@@ -62,7 +62,7 @@ void Bitset_Not(Bitset *this)
 
 void Bitset_And(Bitset *this, Bitset *another)
 {
-	for (uint32_t i = 0; i < this->_size; i++)
+	for (uint32_t i = 0; i < min(this->_size, another->_size); i++)
 	{
 		this->_set[i] &= another->_set[i];
 	}
