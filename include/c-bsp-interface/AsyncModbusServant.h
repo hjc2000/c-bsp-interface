@@ -11,7 +11,10 @@ typedef enum AsyncModbusServant_Endian
 
 typedef struct AsyncModbusServant
 {
+	/// @brief 本机字节序
 	AsyncModbusServant_Endian _local_endian;
+
+	/// @brief 通信对方的字节序
 	AsyncModbusServant_Endian _remote_endian;
 
 	/// @brief crc16 的计算结果要用什么字节序存放
