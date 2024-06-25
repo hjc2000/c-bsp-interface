@@ -1,4 +1,5 @@
 #pragma once
+#include <c-bsp-interface/AsyncStream.h>
 #include <c-bsp-interface/ModbusCrc16.h>
 #include <stdint.h>
 
@@ -15,6 +16,9 @@ typedef struct AsyncModbusServant
 
 	/// @brief crc16 的计算结果要用什么字节序存放
 	AsyncModbusServant_Endian _crc16_endian;
+
+	/// @brief 从流中接收 modbus 请求帧，将响应帧写入流中。用户需要提供一个流。
+	AsyncStream *_stream;
 
 	/// @brief 用户需要提供一个接收缓冲区，大小自己定。
 	uint8_t *_receive_buffer;
@@ -33,9 +37,3 @@ typedef struct AsyncModbusServant
 	void (*OnReceiveCompeleted)(uint8_t *buffer, int32_t count);
 #pragma endregion
 } AsyncModbusServant;
-
-/// @brief 接收到串口数据后调用本函数进行 modbus 协议的解析。
-/// @param buffer
-/// @param offset
-/// @param count
-void AsyncModbusServant_HandleReceive(uint8_t *buffer, int32_t offset, int32_t count);
