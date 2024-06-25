@@ -29,6 +29,7 @@ typedef enum Serial_HardwareFlowControlOption
 /// @note 本结构体继承 @ref AsyncStream。
 typedef struct IAsyncSerial
 {
+#pragma region 属性
 	/// @brief 波特率。
 	uint32_t (*BaudRate)();
 	void (*SetBaudRate)(uint32_t value);
@@ -48,6 +49,7 @@ typedef struct IAsyncSerial
 	/// @brief 硬件流控。
 	Serial_HardwareFlowControlOption (*HardwareFlowControl)();
 	void (*SetHardwareFlowControl)(Serial_HardwareFlowControlOption value);
+#pragma endregion
 
 	/// @brief 打开串口。成功返回 0，失败返回负数的错误代码
 	int32_t (*Open)();
