@@ -3,23 +3,18 @@
 
 typedef struct Bitset
 {
-	/// <summary>
-	///		用来存放每个位的数组。
-	/// </summary>
+	/// @brief 用来存放每个位的数组。
 	uint8_t *_set;
 
-	/// <summary>
-	///		_set 字段是一个多少个字节的数组
-	/// </summary>
+	/// @brief _set 字段是一个多少个字节的数组
 	uint32_t _size;
 } Bitset;
 
-/// <summary>
-///		将 another 的 _set 中的位复制过来，放到 this 的 _set 中。
-///		* 如果两个 _set 大小不匹配，会按照最小的那个来操作。
-/// </summary>
-/// <param name=""></param>
-/// <param name="another"></param>
+/// @brief 将 another 的 _set 中的位复制过来，放到 this 的 _set 中。
+/// @note 如果两个 _set 大小不匹配，会按照最小的那个来操作。
+///
+/// @param
+/// @param another
 void Bitset_CopyFrom(Bitset *this, Bitset *another);
 
 /// <summary>
