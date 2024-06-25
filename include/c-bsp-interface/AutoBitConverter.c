@@ -7,6 +7,7 @@ static uint8_t AutoBitConverter_ShouldReverse(AutoBitConverter *this)
 	return LocalHostEndian() != this->_remote_endian;
 }
 
+#pragma region 转为数字
 uint16_t AutoBitConverter_ToUInt16(AutoBitConverter *this, uint8_t const *buffer, int32_t offset)
 {
 	uint16_t ret = BitConverter_ByteArrayToUInt16(buffer, offset);
@@ -94,3 +95,4 @@ double AutoBitConverter_ToDouble(AutoBitConverter *this, uint8_t const *buffer, 
 
 	return ret;
 }
+#pragma endregion
