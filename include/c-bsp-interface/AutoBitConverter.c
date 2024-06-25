@@ -1,4 +1,5 @@
 #include "AutoBitConverter.h"
+#include <c-bsp-interface/BitConverter.h>
 #include <c-bsp-interface/Reverse.h>
 
 static uint8_t AutoBitConverter_ShouldReverse(AutoBitConverter *this)
@@ -8,7 +9,7 @@ static uint8_t AutoBitConverter_ShouldReverse(AutoBitConverter *this)
 
 uint16_t AutoBitConverter_ToUInt16(AutoBitConverter *this, uint8_t const *buffer, int32_t offset)
 {
-	uint16_t ret = *(uint16_t const *)(buffer + offset);
+	uint16_t ret = BitConverter_ByteArrayToUInt16(buffer, offset);
 	if (AutoBitConverter_ShouldReverse(this))
 	{
 		ReverseByteArray((uint8_t *)(&ret), 2);
@@ -19,7 +20,7 @@ uint16_t AutoBitConverter_ToUInt16(AutoBitConverter *this, uint8_t const *buffer
 
 int16_t AutoBitConverter_ToInt16(AutoBitConverter *this, uint8_t const *buffer, int32_t offset)
 {
-	int16_t ret = *(int16_t const *)(buffer + offset);
+	int16_t ret = BitConverter_ByteArrayToInt16(buffer, offset);
 	if (AutoBitConverter_ShouldReverse(this))
 	{
 		ReverseByteArray((uint8_t *)(&ret), 2);
@@ -30,7 +31,7 @@ int16_t AutoBitConverter_ToInt16(AutoBitConverter *this, uint8_t const *buffer, 
 
 uint32_t AutoBitConverter_ToUInt32(AutoBitConverter *this, uint8_t const *buffer, int32_t offset)
 {
-	uint32_t ret = *(uint32_t const *)(buffer + offset);
+	uint32_t ret = BitConverter_ByteArrayToUInt32(buffer, offset);
 	if (AutoBitConverter_ShouldReverse(this))
 	{
 		ReverseByteArray((uint8_t *)(&ret), 4);
@@ -41,7 +42,7 @@ uint32_t AutoBitConverter_ToUInt32(AutoBitConverter *this, uint8_t const *buffer
 
 int32_t AutoBitConverter_ToInt32(AutoBitConverter *this, uint8_t const *buffer, int32_t offset)
 {
-	int32_t ret = *(int32_t const *)(buffer + offset);
+	int32_t ret = BitConverter_ByteArrayToInt32(buffer, offset);
 	if (AutoBitConverter_ShouldReverse(this))
 	{
 		ReverseByteArray((uint8_t *)(&ret), 4);
@@ -52,7 +53,7 @@ int32_t AutoBitConverter_ToInt32(AutoBitConverter *this, uint8_t const *buffer, 
 
 uint64_t AutoBitConverter_ToUInt64(AutoBitConverter *this, uint8_t const *buffer, int32_t offset)
 {
-	uint64_t ret = *(uint64_t const *)(buffer + offset);
+	uint64_t ret = BitConverter_ByteArrayToUInt64(buffer, offset);
 	if (AutoBitConverter_ShouldReverse(this))
 	{
 		ReverseByteArray((uint8_t *)(&ret), 8);
@@ -63,7 +64,7 @@ uint64_t AutoBitConverter_ToUInt64(AutoBitConverter *this, uint8_t const *buffer
 
 int64_t AutoBitConverter_ToInt64(AutoBitConverter *this, uint8_t const *buffer, int32_t offset)
 {
-	int64_t ret = *(int64_t const *)(buffer + offset);
+	int64_t ret = BitConverter_ByteArrayToInt64(buffer, offset);
 	if (AutoBitConverter_ShouldReverse(this))
 	{
 		ReverseByteArray((uint8_t *)(&ret), 8);
@@ -74,7 +75,7 @@ int64_t AutoBitConverter_ToInt64(AutoBitConverter *this, uint8_t const *buffer, 
 
 float AutoBitConverter_ToFloat(AutoBitConverter *this, uint8_t const *buffer, int32_t offset)
 {
-	float ret = *(float const *)(buffer + offset);
+	float ret = BitConverter_ByteArrayToFloat(buffer, offset);
 	if (AutoBitConverter_ShouldReverse(this))
 	{
 		ReverseByteArray((uint8_t *)(&ret), 4);
@@ -85,7 +86,7 @@ float AutoBitConverter_ToFloat(AutoBitConverter *this, uint8_t const *buffer, in
 
 double AutoBitConverter_ToDouble(AutoBitConverter *this, uint8_t const *buffer, int32_t offset)
 {
-	double ret = *(double const *)(buffer + offset);
+	double ret = BitConverter_ByteArrayToDouble(buffer, offset);
 	if (AutoBitConverter_ShouldReverse(this))
 	{
 		ReverseByteArray((uint8_t *)(&ret), 8);
