@@ -7,7 +7,7 @@ static uint8_t AutoBitConverter_ShouldReverse(AutoBitConverter *this)
 	return LocalHostEndian() != this->_remote_endian;
 }
 
-#pragma region 转为数字
+#pragma region 转数字
 uint16_t AutoBitConverter_ToUInt16(AutoBitConverter *this, uint8_t const *buffer, int32_t offset)
 {
 	uint16_t ret = BitConverter_ByteArrayToUInt16(buffer, offset);
@@ -94,5 +94,87 @@ double AutoBitConverter_ToDouble(AutoBitConverter *this, uint8_t const *buffer, 
 	}
 
 	return ret;
+}
+#pragma endregion
+
+#pragma region 转字节数组
+void AutoBitConverter_GetBytesFromUInt16(AutoBitConverter *this,
+										 uint16_t value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	if (AutoBitConverter_ShouldReverse(this))
+	{
+		ReverseByteArray(out_buffer + offset, 2);
+	}
+}
+
+void AutoBitConverter_GetBytesFromInt16(AutoBitConverter *this,
+										int16_t value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	if (AutoBitConverter_ShouldReverse(this))
+	{
+		ReverseByteArray(out_buffer + offset, 2);
+	}
+}
+
+void AutoBitConverter_GetBytesFromUInt32(AutoBitConverter *this,
+										 uint32_t value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	if (AutoBitConverter_ShouldReverse(this))
+	{
+		ReverseByteArray(out_buffer + offset, 4);
+	}
+}
+
+void AutoBitConverter_GetBytesFromInt32(AutoBitConverter *this,
+										int32_t value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	if (AutoBitConverter_ShouldReverse(this))
+	{
+		ReverseByteArray(out_buffer + offset, 4);
+	}
+}
+
+void AutoBitConverter_GetBytesFromUInt64(AutoBitConverter *this,
+										 uint64_t value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	if (AutoBitConverter_ShouldReverse(this))
+	{
+		ReverseByteArray(out_buffer + offset, 8);
+	}
+}
+
+void AutoBitConverter_GetBytesFromInt64(AutoBitConverter *this,
+										int64_t value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	if (AutoBitConverter_ShouldReverse(this))
+	{
+		ReverseByteArray(out_buffer + offset, 8);
+	}
+}
+
+void AutoBitConverter_GetBytesFromFloat(AutoBitConverter *this,
+										float value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	if (AutoBitConverter_ShouldReverse(this))
+	{
+		ReverseByteArray(out_buffer + offset, 4);
+	}
+}
+
+void AutoBitConverter_GetBytesFromDouble(AutoBitConverter *this,
+										 double value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	if (AutoBitConverter_ShouldReverse(this))
+	{
+		ReverseByteArray(out_buffer + offset, 8);
+	}
 }
 #pragma endregion

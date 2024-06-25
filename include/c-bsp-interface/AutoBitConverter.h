@@ -7,7 +7,7 @@ typedef struct AutoBitConverter
 	Endian _remote_endian;
 } AutoBitConverter;
 
-#pragma region 转化为数字类型
+#pragma region 转数字
 uint16_t AutoBitConverter_ToUInt16(AutoBitConverter *this, uint8_t const *buffer, int32_t offset);
 int16_t AutoBitConverter_ToInt16(AutoBitConverter *this, uint8_t const *buffer, int32_t offset);
 
@@ -19,4 +19,26 @@ int64_t AutoBitConverter_ToInt64(AutoBitConverter *this, uint8_t const *buffer, 
 
 float AutoBitConverter_ToFloat(AutoBitConverter *this, uint8_t const *buffer, int32_t offset);
 double AutoBitConverter_ToDouble(AutoBitConverter *this, uint8_t const *buffer, int32_t offset);
+#pragma endregion
+
+#pragma region 转字节数组
+void AutoBitConverter_GetBytesFromUInt16(AutoBitConverter *this,
+										 uint16_t value, uint8_t *out_buffer, int32_t offset);
+void AutoBitConverter_GetBytesFromInt16(AutoBitConverter *this,
+										int16_t value, uint8_t *out_buffer, int32_t offset);
+
+void AutoBitConverter_GetBytesFromUInt32(AutoBitConverter *this,
+										 uint32_t value, uint8_t *out_buffer, int32_t offset);
+void AutoBitConverter_GetBytesFromInt32(AutoBitConverter *this,
+										int32_t value, uint8_t *out_buffer, int32_t offset);
+
+void AutoBitConverter_GetBytesFromUInt64(AutoBitConverter *this,
+										 uint64_t value, uint8_t *out_buffer, int32_t offset);
+void AutoBitConverter_GetBytesFromInt64(AutoBitConverter *this,
+										int64_t value, uint8_t *out_buffer, int32_t offset);
+
+void AutoBitConverter_GetBytesFromFloat(AutoBitConverter *this,
+										float value, uint8_t *out_buffer, int32_t offset);
+void AutoBitConverter_GetBytesFromDouble(AutoBitConverter *this,
+										 double value, uint8_t *out_buffer, int32_t offset);
 #pragma endregion

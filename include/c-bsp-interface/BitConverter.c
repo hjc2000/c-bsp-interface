@@ -69,49 +69,49 @@ double BitConverter_ByteArrayToDouble(uint8_t const *buffer, int32_t offset)
 #pragma endregion
 
 #pragma region 转字节数组
-void GetBytesFromUInt16(uint16_t value, uint8_t *out_buffer, int32_t offset)
+void BitConverter_GetBytesFromUInt16(uint16_t value, uint8_t *out_buffer, int32_t offset)
 {
 	uint8_t *buffer = (uint8_t *)(&value);
 	memcpy(out_buffer + offset, buffer, 2);
 }
 
-void GetBytesFromInt16(int16_t value, uint8_t *out_buffer, int32_t offset)
+void BitConverter_GetBytesFromInt16(int16_t value, uint8_t *out_buffer, int32_t offset)
 {
 	uint8_t *buffer = (uint8_t *)(&value);
 	memcpy(out_buffer + offset, buffer, 2);
 }
 
-void GetBytesFromUInt32(uint32_t value, uint8_t *out_buffer, int32_t offset)
+void BitConverter_GetBytesFromUInt32(uint32_t value, uint8_t *out_buffer, int32_t offset)
 {
 	uint8_t *buffer = (uint8_t *)(&value);
 	memcpy(out_buffer + offset, buffer, 4);
 }
 
-void GetBytesFromInt32(int32_t value, uint8_t *out_buffer, int32_t offset)
+void BitConverter_GetBytesFromInt32(int32_t value, uint8_t *out_buffer, int32_t offset)
 {
 	uint8_t *buffer = (uint8_t *)(&value);
 	memcpy(out_buffer + offset, buffer, 4);
 }
 
-void GetBytesFromUInt64(uint64_t value, uint8_t *out_buffer, int32_t offset)
+void BitConverter_GetBytesFromUInt64(uint64_t value, uint8_t *out_buffer, int32_t offset)
 {
 	uint8_t *buffer = (uint8_t *)(&value);
 	memcpy(out_buffer + offset, buffer, 8);
 }
 
-void GetBytesFromInt64(int64_t value, uint8_t *out_buffer, int32_t offset)
+void BitConverter_GetBytesFromInt64(int64_t value, uint8_t *out_buffer, int32_t offset)
 {
 	uint8_t *buffer = (uint8_t *)(&value);
 	memcpy(out_buffer + offset, buffer, 8);
 }
 
-void GetBytesFromFloat(float value, uint8_t *out_buffer, int32_t offset)
+void BitConverter_GetBytesFromFloat(float value, uint8_t *out_buffer, int32_t offset)
 {
 	uint8_t *buffer = (uint8_t *)(&value);
 	memcpy(out_buffer + offset, buffer, 4);
 }
 
-void GetBytesFromDouble(double value, uint8_t *out_buffer, int32_t offset)
+void BitConverter_GetBytesFromDouble(double value, uint8_t *out_buffer, int32_t offset)
 {
 	uint8_t *buffer = (uint8_t *)(&value);
 	memcpy(out_buffer + offset, buffer, 8);
