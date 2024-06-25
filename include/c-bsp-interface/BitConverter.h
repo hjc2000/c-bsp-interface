@@ -17,3 +17,17 @@ int64_t BitConverter_ByteArrayToInt64(uint8_t const *buffer, int32_t offset);
 float BitConverter_ByteArrayToFloat(uint8_t const *buffer, int32_t offset);
 double BitConverter_ByteArrayToDouble(uint8_t const *buffer, int32_t offset);
 #pragma endregion
+
+#pragma region 转字节数组
+void GetBytesFromUInt16(uint16_t value, uint8_t *out_buffer, int32_t offset);
+void GetBytesFromInt16(int16_t value, uint8_t *out_buffer, int32_t offset);
+
+void GetBytesFromUInt32(uint32_t value, uint8_t *out_buffer, int32_t offset);
+void GetBytesFromInt32(int32_t value, uint8_t *out_buffer, int32_t offset);
+
+void GetBytesFromUInt64(uint64_t value, uint8_t *out_buffer, int32_t offset);
+void GetBytesFromInt64(int64_t value, uint8_t *out_buffer, int32_t offset);
+
+void GetBytesFromFloat(float value, uint8_t *out_buffer, int32_t offset);
+void GetBytesFromDouble(double value, uint8_t *out_buffer, int32_t offset);
+#pragma endregion
