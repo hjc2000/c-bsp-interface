@@ -59,9 +59,12 @@ typedef struct IAsyncSerial
 
 	/// @brief ReadAsync 读取完成后触发此回调。
 	///
+	/// @param buffer
+	/// @param offset
+	///
 	/// @param have_read 读取了多少字节。可能小于调用 ReadAsync 时传入的 count。
 	/// @note 如果一定要那么多字节的数据，调用者自行再次调用 ReadAsync。
-	void (*ReadCompleteCallback)(int32_t have_read);
+	void (*ReadCompleteCallback)(uint8_t *buffer, int32_t offset, int32_t have_read);
 
 	/// @brief 异步写。此函数不会阻塞，会立刻返回。
 	/// @return 成功返回 0，失败返回负数的错误代码。
