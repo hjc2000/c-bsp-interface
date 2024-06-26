@@ -12,6 +12,4 @@ typedef struct ModbusServant
 	KeyScanner *_key_scanner;
 } ModbusServant;
 
-/// @brief 单例模式，只能启动一个实例。
-/// @param
 void ModbusServant_Start(ModbusServant *this);
