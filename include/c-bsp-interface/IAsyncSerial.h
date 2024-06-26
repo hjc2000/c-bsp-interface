@@ -1,19 +1,33 @@
 #pragma once
 #include <stdint.h>
 
+/// @brief 校验方式
 typedef enum Serial_ParityOption
 {
+	/// @brief 无校验
 	Serial_ParityOption_None,
+
+	/// @brief 偶校验
 	Serial_ParityOption_Even,
+
+	/// @brief 奇校验
 	Serial_ParityOption_Odd,
 } Serial_ParityOption;
 
+/// @brief 停止位占的波特数
 typedef enum Serial_StopBitsOption
 {
-	Serial_StopBitsOption_ZeroPointFive, // 0.5
-	Serial_StopBitsOption_One,			 // 1
-	Serial_StopBitsOption_OnePointFive,	 // 1.5
-	Serial_StopBitsOption_Two,			 // 2
+	/// @brief 0.5
+	Serial_StopBitsOption_ZeroPointFive,
+
+	/// @brief 1
+	Serial_StopBitsOption_One,
+
+	/// @brief 1.5
+	Serial_StopBitsOption_OnePointFive,
+
+	/// @brief 2
+	Serial_StopBitsOption_Two,
 } Serial_StopBitsOption;
 
 /// @brief 硬件流控。
