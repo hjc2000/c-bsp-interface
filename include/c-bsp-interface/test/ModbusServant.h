@@ -11,6 +11,9 @@ typedef struct ModbusServant
 	IDigitalLed *_green_led;
 	IKey *_key0;
 	IKey *_key1;
+
+	/// @brief 延时函数。用来消抖。
+	void (*DelayMilliseconds)(uint32_t ms);
 } ModbusServant;
 
 /// @brief 单例模式，只能启动一个实例。
