@@ -11,6 +11,7 @@ static void HandleBrocastFrame(ModbusServant *this, uint8_t *frame, int32_t coun
 															 this->_crc16_endian);
 	if (!crc16_check_result)
 	{
+		// TODO: 返回例外响应，告诉主机 CRC 错了。
 		return;
 	}
 }
@@ -26,6 +27,7 @@ static void HandleFrame(ModbusServant *this, uint8_t *frame, int32_t count)
 															 this->_crc16_endian);
 	if (!crc16_check_result)
 	{
+		// TODO: 返回例外响应，告诉主机 CRC 错了。
 		return;
 	}
 }
