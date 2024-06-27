@@ -1,16 +1,15 @@
 #pragma once
-#include <c-bsp-interface/IDigitalLed.h>
-#include <c-bsp-interface/IKey.h>
+#include <c-bsp-interface/Endian.h>
+#include <c-bsp-interface/modbus/ModbusCrc16.h>
+#include <stdint.h>
 
 typedef struct ModbusServant
 {
 #pragma region private
 	/// @brief 从机站号
 	uint8_t _servant_address;
-	IDigitalLed *_red_led;
-	IDigitalLed *_green_led;
-	IKey *_key0;
-	IKey *_key1;
+	ModbusCrc16 _crc;
+	Endian _crc16_endian;
 #pragma endregion
 
 } ModbusServant;
@@ -24,10 +23,7 @@ typedef struct ModbusServant
 /// @param key1
 void ModbusServant_Init(ModbusServant *this,
 						uint8_t servant_address,
-						IDigitalLed *red_led,
-						IDigitalLed *green_led,
-						IKey *key0,
-						IKey *key1);
+						Endian crc16_endian);
 
 /// @brief 将缓冲区喂给 ModbusServant
 /// @param

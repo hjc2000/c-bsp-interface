@@ -2,7 +2,7 @@
 
 void ModbusCrc16_Init(ModbusCrc16 *this)
 {
-	this->_crc16_register = UINT16_MAX;
+	ModbusCrc16_ResetRegister(this);
 
 	/* 默认的生成多项式是：
 	 * 		x16+x15+x2+1
@@ -22,6 +22,11 @@ void ModbusCrc16_Init(ModbusCrc16 *this)
 	 * 转化为 16 进制就是 0xA001。
 	 */
 	this->_polynomial = 0xA001;
+}
+
+void ModbusCrc16_ResetRegister(ModbusCrc16 *this)
+{
+	this->_crc16_register = UINT16_MAX;
 }
 
 void ModbusCrc16_Add(ModbusCrc16 *this, uint8_t data)
@@ -44,4 +49,42 @@ void ModbusCrc16_AddArray(ModbusCrc16 *this, uint8_t *datas, uint32_t count)
 	{
 		ModbusCrc16_Add(this, datas[i]);
 	}
+}
+
+uint16_t ModbusCrc16_Register(ModbusCrc16 *this)
+{
+	return this->_crc16_register;
+}
+
+uint8_t ModbusCrc16_HighByte(ModbusCrc16 *this)
+{
+	return (uint8_t)(this->_crc16_register >> 8);
+}
+
+uint8_t ModbusCrc16_LowByte(ModbusCrc16 *this)
+{
+	return (uint8_t)(this->_crc16_register);
+}
+
+uint8_t ModbusCrc16_CompareRegister(ModbusCrc16 *this,
+									uint8_t *crc16_register_buffer,
+									Endian crc16_register_buffer_endian)
+{
+	ModbusCrc16_AddArray(this, crc16_register_buffer, 2);
+	uint8_t buffer_low_byte;
+	uint8_t buffer_high_byte;
+
+	if (crc16_register_buffer_endian == LittleEndian)
+	{
+		buffer_low_byte = crc16_register_buffer[0];
+		buffer_high_byte = crc16_register_buffer[1];
+	}
+	else
+	{
+		buffer_low_byte = crc16_register_buffer[1];
+		buffer_high_byte = crc16_register_buffer[0];
+	}
+
+	return buffer_low_byte == ModbusCrc16_LowByte(this) &&
+		   buffer_high_byte == ModbusCrc16_HighByte(this);
 }

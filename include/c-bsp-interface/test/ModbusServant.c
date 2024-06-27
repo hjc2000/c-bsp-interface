@@ -1,55 +1,53 @@
 #include "ModbusServant.h"
-#include <c-bsp-interface/modbus/ModbusCrc16.h>
-
-/// @brief 对帧进行 CRC16 校验
-/// @param frame 帧指针
-/// @param count 帧的长度。单位：字节。
-/// @return
-static uint8_t CheckCrc16(uint8_t *frame, int32_t count)
-{
-}
 
 /// @brief 处理广播帧
-/// @note 在 ModbusServant_FeedBuffer 函数中被调用，ModbusServant_FeedBuffer 函数已经对站号
-/// 进行过滤了。
-///
 /// @param
 /// @param frame
 /// @param count
 static void HandleBrocastFrame(ModbusServant *this, uint8_t *frame, int32_t count)
 {
+	uint8_t crc16_check_result = ModbusCrc16_CompareRegister(&this->_crc,
+															 frame + count - 2,
+															 this->_crc16_endian);
+	if (!crc16_check_result)
+	{
+		return;
+	}
 }
 
 /// @brief 处理普通帧
-/// @note 在 ModbusServant_FeedBuffer 函数中被调用，ModbusServant_FeedBuffer 函数已经对站号
-/// 进行过滤了。
-///
 /// @param
 /// @param frame
 /// @param count
 static void HandleFrame(ModbusServant *this, uint8_t *frame, int32_t count)
 {
+	uint8_t crc16_check_result = ModbusCrc16_CompareRegister(&this->_crc,
+															 frame + count - 2,
+															 this->_crc16_endian);
+	if (!crc16_check_result)
+	{
+		return;
+	}
 }
 
 void ModbusServant_Init(ModbusServant *this,
 						uint8_t servant_address,
-						IDigitalLed *red_led,
-						IDigitalLed *green_led,
-						IKey *key0,
-						IKey *key1)
+						Endian crc16_endian)
 {
 	this->_servant_address = servant_address;
-	this->_red_led = red_led;
-	this->_green_led = green_led;
-	this->_key0 = key0;
-	this->_key1 = key1;
+	ModbusCrc16_Init(&this->_crc);
 }
 
 void ModbusServant_FeedBuffer(ModbusServant *this,
 							  uint8_t *buffer, int32_t offset, int32_t count)
 {
-	if (count <= 0)
+	if (count <= 2)
 	{
+		/* 因为 CRC16 占 2 字节，所以帧大小不可能小于等于 2 字节，如果出现这种情况，
+		 * 一定是帧出错了。
+		 *
+		 * 此时连帧都不完整，也不知道是发给谁的，所以就不发回例外响应了。
+		 */
 		return;
 	}
 
