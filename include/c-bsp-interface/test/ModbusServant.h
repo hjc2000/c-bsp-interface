@@ -15,6 +15,13 @@ typedef struct ModbusServant
 
 } ModbusServant;
 
+/// @brief 准备一个静态的 ModbusServant 对象，传进来进行初始化。
+/// @param
+/// @param servant_address
+/// @param red_led
+/// @param green_led
+/// @param key0
+/// @param key1
 void ModbusServant_Init(ModbusServant *this,
 						uint8_t servant_address,
 						IDigitalLed *red_led,
@@ -23,6 +30,7 @@ void ModbusServant_Init(ModbusServant *this,
 						IKey *key1);
 
 /// @brief 将缓冲区喂给 ModbusServant
+/// @param
 /// @param buffer
 /// @param offset
 /// @param count
