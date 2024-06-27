@@ -25,10 +25,10 @@ void ModbusServant_Init(ModbusServant *this,
 						uint8_t servant_address,
 						Endian crc16_endian);
 
-/// @brief 将缓冲区喂给 ModbusServant
+/// @brief 将缓冲区送给 ModbusServant
 /// @param
 /// @param buffer
 /// @param offset
 /// @param count
-void ModbusServant_FeedBuffer(ModbusServant *this,
+void ModbusServant_SendBuffer(ModbusServant *this,
 							  uint8_t *buffer, int32_t offset, int32_t count);

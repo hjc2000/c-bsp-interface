@@ -1,46 +1,36 @@
 #include "ModbusServant.h"
 
 /// @brief 处理广播帧
+/// @note 被调用说明 CRC 校验通过了。
+///
 /// @param
-/// @param frame
+/// @param pdu_frame 包含功能码和数据，不包含站号和 CRC16
 /// @param count
-static void HandleBrocastFrame(ModbusServant *this, uint8_t *frame, int32_t count)
+static void HandleBrocastFrame(ModbusServant *this, uint8_t *pdu_frame, int32_t count)
 {
-	uint8_t crc16_check_result = ModbusCrc16_CompareRegister(&this->_crc,
-															 frame + count - 2,
-															 this->_crc16_endian);
-	if (!crc16_check_result)
-	{
-		// TODO: 返回例外响应，告诉主机 CRC 错了。
-		return;
-	}
 }
 
 /// @brief 处理普通帧
+/// @note 被调用说明 CRC 校验通过了。
+///
 /// @param
-/// @param frame
+/// @param pdu_frame 包含功能码和数据，不包含站号和 CRC16
 /// @param count
-static void HandleFrame(ModbusServant *this, uint8_t *frame, int32_t count)
+static void HandleFrame(ModbusServant *this, uint8_t *pdu_frame, int32_t count)
 {
-	uint8_t crc16_check_result = ModbusCrc16_CompareRegister(&this->_crc,
-															 frame + count - 2,
-															 this->_crc16_endian);
-	if (!crc16_check_result)
-	{
-		// TODO: 返回例外响应，告诉主机 CRC 错了。
-		return;
-	}
 }
 
+#pragma region 公共函数
 void ModbusServant_Init(ModbusServant *this,
 						uint8_t servant_address,
 						Endian crc16_endian)
 {
 	this->_servant_address = servant_address;
+	this->_crc16_endian = crc16_endian;
 	ModbusCrc16_Init(&this->_crc);
 }
 
-void ModbusServant_FeedBuffer(ModbusServant *this,
+void ModbusServant_SendBuffer(ModbusServant *this,
 							  uint8_t *buffer, int32_t offset, int32_t count)
 {
 	if (count <= 2)
@@ -54,17 +44,30 @@ void ModbusServant_FeedBuffer(ModbusServant *this,
 	}
 
 	uint8_t *frame = buffer + offset;
-	if (frame[0] != this->_servant_address)
+	if (frame[0] != this->_servant_address && frame[0] != 0)
 	{
-		// 接收到的帧的从机站号与本站号不匹配
-		if (frame[0] == 0)
-		{
-			// 广播帧
-			HandleBrocastFrame(this, frame, count);
-		}
-
+		// 站号与本站号不匹配，且不等于 0，即不是广播帧。
 		return;
 	}
 
-	HandleFrame(this, frame, count);
+	ModbusCrc16_ResetRegister(&this->_crc);
+	ModbusCrc16_AddArray(&this->_crc, frame, count - 2);
+	uint8_t crc16_check_result = ModbusCrc16_CompareRegister(&this->_crc,
+															 frame + count - 2,
+															 this->_crc16_endian);
+	if (!crc16_check_result)
+	{
+		// CRC 校验错误时从机应该沉默。
+		return;
+	}
+
+	if (frame[0] == 0)
+	{
+		// 广播帧
+		HandleBrocastFrame(this, frame, count - 2);
+		return;
+	}
+
+	HandleFrame(this, frame, count - 2);
 }
+#pragma endregion
