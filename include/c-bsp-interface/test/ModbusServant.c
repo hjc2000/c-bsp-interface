@@ -5,7 +5,7 @@
 ///
 /// @param
 /// @param pdu_frame 包含功能码和数据，不包含站号和 CRC16
-/// @param count
+/// @param count 字节数
 static void HandleBrocastFrame(ModbusServant *this, uint8_t *pdu_frame, int32_t count)
 {
 }
@@ -15,7 +15,7 @@ static void HandleBrocastFrame(ModbusServant *this, uint8_t *pdu_frame, int32_t 
 ///
 /// @param
 /// @param pdu_frame 包含功能码和数据，不包含站号和 CRC16
-/// @param count
+/// @param count 字节数
 static void HandleFrame(ModbusServant *this, uint8_t *pdu_frame, int32_t count)
 {
 }
