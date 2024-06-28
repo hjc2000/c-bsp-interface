@@ -50,6 +50,8 @@ void ModbusServant_SendBuffer(ModbusServant *this,
 		return;
 	}
 
+	// 站号匹配或者是广播帧
+	// 进行 CRC 校验
 	ModbusCrc16_ResetRegister(&this->_crc);
 	ModbusCrc16_AddArray(&this->_crc, frame, count - 2);
 	uint8_t crc16_check_result = ModbusCrc16_CompareRegister(&this->_crc,
@@ -61,6 +63,7 @@ void ModbusServant_SendBuffer(ModbusServant *this,
 		return;
 	}
 
+	// CRC 校验通过
 	if (frame[0] == 0)
 	{
 		// 广播帧
@@ -68,6 +71,7 @@ void ModbusServant_SendBuffer(ModbusServant *this,
 		return;
 	}
 
+	// 普通帧
 	HandleFrame(this, frame, count - 2);
 }
 #pragma endregion
