@@ -13,6 +13,9 @@ typedef struct ModbusServant
 #pragma endregion
 
 #pragma region 主机请求回调
+	uint8_t (*ReadBitCallback)(uint32_t bit_addr);
+	void (*WriteBitCallback)(uint32_t bit_addr, uint8_t value);
+
 	/// @brief 主机请求读取 16 位保持寄存器时会触发此回调。
 	/// @note 每次回调只读取 1 个 16 位保持寄存器，主机请求读取一组保持寄存器，则会回调多次。
 	///
@@ -26,6 +29,9 @@ typedef struct ModbusServant
 	/// @param data_addr 数据地址
 	/// @param value 数据值
 	void (*WriteUInt16Callback)(uint32_t data_addr, uint16_t value);
+
+	uint32_t (*ReadUInt32Callback)(uint32_t data_addr);
+	void (*WriteUInt32Callback)(uint32_t data_addr, uint32_t value);
 #pragma endregion
 
 } ModbusServant;
