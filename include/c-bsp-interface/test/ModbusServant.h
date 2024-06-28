@@ -3,6 +3,7 @@
 #include <c-bsp-interface/modbus/ModbusCrc16.h>
 #include <stdint.h>
 
+/// @brief modbus 从机
 typedef struct ModbusServant
 {
 #pragma region private
