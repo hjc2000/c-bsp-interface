@@ -12,6 +12,22 @@ typedef struct ModbusServant
 	Endian _crc16_endian;
 #pragma endregion
 
+#pragma region 主机请求回调
+	/// @brief 主机请求读取 16 位保持寄存器时会触发此回调。
+	/// @note 每次回调只读取 1 个 16 位保持寄存器，主机请求读取一组保持寄存器，则会回调多次。
+	///
+	/// @param data_addr 数据地址
+	/// @return 返回的值将被发送给主机。
+	uint16_t (*ReadUint16Callback)(uint32_t data_addr);
+
+	/// @brief 主机请求写 16 位保持寄存器时会触发此回调。
+	/// @note 每次回调只写一个 16 位数据，主机要写一组，则会触发多次回调。
+	///
+	/// @param data_addr 数据地址
+	/// @param value 数据值
+	void (*WriteUInt16Callback)(uint32_t data_addr, uint16_t value);
+#pragma endregion
+
 } ModbusServant;
 
 /// @brief 准备一个静态的 ModbusServant 对象，传进来进行初始化。
@@ -30,5 +46,5 @@ void ModbusServant_Init(ModbusServant *this,
 /// @param buffer
 /// @param offset
 /// @param count
-void ModbusServant_SendBuffer(ModbusServant *this,
+void ModbusServant_FeedBuffer(ModbusServant *this,
 							  uint8_t *buffer, int32_t offset, int32_t count);

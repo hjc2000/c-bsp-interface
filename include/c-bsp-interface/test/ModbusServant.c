@@ -4,8 +4,8 @@
 /// @note 被调用说明 CRC 校验通过了。
 ///
 /// @param
-/// @param pdu 包含功能码和数据，不包含站号和 CRC16
-/// @param count 字节数
+/// @param pdu modbus PDU
+/// @param count pdu 的字节数
 static void HandleBrocastPdu(ModbusServant *this, uint8_t *pdu, int32_t count)
 {
 }
@@ -14,8 +14,8 @@ static void HandleBrocastPdu(ModbusServant *this, uint8_t *pdu, int32_t count)
 /// @note 被调用说明 CRC 校验通过了。
 ///
 /// @param
-/// @param pdu 包含功能码和数据，不包含站号和 CRC16
-/// @param count 字节数
+/// @param pdu modbus PDU
+/// @param count pdu 的字节数
 static void HandlePdu(ModbusServant *this, uint8_t *pdu, int32_t count)
 {
 }
@@ -30,7 +30,7 @@ void ModbusServant_Init(ModbusServant *this,
 	ModbusCrc16_Init(&this->_crc);
 }
 
-void ModbusServant_SendBuffer(ModbusServant *this,
+void ModbusServant_FeedBuffer(ModbusServant *this,
 							  uint8_t *buffer, int32_t offset, int32_t count)
 {
 	if (count <= 3)
