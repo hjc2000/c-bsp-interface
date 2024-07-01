@@ -4,7 +4,7 @@
 static void GetCurrentKeyPressedState(KeyScanner *this)
 {
 	// 遍历每个按键
-	for (uint32_t i = 0; i < this->_key_count; i++)
+	for (int32_t i = 0; i < this->_key_count; i++)
 	{
 		Bitset *bitset = this->_key_pressed_state_bitset;
 		IKey *key = this->_keys[i];
@@ -13,7 +13,7 @@ static void GetCurrentKeyPressedState(KeyScanner *this)
 
 	this->DelayMilliseconds(20);
 
-	for (uint32_t i = 0; i < this->_key_count; i++)
+	for (int32_t i = 0; i < this->_key_count; i++)
 	{
 		uint8_t value = this->_keys[i]->KeyIsDown() &&
 						Bitset_GetBit(this->_key_pressed_state_bitset, i);
@@ -30,7 +30,8 @@ KeyScanner *KeyScanner_StackHeapAlloc(int32_t key_count,
 		return 0;
 	}
 
-	KeyScanner *this = (KeyScanner *)StackHeapAlignAlloc(sizeof(KeyScanner), sizeof(KeyScanner *));
+	KeyScanner *this = (KeyScanner *)StackHeapAlignAlloc(sizeof(KeyScanner),
+														 sizeof(KeyScanner *));
 
 	// 能够装下 key_count 个指针的指针数组
 	this->_keys = StackHeapAlignAlloc(sizeof(IKey *) * key_count, 4);
@@ -43,6 +44,16 @@ KeyScanner *KeyScanner_StackHeapAlloc(int32_t key_count,
 
 	this->DelayMilliseconds = delay_milliseconds;
 	return this;
+}
+
+void KeyScanner_SetKey(KeyScanner *this, int32_t index, IKey *key)
+{
+	if (index < 0 || index >= this->_key_count)
+	{
+		return;
+	}
+
+	this->_keys[index] = key;
 }
 
 void KeyScanner_Scan(KeyScanner *this)
@@ -69,17 +80,17 @@ void KeyScanner_Scan(KeyScanner *this)
 					this->_key_pressed_state_bitset);
 }
 
-uint8_t KeyScanner_KeyIsPressed(KeyScanner *this, uint32_t key_index)
+uint8_t KeyScanner_KeyIsPressed(KeyScanner *this, int32_t key_index)
 {
 	return Bitset_GetBit(this->_key_pressed_state_bitset, key_index);
 }
 
-uint8_t KeyScanner_HasKeyDownEvent(KeyScanner *this, uint32_t key_index)
+uint8_t KeyScanner_HasKeyDownEvent(KeyScanner *this, int32_t key_index)
 {
 	return Bitset_GetBit(this->_key_down_event_bitset, key_index);
 }
 
-uint8_t KeyScanner_HasKeyUpEvent(KeyScanner *this, uint32_t key_index)
+uint8_t KeyScanner_HasKeyUpEvent(KeyScanner *this, int32_t key_index)
 {
 	return Bitset_GetBit(this->_key_up_event_bitset, key_index);
 }
