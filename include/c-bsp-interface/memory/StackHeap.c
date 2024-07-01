@@ -53,3 +53,8 @@ uint8_t StackHeapOverflow()
 {
 	return _overflow;
 }
+
+uint32_t StackHeapSp()
+{
+	return _sp;
+}

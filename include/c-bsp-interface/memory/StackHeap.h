@@ -24,3 +24,5 @@ void *StackHeapAlignAlloc(int32_t size, int32_t align);
 /// @brief 检查栈式堆是否发生过溢出
 /// @return 栈式堆发生过溢出就会返回 true，否则返回 false
 uint8_t StackHeapOverflow();
+
+uint32_t StackHeapSp();
