@@ -1,4 +1,5 @@
 #include "Bitset.h"
+#include <c-bsp-interface/memory/StackHeap.h>
 #include <string.h>
 
 static uint32_t min(uint32_t value1, uint32_t value2)
@@ -9,6 +10,25 @@ static uint32_t min(uint32_t value1, uint32_t value2)
 	}
 
 	return value2;
+}
+
+Bitset *Bitset_StackHeapAlloc(int32_t bit_count)
+{
+	if (bit_count <= 0)
+	{
+		return 0;
+	}
+
+	Bitset *bitset = (Bitset *)StackHeapAlignAlloc(sizeof(Bitset), 4);
+	int32_t buffer_size = bit_count / 8;
+	if (bit_count % 8 != 0)
+	{
+		buffer_size += 1;
+	}
+
+	bitset->_set = StackHeapAlloc(buffer_size);
+	bitset->_size = buffer_size;
+	return bitset;
 }
 
 void Bitset_CopyFrom(Bitset *this, Bitset *another)
