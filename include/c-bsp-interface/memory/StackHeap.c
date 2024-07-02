@@ -3,6 +3,7 @@
 static uint8_t _buffer[STACK_HEAP_SIZE];
 static uint32_t _sp = 0;
 static uint8_t _overflow = 0;
+static void (*_overflow_handler)() = 0;
 
 static void AlignSp(int32_t align)
 {
@@ -35,6 +36,11 @@ void *StackHeapAlloc(int32_t size)
 	}
 
 	_overflow = 1;
+	if (_overflow_handler)
+	{
+		_overflow_handler();
+	}
+
 	return 0;
 }
 
@@ -52,6 +58,11 @@ void *StackHeapAlignAlloc(int32_t size, int32_t align)
 uint8_t StackHeapOverflow()
 {
 	return _overflow;
+}
+
+void SetStackHeapOverflowHandler(void (*func)())
+{
+	_overflow_handler = func;
 }
 
 uint32_t StackHeapSp()
