@@ -30,8 +30,8 @@ void ModbusServant_Init(ModbusServant *this,
 	ModbusCrc16_Init(&this->_crc);
 }
 
-void ModbusServant_FeedBuffer(ModbusServant *this,
-							  uint8_t *buffer, int32_t offset, int32_t count)
+void ModbusServant_ParseReceivedBuffer(ModbusServant *this,
+									   uint8_t *buffer, int32_t offset, int32_t count)
 {
 	if (count <= 3)
 	{
@@ -73,4 +73,11 @@ void ModbusServant_FeedBuffer(ModbusServant *this,
 	// 普通帧
 	HandlePdu(this, pdu, count - 2);
 }
+
 #pragma endregion
+
+void ModbusServant_SendUInt32(ModbusServant *this,
+							  uint32_t value,
+							  ModbusServant_SendingUnit unit)
+{
+}

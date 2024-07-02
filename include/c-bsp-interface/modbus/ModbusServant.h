@@ -3,6 +3,16 @@
 #include <c-bsp-interface/modbus/ModbusCrc16.h>
 #include <stdint.h>
 
+/// @brief 发送数据时使用的单位
+typedef enum ModbusServant_SendingUnit
+{
+	/// @brief 以记录为单位。这是 modbus 保持寄存器的最小单位。
+	ModbusServant_SendingUnit_Record,
+
+	/// @brief 以整体为一个单位，不拆分成记录
+	ModbusServant_ReverseMethod_Whole,
+} ModbusServant_SendingUnit;
+
 /// @brief modbus 从机
 typedef struct ModbusServant
 {
@@ -14,25 +24,15 @@ typedef struct ModbusServant
 #pragma endregion
 
 #pragma region 主机请求回调
-	uint8_t (*ReadBitCallback)(uint32_t bit_addr);
-	void (*WriteBitCallback)(uint32_t bit_addr, uint8_t value);
-
-	/// @brief 主机请求读取 16 位保持寄存器时会触发此回调。
-	/// @note 每次回调只读取 1 个 16 位保持寄存器，主机请求读取一组保持寄存器，则会回调多次。
-	///
+	/// @brief 功能码 0x03，读一组保持寄存器。
 	/// @param data_addr 数据地址
-	/// @return 返回的值将被发送给主机。
-	uint16_t (*ReadUint16Callback)(uint32_t data_addr);
+	/// @param record_count 记录数
+	void (*ReadHoldingRegistersCallback)(uint32_t data_addr, int32_t record_count);
 
-	/// @brief 主机请求写 16 位保持寄存器时会触发此回调。
-	/// @note 每次回调只写一个 16 位数据，主机要写一组，则会触发多次回调。
-	///
-	/// @param data_addr 数据地址
-	/// @param value 数据值
-	void (*WriteUInt16Callback)(uint32_t data_addr, uint16_t value);
-
-	uint32_t (*ReadUInt32Callback)(uint32_t data_addr);
-	void (*WriteUInt32Callback)(uint32_t data_addr, uint32_t value);
+	/// @brief 功能码 0x10，写一组保持寄存器。
+	void (*WriteHoldingRegistersCallback)(uint32_t data_addr,
+										  uint8_t *buffer,
+										  int32_t count);
 #pragma endregion
 
 } ModbusServant;
@@ -48,10 +48,25 @@ void ModbusServant_Init(ModbusServant *this,
 						uint8_t servant_address,
 						Endian crc16_endian);
 
-/// @brief 将缓冲区送给 ModbusServant
+/// @brief 将接收缓冲区送给 ModbusServant 进行分析。分析完后会触发回调。
 /// @param
 /// @param buffer
 /// @param offset
 /// @param count
-void ModbusServant_FeedBuffer(ModbusServant *this,
-							  uint8_t *buffer, int32_t offset, int32_t count);
+void ModbusServant_ParseReceivedBuffer(ModbusServant *this,
+									   uint8_t *buffer, int32_t offset, int32_t count);
+
+/// @brief 发送一个 uint32_t 数据。
+/// @param
+/// @param value
+///
+/// @param unit 这个 uint32_t 数据要用什么单位发送。
+/// @example 例如 value = 0x12345678。
+/// @li 如果以记录为单位发送，则低 16 位作为第 1 个记录，用大端序发送。
+/// 	高 16 位作为第 2 个记录，用大端序发送。则字节流为 0x56, 0x78, 0x12, 0x34，
+///		从左往右依次发送。
+/// @li 如果以整体为一个单位发送，则整体用大端序发送。发送的字节流为：0x12, 0x34, 0x56, 0x78
+///		从左往右依次发送。
+void ModbusServant_SendUInt32(ModbusServant *this,
+							  uint32_t value,
+							  ModbusServant_SendingUnit unit);
