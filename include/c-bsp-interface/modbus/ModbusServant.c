@@ -27,6 +27,9 @@ void ModbusServant_Init(ModbusServant *this,
 {
 	this->_servant_address = servant_address;
 	this->_crc16_endian = crc16_endian;
+
+	// modbus 一律是大端序
+	this->_auto_bit_converter = AutoBitConverter_StackHeapAlloc(BigEndian);
 	ModbusCrc16_Init(&this->_crc);
 }
 
