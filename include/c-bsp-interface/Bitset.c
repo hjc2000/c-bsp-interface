@@ -2,6 +2,15 @@
 #include <c-bsp-interface/memory/StackHeap.h>
 #include <string.h>
 
+typedef struct Bitset
+{
+	/// @brief 用来存放每个位的数组。
+	uint8_t *_set;
+
+	/// @brief _set 字段是一个多少个字节的数组
+	uint32_t _size;
+} Bitset;
+
 static uint32_t min(uint32_t value1, uint32_t value2)
 {
 	if (value1 < value2)

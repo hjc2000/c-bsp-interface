@@ -1,14 +1,7 @@
 #pragma once
 #include <stdint.h>
 
-typedef struct Bitset
-{
-	/// @brief 用来存放每个位的数组。
-	uint8_t *_set;
-
-	/// @brief _set 字段是一个多少个字节的数组
-	uint32_t _size;
-} Bitset;
+typedef struct Bitset Bitset;
 
 /// @brief 在 StackHeap 上分配 Bitset 的内存并对他的字段进行初始化。
 /// @param bit_count 需要储存多少个位
