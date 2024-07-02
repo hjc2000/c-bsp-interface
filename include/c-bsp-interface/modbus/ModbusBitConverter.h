@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 
 /*
 	收发的数据为
@@ -56,3 +57,54 @@ typedef enum ModbusBitConverterUnit
 	/// @brief 以整体为一个单位，不拆分成记录
 	ModbusBitConverterUnit_Whole,
 } ModbusBitConverterUnit;
+
+#pragma region 转数字
+uint16_t ModbusBitConverter_ToUInt16(ModbusBitConverterUnit unit,
+									 uint8_t const *buffer, int32_t offset);
+
+int16_t ModbusBitConverter_ToInt16(ModbusBitConverterUnit unit,
+								   uint8_t const *buffer, int32_t offset);
+
+uint32_t ModbusBitConverter_ToUInt32(ModbusBitConverterUnit unit,
+									 uint8_t const *buffer, int32_t offset);
+int32_t ModbusBitConverter_ToInt32(ModbusBitConverterUnit unit,
+								   uint8_t const *buffer, int32_t offset);
+
+uint64_t ModbusBitConverter_ToUInt64(ModbusBitConverterUnit unit,
+									 uint8_t const *buffer, int32_t offset);
+
+int64_t ModbusBitConverter_ToInt64(ModbusBitConverterUnit unit,
+								   uint8_t const *buffer, int32_t offset);
+
+float ModbusBitConverter_ToFloat(ModbusBitConverterUnit unit,
+								 uint8_t const *buffer, int32_t offset);
+
+double ModbusBitConverter_ToDouble(ModbusBitConverterUnit unit,
+								   uint8_t const *buffer, int32_t offset);
+#pragma endregion
+
+#pragma region 转字节数组
+void ModbusBitConverter_GetBytesFromUInt16(ModbusBitConverterUnit unit,
+										   uint16_t value, uint8_t *out_buffer, int32_t offset);
+
+void ModbusBitConverter_GetBytesFromInt16(ModbusBitConverterUnit unit,
+										  int16_t value, uint8_t *out_buffer, int32_t offset);
+
+void ModbusBitConverter_GetBytesFromUInt32(ModbusBitConverterUnit unit,
+										   uint32_t value, uint8_t *out_buffer, int32_t offset);
+
+void ModbusBitConverter_GetBytesFromInt32(ModbusBitConverterUnit unit,
+										  int32_t value, uint8_t *out_buffer, int32_t offset);
+
+void ModbusBitConverter_GetBytesFromUInt64(ModbusBitConverterUnit unit,
+										   uint64_t value, uint8_t *out_buffer, int32_t offset);
+
+void ModbusBitConverter_GetBytesFromInt64(ModbusBitConverterUnit unit,
+										  int64_t value, uint8_t *out_buffer, int32_t offset);
+
+void ModbusBitConverter_GetBytesFromFloat(ModbusBitConverterUnit unit,
+										  float value, uint8_t *out_buffer, int32_t offset);
+
+void ModbusBitConverter_GetBytesFromDouble(ModbusBitConverterUnit unit,
+										   double value, uint8_t *out_buffer, int32_t offset);
+#pragma endregion
