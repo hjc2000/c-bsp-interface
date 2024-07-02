@@ -214,5 +214,12 @@ double ModbusBitConverter_ToDouble(ModbusBitConverterUnit unit,
 	ReverseByteArray((uint8_t *)(&value), 8);
 	return value;
 }
+#pragma endregion
+
+#pragma region 转字节数组
+void ModbusBitConverter_GetBytesFromUInt16(ModbusBitConverterUnit unit,
+										   uint16_t value, uint8_t *out_buffer, int32_t offset)
+{
+}
 
 #pragma endregion
