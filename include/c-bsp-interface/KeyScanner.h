@@ -4,13 +4,17 @@
 
 typedef struct KeyScanner KeyScanner;
 
+/// @brief 在栈堆上分配一个 KeyScanner 并初始化。
+/// @param key_count
+/// @param delay_milliseconds
+/// @return
 KeyScanner *KeyScanner_StackHeapAlloc(int32_t key_count,
 									  void (*delay_milliseconds)(uint32_t ms));
 
 /// @brief 设置一个按键到扫描器中指定的位置。
 /// @param
-/// @param index
-/// @param key
+/// @param index 按键的索引。不要大于 key_count - 1。
+/// @param key 要被放入按键扫描器的按键。
 void KeyScanner_SetKey(KeyScanner *this, int32_t index, IKey *key);
 
 /// @brief 执行扫描

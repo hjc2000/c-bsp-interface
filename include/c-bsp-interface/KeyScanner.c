@@ -48,8 +48,7 @@ KeyScanner *KeyScanner_StackHeapAlloc(int32_t key_count,
 		return 0;
 	}
 
-	KeyScanner *this = (KeyScanner *)StackHeapAlignAlloc(sizeof(KeyScanner),
-														 sizeof(KeyScanner *));
+	KeyScanner *this = (KeyScanner *)StackHeapAlignAlloc(sizeof(KeyScanner), 4);
 
 	// 能够装下 key_count 个指针的指针数组
 	this->_keys = StackHeapAlignAlloc(sizeof(IKey *) * key_count, 4);

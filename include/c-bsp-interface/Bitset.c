@@ -19,7 +19,7 @@ Bitset *Bitset_StackHeapAlloc(int32_t bit_count)
 		return 0;
 	}
 
-	Bitset *bitset = (Bitset *)StackHeapAlignAlloc(sizeof(Bitset), sizeof(Bitset *));
+	Bitset *bitset = (Bitset *)StackHeapAlignAlloc(sizeof(Bitset), 4);
 	int32_t buffer_size = bit_count / 8;
 	if (bit_count % 8 != 0)
 	{

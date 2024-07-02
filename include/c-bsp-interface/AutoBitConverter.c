@@ -1,6 +1,19 @@
 #include "AutoBitConverter.h"
 #include <c-bsp-interface/BitConverter.h>
 #include <c-bsp-interface/Reverse.h>
+#include <c-bsp-interface/memory/StackHeap.h>
+
+typedef struct AutoBitConverter
+{
+	Endian _remote_endian;
+} AutoBitConverter;
+
+AutoBitConverter *AutoBitConverter_StackHeapAlloc(Endian remote_endian)
+{
+	AutoBitConverter *this = StackHeapAlignAlloc(sizeof(AutoBitConverter), 4);
+	this->_remote_endian = remote_endian;
+	return this;
+}
 
 static uint8_t AutoBitConverter_ShouldReverse(AutoBitConverter *this)
 {

@@ -4,10 +4,9 @@
 
 /// @brief 在通信时需要在本机字节序和远程字节序之间转换。本结构体提供了一系列方法来进行这种操作。
 /// 设置好远程的字节序后，在转换时如果远程字节序与本机不一样，就会反转字节数组。
-typedef struct AutoBitConverter
-{
-	Endian _remote_endian;
-} AutoBitConverter;
+typedef struct AutoBitConverter AutoBitConverter;
+
+AutoBitConverter *AutoBitConverter_StackHeapAlloc(Endian remote_endian);
 
 #pragma region 转数字
 uint16_t AutoBitConverter_ToUInt16(AutoBitConverter *this, uint8_t const *buffer, int32_t offset);
