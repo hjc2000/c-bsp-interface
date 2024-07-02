@@ -267,6 +267,8 @@ void ModbusBitConverter_GetBytesFromUInt32(ModbusBitConverterUnit unit,
 		ReverseByteArray(out_buffer + offset, 4);
 	}
 
+	// 本机是小端序不用先经过整体翻转
+
 	// 逐个记录进行翻转，也就是逐 2 字节进行翻转
 	ReverseByteArrayPerElement(out_buffer + offset, 2, 2);
 }
