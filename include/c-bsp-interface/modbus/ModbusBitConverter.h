@@ -67,6 +67,7 @@ int16_t ModbusBitConverter_ToInt16(ModbusBitConverterUnit unit,
 
 uint32_t ModbusBitConverter_ToUInt32(ModbusBitConverterUnit unit,
 									 uint8_t const *buffer, int32_t offset);
+
 int32_t ModbusBitConverter_ToInt32(ModbusBitConverterUnit unit,
 								   uint8_t const *buffer, int32_t offset);
 
