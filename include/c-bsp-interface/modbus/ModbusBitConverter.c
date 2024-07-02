@@ -34,36 +34,28 @@ uint32_t ModbusBitConverter_ToUInt32(ModbusBitConverterUnit unit,
 {
 	uint32_t const *p = (uint32_t const *)(buffer + offset);
 	uint32_t value = *p;
-	if (LocalHostEndian() == LittleEndian)
+
+	// 以整体为转换单位
+	if (unit == ModbusBitConverterUnit_Whole)
 	{
-		if (unit == ModbusBitConverterUnit_Whole)
+		if (LocalHostEndian() == BigEndian)
 		{
-			ReverseByteArray((uint8_t *)(&value), 4);
 			return value;
 		}
 
-		// 以记录为单位翻转
-		ReverseByteArray((uint8_t *)(&value), 2);
-		ReverseByteArray((uint8_t *)(&value + 2), 2);
+		ReverseByteArray((uint8_t *)(&value), 4);
 		return value;
 	}
 
-	// 大端序
-	if (unit == ModbusBitConverterUnit_Whole)
+	// 以记录为转换单位
+	// 逐 2 字节翻转
+	ReverseByteArrayPerElement((uint8_t *)(&value), 2, 2);
+	if (LocalHostEndian() == LittleEndian)
 	{
-		// 以整体为转换单位，因为接收就是大端序，所以不用翻转
 		return value;
 	}
 
-	// 以记录为单位翻转
-
-	// 先逐 2 字节翻转
-	for (int i = 0; i < sizeof(uint32_t); i += 2)
-	{
-		ReverseByteArray((uint8_t *)(&value + i), 2);
-	}
-
-	// 最后整体翻转
+	// 如果本机是大端序，还要整体翻转一次
 	ReverseByteArray((uint8_t *)(&value), 4);
 	return value;
 }
