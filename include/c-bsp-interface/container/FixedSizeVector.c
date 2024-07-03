@@ -30,6 +30,11 @@ int32_t FixedSizeVector_Size(FixedSizeVector *this)
 	return this->_pos;
 }
 
+void FixedSizeVector_Clear(FixedSizeVector *this)
+{
+	this->_pos = 0;
+}
+
 uint8_t FixedSizeVector_PushBack(FixedSizeVector *this, void *element)
 {
 	if ((this->_pos + this->_element_size) > this->_max_size)

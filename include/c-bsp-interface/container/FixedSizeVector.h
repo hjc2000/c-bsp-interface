@@ -20,6 +20,10 @@ uint8_t *FixedSizeVector_Buffer(FixedSizeVector *this);
 /// @return
 int32_t FixedSizeVector_Size(FixedSizeVector *this);
 
+/// @brief 清空所有数据
+/// @param
+void FixedSizeVector_Clear(FixedSizeVector *this);
+
 /// @brief 在 FixedSizeVector 末尾添加一个元素。
 /// @param
 /// @param element 要被添加的元素的指针。会将指针指向的内存复制到向量中。
