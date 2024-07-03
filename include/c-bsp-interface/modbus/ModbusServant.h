@@ -5,16 +5,6 @@
 #include <c-bsp-interface/modbus/ModbusCrc16.h>
 #include <stdint.h>
 
-/// @brief 发送数据时使用的单位
-typedef enum ModbusServant_SendingUnit
-{
-	/// @brief 以记录为单位。这是 modbus 保持寄存器的最小单位。
-	ModbusServant_SendingUnit_Record,
-
-	/// @brief 以整体为一个单位，不拆分成记录
-	ModbusServant_ReverseMethod_Whole,
-} ModbusServant_SendingUnit;
-
 /// @brief modbus 从机
 typedef struct ModbusServant
 {
@@ -34,6 +24,9 @@ typedef struct ModbusServant
 	void (*ReadHoldingRegistersCallback)(uint32_t data_addr, int32_t record_count);
 
 	/// @brief 功能码 0x10，写一组保持寄存器。
+	/// @param data_addr 数据地址
+	/// @param buffer 主机发过来的要写入的数据值组成的字节数组。应用层自己选择将这里面的字节解释成什么样。
+	/// @param count buffer 的字节数。
 	void (*WriteHoldingRegistersCallback)(uint32_t data_addr, uint8_t *buffer, int32_t count);
 #pragma endregion
 
