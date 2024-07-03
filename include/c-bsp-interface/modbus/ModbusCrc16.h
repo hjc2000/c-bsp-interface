@@ -12,7 +12,7 @@ typedef struct ModbusCrc16
 } ModbusCrc16;
 
 /// @brief 传入一个 ModbusCrc16 对象进行初始化。
-/// @param
+/// @param o
 void ModbusCrc16_Init(ModbusCrc16 *o);
 
 /// @brief 开始新的一轮校验时需要重置 CRC16 寄存器，否则添加计算的字节会与上一轮校验的字节
@@ -21,33 +21,33 @@ void ModbusCrc16_Init(ModbusCrc16 *o);
 void ModbusCrc16_ResetRegister(ModbusCrc16 *o);
 
 /// @brief 添加一个数进行计算。
-/// @param
+/// @param o
 /// @param data
 void ModbusCrc16_Add(ModbusCrc16 *o, uint8_t data);
 
 /// @brief 添加一个数组中的数进行计算。会逐字节添加，进行计算。
-/// @param
+/// @param o
 /// @param datas
 /// @param count
 void ModbusCrc16_AddArray(ModbusCrc16 *o, uint8_t *datas, uint32_t count);
 
 /// @brief 获取 CRC16 寄存器的值
-/// @param
+/// @param o
 /// @return
 uint16_t ModbusCrc16_Register(ModbusCrc16 *o);
 
 /// @brief 获取 CRC16 寄存器的高字节
-/// @param
+/// @param o
 /// @return
 uint8_t ModbusCrc16_HighByte(ModbusCrc16 *o);
 
 /// @brief 获取 CRC16 寄存器的低字节
-/// @param
+/// @param o
 /// @return
 uint8_t ModbusCrc16_LowByte(ModbusCrc16 *o);
 
 /// @brief 将本对象的 CRC16 寄存器与另一个 CRC16 寄存器对比，看是否相等。
-/// @param
+/// @param o
 /// @param crc16_register_buffer CRC16 寄存器的 2 个字节被存放在此缓冲区中。
 ///
 /// @param crc16_register_buffer_endian crc16_register_buffer

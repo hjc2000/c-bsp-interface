@@ -29,7 +29,7 @@ void ModbusServant_Init(ModbusServant *o,
 	o->_servant_address = servant_address;
 	o->_crc16_endian = crc16_endian;
 	o->_bit_converter_unit = bit_converter_unit;
-	o->_send_buffer = Stack_StackHeapAlloc(512);
+	o->_send_buffer_stack = Stack_StackHeapAlloc(512);
 	ModbusCrc16_Init(&o->_crc);
 }
 
@@ -75,8 +75,4 @@ void ModbusServant_ParseReceivedBuffer(ModbusServant *o,
 
 	// 普通帧
 	HandlePdu(o, pdu, count - 2);
-}
-
-void ModbusServant_PushBackUInt32(ModbusServant *o, uint32_t value)
-{
 }
