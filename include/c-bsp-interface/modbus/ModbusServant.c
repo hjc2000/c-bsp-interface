@@ -24,12 +24,14 @@ static void HandlePdu(ModbusServant *o, uint8_t *pdu, int32_t count)
 void ModbusServant_Init(ModbusServant *o,
 						uint8_t servant_address,
 						Endian crc16_endian,
-						ModbusBitConverterUnit bit_converter_unit)
+						ModbusBitConverterUnit bit_converter_unit,
+						ModbusMultibyteSizeEnum (*get_multibyte_data_size)(uint32_t data_addr))
 {
 	o->_servant_address = servant_address;
 	o->_crc16_endian = crc16_endian;
 	o->_bit_converter_unit = bit_converter_unit;
 	o->_send_buffer_stack = Stack_StackHeapAlloc(512);
+	o->GetMultibyteDataSize = get_multibyte_data_size;
 	ModbusCrc16_Init(&o->_crc);
 }
 
