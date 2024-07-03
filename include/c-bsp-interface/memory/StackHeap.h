@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 // 栈堆的总大小
-#define STACK_HEAP_SIZE 1024
+#define STACK_HEAP_SIZE 1024 * 4
 
 /// @brief 在栈堆上分配一段内存。
 /// @note 栈堆就是将一个静态数组作为内存空间，维护一个栈的数据结构，调用本函数请求进行空间

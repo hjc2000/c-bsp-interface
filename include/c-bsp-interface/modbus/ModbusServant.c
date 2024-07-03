@@ -1,4 +1,5 @@
 #include "ModbusServant.h"
+#include <c-bsp-interface/memory/StackHeap.h>
 
 /// @brief 处理广播的 PDU
 /// @note 被调用说明 CRC 校验通过了。
@@ -20,16 +21,16 @@ static void HandlePdu(ModbusServant *this, uint8_t *pdu, int32_t count)
 {
 }
 
-#pragma region 公共函数
 void ModbusServant_Init(ModbusServant *this,
 						uint8_t servant_address,
-						Endian crc16_endian)
+						Endian crc16_endian,
+						ModbusBitConverterUnit bit_converter_unit)
 {
 	this->_servant_address = servant_address;
 	this->_crc16_endian = crc16_endian;
-
-	// modbus 一律是大端序
-	this->_auto_bit_converter = AutoBitConverter_StackHeapAlloc(BigEndian);
+	this->_bit_converter_unit = bit_converter_unit;
+	this->_send_buffer_size = 512;
+	this->_send_buffer = StackHeapAlloc(this->_send_buffer_size);
 	ModbusCrc16_Init(&this->_crc);
 }
 
@@ -77,10 +78,6 @@ void ModbusServant_ParseReceivedBuffer(ModbusServant *this,
 	HandlePdu(this, pdu, count - 2);
 }
 
-#pragma endregion
-
-void ModbusServant_SendUInt32(ModbusServant *this,
-							  uint32_t value,
-							  ModbusServant_SendingUnit unit)
+void ModbusServant_PushBackUInt32(ModbusServant *this, uint32_t value)
 {
 }

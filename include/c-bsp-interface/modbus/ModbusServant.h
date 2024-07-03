@@ -1,6 +1,6 @@
 #pragma once
-#include <c-bsp-interface/AutoBitConverter.h>
 #include <c-bsp-interface/Endian.h>
+#include <c-bsp-interface/modbus/ModbusBitConverter.h>
 #include <c-bsp-interface/modbus/ModbusCrc16.h>
 #include <stdint.h>
 
@@ -22,7 +22,9 @@ typedef struct ModbusServant
 	uint8_t _servant_address;
 	ModbusCrc16 _crc;
 	Endian _crc16_endian;
-	AutoBitConverter *_auto_bit_converter;
+	ModbusBitConverterUnit _bit_converter_unit;
+	uint8_t *_send_buffer;
+	int32_t _send_buffer_size;
 #pragma endregion
 
 #pragma region 主机请求回调
@@ -42,13 +44,12 @@ typedef struct ModbusServant
 /// @brief 准备一个静态的 ModbusServant 对象，传进来进行初始化。
 /// @param
 /// @param servant_address
-/// @param red_led
-/// @param green_led
-/// @param key0
-/// @param key1
+/// @param crc16_endian
+/// @param bit_converter_unit
 void ModbusServant_Init(ModbusServant *this,
 						uint8_t servant_address,
-						Endian crc16_endian);
+						Endian crc16_endian,
+						ModbusBitConverterUnit bit_converter_unit);
 
 /// @brief 将接收缓冲区送给 ModbusServant 进行分析。分析完后会触发回调。
 /// @param
@@ -58,17 +59,7 @@ void ModbusServant_Init(ModbusServant *this,
 void ModbusServant_ParseReceivedBuffer(ModbusServant *this,
 									   uint8_t *buffer, int32_t offset, int32_t count);
 
-/// @brief 发送一个 uint32_t 数据。
+/// @brief 在发送缓冲区尾部添加一个 uint32_t 数据。
 /// @param
 /// @param value
-///
-/// @param unit 这个 uint32_t 数据要用什么单位发送。
-/// @example 例如 value = 0x12345678。
-/// @li 如果以记录为单位发送，则低 16 位作为第 1 个记录，用大端序发送。
-/// 	高 16 位作为第 2 个记录，用大端序发送。则字节流为 0x56, 0x78, 0x12, 0x34，
-///		从左往右依次发送。
-/// @li 如果以整体为一个单位发送，则整体用大端序发送。发送的字节流为：0x12, 0x34, 0x56, 0x78
-///		从左往右依次发送。
-void ModbusServant_SendUInt32(ModbusServant *this,
-							  uint32_t value,
-							  ModbusServant_SendingUnit unit);
+void ModbusServant_PushBackUInt32(ModbusServant *this, uint32_t value);
