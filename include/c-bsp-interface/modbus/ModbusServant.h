@@ -24,16 +24,18 @@ typedef struct ModbusServant
 #pragma endregion
 
 #pragma region 主机请求回调
-	/// @brief 功能码 0x03，读一组保持寄存器。
-	/// @param data_addr 数据地址
-	/// @param record_count 记录数
-	void (*ReadHoldingRegistersCallback)(uint32_t data_addr, int32_t record_count);
+	uint8_t (*ReadByteCallback)(uint32_t data_addr);
+	uint16_t (*Read2ByteCallback)(uint32_t data_addr);
+	uint32_t (*Read4ByteCallback)(uint32_t data_addr);
+	uint64_t (*Read8ByteCallback)(uint32_t data_addr);
 
-	/// @brief 功能码 0x10，写一组保持寄存器。
-	/// @param data_addr 数据地址
-	/// @param buffer 主机发过来的要写入的数据值组成的字节数组。应用层自己选择将这里面的字节解释成什么样。
-	/// @param count buffer 的字节数。
-	void (*WriteHoldingRegistersCallback)(uint32_t data_addr, uint8_t *buffer, int32_t count);
+	void (*WriteByteCallback)(uint32_t data_addr, uint8_t value);
+	void (*Write2ByteCallback)(uint32_t data_addr, uint16_t value);
+	void (*Write4ByteCallback)(uint32_t data_addr, uint32_t value);
+	void (*Write8ByteCallback)(uint32_t data_addr, uint64_t value);
+
+	uint8_t (*ReadBitCallback)(uint32_t data_addr);
+	void (*WriteBitCallback)(uint32_t data_addr, uint8_t value);
 #pragma endregion
 
 } ModbusServant;
