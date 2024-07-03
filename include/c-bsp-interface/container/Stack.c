@@ -15,7 +15,7 @@ Stack *Stack_StackHeapAlloc(int32_t max_size)
 	o->_buffer = StackHeapAlloc(max_size);
 	o->_max_size = max_size;
 	o->_sp = 0;
-	return 0;
+	return o;
 }
 
 void Stack_Clear(Stack *o)

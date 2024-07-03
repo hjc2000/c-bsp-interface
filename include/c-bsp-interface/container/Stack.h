@@ -9,7 +9,7 @@ typedef struct Stack Stack;
 Stack *Stack_StackHeapAlloc(int32_t max_size);
 
 /// @brief 清空栈。
-/// @param
+/// @param o
 void Stack_Clear(Stack *o);
 
 /// @brief 入栈指定大小的数据
@@ -25,16 +25,16 @@ uint8_t Stack_Push(Stack *o, void *data, int32_t size);
 uint8_t Stack_Pop(Stack *o, void *out, int32_t size);
 
 /// @brief 获取栈的底层缓冲区。
-/// @param
+/// @param o
 /// @return
 uint8_t *Stack_Buffer(Stack *o);
 
 /// @brief 栈的最大字节数。即内部缓冲区的大小。
-/// @param
+/// @param o
 /// @return
 int32_t Stack_MaxSize(Stack *o);
 
 /// @brief sp 指向的是栈顶的空格子。
-/// @param
+/// @param o
 /// @return
 int32_t Stack_Sp(Stack *o);
