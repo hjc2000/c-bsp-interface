@@ -23,7 +23,7 @@ typedef struct ModbusServant
 	ModbusMultibyteSizeEnum (*GetMultibyteDataSize)(uint32_t data_addr);
 #pragma endregion
 
-#pragma region 主机请求回调
+#pragma region 读写数据回调
 	uint8_t (*ReadByteCallback)(uint32_t data_addr);
 	uint16_t (*Read2ByteCallback)(uint32_t data_addr);
 	uint32_t (*Read4ByteCallback)(uint32_t data_addr);
