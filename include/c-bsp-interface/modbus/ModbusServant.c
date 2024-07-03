@@ -7,7 +7,7 @@
 /// @param
 /// @param pdu modbus PDU
 /// @param count pdu 的字节数
-static void HandleBrocastPdu(ModbusServant *this, uint8_t *pdu, int32_t count)
+static void HandleBrocastPdu(ModbusServant *o, uint8_t *pdu, int32_t count)
 {
 }
 
@@ -17,23 +17,23 @@ static void HandleBrocastPdu(ModbusServant *this, uint8_t *pdu, int32_t count)
 /// @param
 /// @param pdu modbus PDU
 /// @param count pdu 的字节数
-static void HandlePdu(ModbusServant *this, uint8_t *pdu, int32_t count)
+static void HandlePdu(ModbusServant *o, uint8_t *pdu, int32_t count)
 {
 }
 
-void ModbusServant_Init(ModbusServant *this,
+void ModbusServant_Init(ModbusServant *o,
 						uint8_t servant_address,
 						Endian crc16_endian,
 						ModbusBitConverterUnit bit_converter_unit)
 {
-	this->_servant_address = servant_address;
-	this->_crc16_endian = crc16_endian;
-	this->_bit_converter_unit = bit_converter_unit;
-	this->_send_buffer = Stack_StackHeapAlloc(512);
-	ModbusCrc16_Init(&this->_crc);
+	o->_servant_address = servant_address;
+	o->_crc16_endian = crc16_endian;
+	o->_bit_converter_unit = bit_converter_unit;
+	o->_send_buffer = Stack_StackHeapAlloc(512);
+	ModbusCrc16_Init(&o->_crc);
 }
 
-void ModbusServant_ParseReceivedBuffer(ModbusServant *this,
+void ModbusServant_ParseReceivedBuffer(ModbusServant *o,
 									   uint8_t *buffer, int32_t offset, int32_t count)
 {
 	if (count <= 3)
@@ -45,7 +45,7 @@ void ModbusServant_ParseReceivedBuffer(ModbusServant *this,
 	}
 
 	uint8_t *adu = buffer + offset;
-	if (adu[0] != this->_servant_address && adu[0] != 0)
+	if (adu[0] != o->_servant_address && adu[0] != 0)
 	{
 		// 站号与本站号不匹配，且不等于 0，即不是广播帧。
 		return;
@@ -53,11 +53,11 @@ void ModbusServant_ParseReceivedBuffer(ModbusServant *this,
 
 	// 站号匹配或者是广播帧
 	// 进行 CRC 校验
-	ModbusCrc16_ResetRegister(&this->_crc);
-	ModbusCrc16_AddArray(&this->_crc, adu, count - 2);
-	uint8_t crc16_check_result = ModbusCrc16_CompareRegister(&this->_crc,
+	ModbusCrc16_ResetRegister(&o->_crc);
+	ModbusCrc16_AddArray(&o->_crc, adu, count - 2);
+	uint8_t crc16_check_result = ModbusCrc16_CompareRegister(&o->_crc,
 															 adu + count - 2,
-															 this->_crc16_endian);
+															 o->_crc16_endian);
 	if (!crc16_check_result)
 	{
 		// CRC 校验错误时从机应该沉默。
@@ -69,14 +69,14 @@ void ModbusServant_ParseReceivedBuffer(ModbusServant *this,
 	if (adu[0] == 0)
 	{
 		// 广播帧
-		HandleBrocastPdu(this, pdu, count - 2);
+		HandleBrocastPdu(o, pdu, count - 2);
 		return;
 	}
 
 	// 普通帧
-	HandlePdu(this, pdu, count - 2);
+	HandlePdu(o, pdu, count - 2);
 }
 
-void ModbusServant_PushBackUInt32(ModbusServant *this, uint32_t value)
+void ModbusServant_PushBackUInt32(ModbusServant *o, uint32_t value)
 {
 }

@@ -12,37 +12,37 @@ typedef struct FixedSizeVector
 
 FixedSizeVector *FixedSizeVector_StackHeapAlloc(int32_t element_size, int32_t max_element_count)
 {
-	FixedSizeVector *this = StackHeapAlignAlloc(sizeof(FixedSizeVector), 4);
-	this->_max_size = max_element_count * element_size;
-	this->_buffer = StackHeapAlloc(this->_max_size);
-	this->_pos = 0;
-	this->_element_size = element_size;
-	return this;
+	FixedSizeVector *o = StackHeapAlignAlloc(sizeof(FixedSizeVector), 4);
+	o->_max_size = max_element_count * element_size;
+	o->_buffer = StackHeapAlloc(o->_max_size);
+	o->_pos = 0;
+	o->_element_size = element_size;
+	return o;
 }
 
-uint8_t *FixedSizeVector_Buffer(FixedSizeVector *this)
+uint8_t *FixedSizeVector_Buffer(FixedSizeVector *o)
 {
-	return this->_buffer;
+	return o->_buffer;
 }
 
-int32_t FixedSizeVector_Size(FixedSizeVector *this)
+int32_t FixedSizeVector_Size(FixedSizeVector *o)
 {
-	return this->_pos;
+	return o->_pos;
 }
 
-void FixedSizeVector_Clear(FixedSizeVector *this)
+void FixedSizeVector_Clear(FixedSizeVector *o)
 {
-	this->_pos = 0;
+	o->_pos = 0;
 }
 
-uint8_t FixedSizeVector_PushBack(FixedSizeVector *this, void *element)
+uint8_t FixedSizeVector_PushBack(FixedSizeVector *o, void *element)
 {
-	if ((this->_pos + this->_element_size) > this->_max_size)
+	if ((o->_pos + o->_element_size) > o->_max_size)
 	{
 		return 0;
 	}
 
-	memcpy(this->_buffer + this->_pos, element, this->_element_size);
-	this->_pos += this->_element_size;
+	memcpy(o->_buffer + o->_pos, element, o->_element_size);
+	o->_pos += o->_element_size;
 	return 1;
 }

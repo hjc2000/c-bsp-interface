@@ -46,7 +46,7 @@ typedef struct ModbusServant
 /// @param servant_address
 /// @param crc16_endian
 /// @param bit_converter_unit
-void ModbusServant_Init(ModbusServant *this,
+void ModbusServant_Init(ModbusServant *o,
 						uint8_t servant_address,
 						Endian crc16_endian,
 						ModbusBitConverterUnit bit_converter_unit);
@@ -56,18 +56,18 @@ void ModbusServant_Init(ModbusServant *this,
 /// @param buffer
 /// @param offset
 /// @param count
-void ModbusServant_ParseReceivedBuffer(ModbusServant *this,
+void ModbusServant_ParseReceivedBuffer(ModbusServant *o,
 									   uint8_t *buffer, int32_t offset, int32_t count);
 
 /// @brief 在发送缓冲向量尾部添加一个 uint32_t 数据。
 /// @param
 /// @param value
-void ModbusServant_PushBackUInt32(ModbusServant *this, uint32_t value);
+void ModbusServant_PushBackUInt32(ModbusServant *o, uint32_t value);
 
 /// @brief 对当前发送缓冲向量计算 CRC16 并将 CRC16 放到向量末尾。
 /// @param
-void ModbusServant_PushBackCrc16(ModbusServant *this);
+void ModbusServant_PushBackCrc16(ModbusServant *o);
 
 /// @brief 将发送缓冲向量发送出去。
 /// @param
-void ModbusServant_Send(ModbusServant *this);
+void ModbusServant_Send(ModbusServant *o);

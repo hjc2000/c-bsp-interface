@@ -11,53 +11,53 @@ typedef struct Stack
 
 Stack *Stack_StackHeapAlloc(int32_t max_size)
 {
-	Stack *this = StackHeapAlignAlloc(sizeof(Stack), 4);
-	this->_buffer = StackHeapAlloc(max_size);
-	this->_max_size = max_size;
-	this->_sp = 0;
+	Stack *o = StackHeapAlignAlloc(sizeof(Stack), 4);
+	o->_buffer = StackHeapAlloc(max_size);
+	o->_max_size = max_size;
+	o->_sp = 0;
 	return 0;
 }
 
-void Stack_Clear(Stack *this)
+void Stack_Clear(Stack *o)
 {
-	this->_sp = 0;
+	o->_sp = 0;
 }
 
-uint8_t Stack_Push(Stack *this, void *data, int32_t size)
+uint8_t Stack_Push(Stack *o, void *data, int32_t size)
 {
-	if (this->_sp + size > this->_max_size)
+	if (o->_sp + size > o->_max_size)
 	{
 		return 0;
 	}
 
-	memcpy(this->_buffer + this->_sp, data, size);
-	this->_sp += size;
+	memcpy(o->_buffer + o->_sp, data, size);
+	o->_sp += size;
 	return 1;
 }
 
-uint8_t Stack_Pop(Stack *this, void *out, int32_t size)
+uint8_t Stack_Pop(Stack *o, void *out, int32_t size)
 {
-	if (this->_sp - size < 0)
+	if (o->_sp - size < 0)
 	{
 		return 0;
 	}
 
-	this->_sp -= size;
-	memcpy(out, this->_buffer + this->_sp, size);
+	o->_sp -= size;
+	memcpy(out, o->_buffer + o->_sp, size);
 	return 1;
 }
 
-uint8_t *Stack_Buffer(Stack *this)
+uint8_t *Stack_Buffer(Stack *o)
 {
-	return this->_buffer;
+	return o->_buffer;
 }
 
-int32_t Stack_MaxSize(Stack *this)
+int32_t Stack_MaxSize(Stack *o)
 {
-	return this->_max_size;
+	return o->_max_size;
 }
 
-int32_t Stack_Sp(Stack *this)
+int32_t Stack_Sp(Stack *o)
 {
-	return this->_sp;
+	return o->_sp;
 }
