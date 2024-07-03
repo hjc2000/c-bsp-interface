@@ -1,8 +1,8 @@
 #include "ModbusServant.h"
 #include <c-bsp-interface/container/Stack.h>
 #include <c-bsp-interface/memory/StackHeap.h>
-#include <c-bsp-interface/modbus/FunctionCode.h>
 #include <c-bsp-interface/modbus/ModbusCrc16.h>
+#include <c-bsp-interface/modbus/ModbusFunctionCode.h>
 
 /// @brief modbus 从机
 typedef struct ModbusServant
@@ -14,7 +14,7 @@ typedef struct ModbusServant
 	ModbusBitConverterUnit _bit_converter_unit;
 	Stack *_send_buffer_stack;
 
-#pragma region 读写数据回调函数
+#pragma region 读写回调函数
 	/// @brief 传入数据地址，返回这个数据是对应什么 ModbusMultibyteSizeEnum
 	/// @param data_addr 数据地址
 	/// @return 这个地址的数据是对应什么 ModbusMultibyteSizeEnum
@@ -48,6 +48,7 @@ static void HandleReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 /// @param pdu_size pdu 的字节数
 static void HandlePdu(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 {
+	HandleReadCoils(o, pdu, pdu_size);
 }
 
 /// @brief 处理广播的 PDU
