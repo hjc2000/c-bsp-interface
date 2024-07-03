@@ -18,6 +18,11 @@ Stack *Stack_StackHeapAlloc(int32_t max_size)
 	return 0;
 }
 
+void Stack_Clear(Stack *this)
+{
+	this->_sp = 0;
+}
+
 uint8_t Stack_Push(Stack *this, void *data, int32_t size)
 {
 	if (this->_sp + size > this->_max_size)

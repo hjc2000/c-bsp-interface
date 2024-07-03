@@ -8,6 +8,10 @@ typedef struct Stack Stack;
 /// @return
 Stack *Stack_StackHeapAlloc(int32_t max_size);
 
+/// @brief 清空栈。
+/// @param
+void Stack_Clear(Stack *this);
+
 /// @brief 入栈指定大小的数据
 /// @param data 要入栈的数据的指针。
 /// @param size 要入栈的字节数。
