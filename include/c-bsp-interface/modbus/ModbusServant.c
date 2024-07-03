@@ -29,8 +29,7 @@ void ModbusServant_Init(ModbusServant *this,
 	this->_servant_address = servant_address;
 	this->_crc16_endian = crc16_endian;
 	this->_bit_converter_unit = bit_converter_unit;
-	this->_send_buffer_size = 512;
-	this->_send_buffer = StackHeapAlloc(this->_send_buffer_size);
+	this->_send_buffer = Stack_StackHeapAlloc(512);
 	ModbusCrc16_Init(&this->_crc);
 }
 

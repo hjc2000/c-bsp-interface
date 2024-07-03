@@ -41,3 +41,18 @@ uint8_t Stack_Pop(Stack *this, void *out, int32_t size)
 	memcpy(out, this->_buffer + this->_sp, size);
 	return 1;
 }
+
+uint8_t *Stack_Buffer(Stack *this)
+{
+	return this->_buffer;
+}
+
+int32_t Stack_MaxSize(Stack *this)
+{
+	return this->_max_size;
+}
+
+int32_t Stack_Sp(Stack *this)
+{
+	return this->_sp;
+}

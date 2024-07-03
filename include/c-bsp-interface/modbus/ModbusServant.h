@@ -1,5 +1,6 @@
 #pragma once
 #include <c-bsp-interface/Endian.h>
+#include <c-bsp-interface/container/Stack.h>
 #include <c-bsp-interface/modbus/ModbusBitConverter.h>
 #include <c-bsp-interface/modbus/ModbusCrc16.h>
 #include <stdint.h>
@@ -23,8 +24,7 @@ typedef struct ModbusServant
 	ModbusCrc16 _crc;
 	Endian _crc16_endian;
 	ModbusBitConverterUnit _bit_converter_unit;
-	uint8_t *_send_buffer;
-	int32_t _send_buffer_size;
+	Stack *_send_buffer;
 #pragma endregion
 
 #pragma region 主机请求回调

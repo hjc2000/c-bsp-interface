@@ -19,3 +19,18 @@ uint8_t Stack_Push(Stack *this, void *data, int32_t size);
 /// @param size 要出栈的字节数。
 /// @return 成功返回 true，失败返回 false。
 uint8_t Stack_Pop(Stack *this, void *out, int32_t size);
+
+/// @brief 获取栈的底层缓冲区。
+/// @param
+/// @return
+uint8_t *Stack_Buffer(Stack *this);
+
+/// @brief 栈的最大字节数。即内部缓冲区的大小。
+/// @param
+/// @return
+int32_t Stack_MaxSize(Stack *this);
+
+/// @brief sp 指向的是栈顶的空格子。
+/// @param
+/// @return
+int32_t Stack_Sp(Stack *this);
