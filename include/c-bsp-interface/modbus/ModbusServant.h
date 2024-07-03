@@ -1,29 +1,19 @@
 #pragma once
 #include <c-bsp-interface/Endian.h>
-#include <c-bsp-interface/container/Stack.h>
 #include <c-bsp-interface/modbus/ModbusBitConverter.h>
-#include <c-bsp-interface/modbus/ModbusCrc16.h>
 #include <c-bsp-interface/modbus/ModbusMultibyteSizeEnum.h>
 #include <stdint.h>
 
-/// @brief modbus 从机
-typedef struct ModbusServant
+/// @brief 读写回调函数中心
+typedef struct ModbusServantReadWriteCallbackHub
 {
-#pragma region private
-	/// @brief 从机站号
-	uint8_t _servant_address;
-	ModbusCrc16 _crc;
-	Endian _crc16_endian;
-	ModbusBitConverterUnit _bit_converter_unit;
-	Stack *_send_buffer_stack;
-
 	/// @brief 传入数据地址，返回这个数据是对应什么 ModbusMultibyteSizeEnum
+	/// @note 此函数指针必须设置。
+	///
 	/// @param data_addr 数据地址
 	/// @return 这个地址的数据是对应什么 ModbusMultibyteSizeEnum
 	ModbusMultibyteSizeEnum (*GetMultibyteDataSize)(uint32_t data_addr);
-#pragma endregion
 
-#pragma region 读写数据回调
 	uint8_t (*ReadByteCallback)(uint32_t data_addr);
 	uint16_t (*Read2ByteCallback)(uint32_t data_addr);
 	uint32_t (*Read4ByteCallback)(uint32_t data_addr);
@@ -36,21 +26,24 @@ typedef struct ModbusServant
 
 	uint8_t (*ReadBitCallback)(uint32_t data_addr);
 	void (*WriteBitCallback)(uint32_t data_addr, uint8_t value);
-#pragma endregion
+} ModbusServantReadWriteCallbackHub;
 
-} ModbusServant;
+/// @brief modbus 从机
+typedef struct ModbusServant ModbusServant;
 
 /// @brief 准备一个静态的 ModbusServant 对象，传进来进行初始化。
 /// @param o
 /// @param servant_address 本从站的地址（站号）。
 /// @param crc16_endian CRC16 的 2 个字节用什么字节序存放。
 /// @param bit_converter_unit 比特转换的单位。
-/// @param get_multibyte_data_size 传入数据地址，返回这个数据是对应什么 ModbusMultibyteSizeEnum
+///
+/// @param read_write_callback_hub 调用者在栈上构造此结构体，为字段赋值后将指针传进来，
+/// 随后这个对象可被销毁，内部不会引用此对象。
 void ModbusServant_Init(ModbusServant *o,
 						uint8_t servant_address,
 						Endian crc16_endian,
 						ModbusBitConverterUnit bit_converter_unit,
-						ModbusMultibyteSizeEnum (*get_multibyte_data_size)(uint32_t data_addr));
+						ModbusServantReadWriteCallbackHub *read_write_callback_hub);
 
 /// @brief 将接收缓冲区送给 ModbusServant 进行分析。分析完后会触发回调。
 /// @param o
