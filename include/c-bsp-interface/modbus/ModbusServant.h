@@ -59,7 +59,15 @@ void ModbusServant_Init(ModbusServant *this,
 void ModbusServant_ParseReceivedBuffer(ModbusServant *this,
 									   uint8_t *buffer, int32_t offset, int32_t count);
 
-/// @brief 在发送缓冲区尾部添加一个 uint32_t 数据。
+/// @brief 在发送缓冲向量尾部添加一个 uint32_t 数据。
 /// @param
 /// @param value
 void ModbusServant_PushBackUInt32(ModbusServant *this, uint32_t value);
+
+/// @brief 对当前发送缓冲向量计算 CRC16 并将 CRC16 放到向量末尾。
+/// @param
+void ModbusServant_PushBackCrc16(ModbusServant *this);
+
+/// @brief 将发送缓冲向量发送出去。
+/// @param
+void ModbusServant_Send(ModbusServant *this);
