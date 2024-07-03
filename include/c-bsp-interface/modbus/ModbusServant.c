@@ -36,9 +36,42 @@ typedef struct ModbusServant
 
 } ModbusServant;
 
-static void HandleReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
+#pragma region 读写回调处理函数
+// 读一组线圈
+static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 {
 }
+
+// 读取一组输入位
+static void ReadInputBits(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
+{
+}
+
+// 读一组保持寄存器
+static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
+{
+}
+
+static void ReadInputRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
+{
+}
+
+static void WriteSingleCoil(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
+{
+}
+
+static void WriteCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
+{
+}
+
+static void WriteHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
+{
+}
+
+static void Diagnosis(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
+{
+}
+#pragma endregion
 
 /// @brief 处理普通的 PDU
 /// @note 被调用说明 CRC 校验通过了。
@@ -48,7 +81,64 @@ static void HandleReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 /// @param pdu_size pdu 的字节数
 static void HandlePdu(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 {
-	HandleReadCoils(o, pdu, pdu_size);
+	if (pdu_size < 1)
+	{
+		// PDU 只有一个功能码，此操作没有意义
+		return;
+	}
+
+	ModbusFunctionCode function_code = pdu[0];
+	switch (function_code)
+	{
+	case ModbusFunctionCode_ReadCoils:
+	{
+		// 读取一组线圈
+		ReadCoils(o, pdu, pdu_size);
+		break;
+	}
+	case ModbusFunctionCode_ReadInputBits:
+	{
+		// 读取一组输入位
+		ReadInputBits(o, pdu, pdu_size);
+		break;
+	}
+	case ModbusFunctionCode_ReadHoldingRegisters:
+	{
+		// 读取一组保持寄存器
+		ReadHoldingRegisters(o, pdu, pdu_size);
+		break;
+	}
+	case ModbusFunctionCode_ReadInputRegisters:
+	{
+		// 读取一组输入寄存器
+		ReadInputRegisters(o, pdu, pdu_size);
+		break;
+	}
+	case ModbusFunctionCode_WriteSingleCoil:
+	{
+		// 写单个线圈
+		WriteSingleCoil(o, pdu, pdu_size);
+		break;
+	}
+	case ModbusFunctionCode_WriteCoils:
+	{
+		// 写入一组线圈
+		WriteCoils(o, pdu, pdu_size);
+		break;
+	}
+	case ModbusFunctionCode_WriteHoldingRegisters:
+	{
+		// 写入多个保持寄存器
+		WriteHoldingRegisters(o, pdu, pdu_size);
+		break;
+	}
+	case ModbusFunctionCode_Diagnosis:
+	{
+		// 诊断
+		Diagnosis(o, pdu, pdu_size);
+		break;
+	}
+	}
 }
 
 /// @brief 处理广播的 PDU
