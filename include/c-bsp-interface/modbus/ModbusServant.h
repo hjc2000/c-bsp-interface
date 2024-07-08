@@ -21,6 +21,8 @@ typedef struct ModbusServantReadWriteCallbackHub
 	/// @return 这个地址的数据是对应什么 ModbusMultibyteSizeEnum
 	ModbusMultibyteSizeEnum (*GetMultibyteDataSize)(uint32_t data_addr);
 
+	void (*SendResponse)(uint8_t *buffer, int32_t offset, int32_t count);
+
 	uint8_t (*ReadByteCallback)(uint32_t data_addr);
 	uint16_t (*Read2ByteCallback)(uint32_t data_addr);
 	uint32_t (*Read4ByteCallback)(uint32_t data_addr);
