@@ -56,7 +56,6 @@ static void CalculateAndPushCrc16(ModbusServant *o)
 	}
 }
 
-#pragma region 不同功能码的请求处理函数
 /// @brief 读一组线圈
 /// @param o
 /// @param pdu 传进来的是完整的 PDU，包括 1 字节的功能码和后面的信息域。
@@ -492,7 +491,6 @@ static void Diagnosis(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	// 发送响应帧
 	o->SendResponse(Stack_Buffer(o->_send_buffer_stack), 0, Stack_Sp(o->_send_buffer_stack));
 }
-#pragma endregion
 
 /// @brief 处理普通的 PDU
 /// @note 被调用说明 CRC 校验通过了。
