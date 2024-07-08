@@ -244,8 +244,19 @@ static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_siz
 	 * 每读取 1 个记录，record_addr_offset 递增 1.
 	 */
 	int32_t record_addr_offset = 0;
-	while (record_addr_offset < record_count)
+	while (1)
 	{
+		if (record_addr_offset == record_count)
+		{
+			break;
+		}
+
+		if (record_addr_offset > record_count)
+		{
+			// 超出了就不对了，说明上位机想要读取的记录数与本从机的数据大小不符，上位机错了
+			return;
+		}
+
 		int32_t current_record_addr = start_record_addr + record_addr_offset;
 		ModbusMultibyteSizeEnum current_data_size_enum = o->GetMultibyteDataSize(current_record_addr);
 		switch (current_data_size_enum)
