@@ -303,9 +303,12 @@ static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_siz
 		}
 		default:
 		{
-			// 不支持的数据大小
-			// TODO: 发回例外响应。
-			return;
+			// 不支持的数据大小。
+			// 从机出错了，不应该有任何一个地址的数据的大小不在 ModbusMultibyteSizeEnum 的范围内。
+			while (1)
+			{
+				// 卡在死循环，便于调试的时候发现错误
+			}
 		}
 		}
 	}
