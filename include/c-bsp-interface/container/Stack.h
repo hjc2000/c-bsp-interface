@@ -25,6 +25,8 @@ uint8_t Stack_Push(Stack *o, void *data, int32_t size);
 uint8_t Stack_Pop(Stack *o, void *out, int32_t size);
 
 /// @brief 获取栈的底层缓冲区。
+/// @note 这里返回的指针是栈底指针，逐渐递增指针即可访问整个栈的所有字节。
+///
 /// @param o
 /// @return
 uint8_t *Stack_Buffer(Stack *o);

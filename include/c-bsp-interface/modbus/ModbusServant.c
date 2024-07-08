@@ -12,12 +12,11 @@ typedef struct ModbusServant
 	ModbusCrc16 _crc;
 	Endian _crc16_endian;
 	ModbusBitConverterUnit _bit_converter_unit;
+
+	/// @brief 发送缓冲区。将各种不同大小的数据入栈，最后就可以将整个缓冲区从栈底开始发送出去。
 	Stack *_send_buffer_stack;
 
 #pragma region 读写回调函数
-	/// @brief 传入数据地址，返回这个数据是对应什么 ModbusMultibyteSizeEnum
-	/// @param data_addr 数据地址
-	/// @return 这个地址的数据是对应什么 ModbusMultibyteSizeEnum
 	ModbusMultibyteSizeEnum (*GetMultibyteDataSize)(uint32_t data_addr);
 
 	uint8_t (*ReadByteCallback)(uint32_t data_addr);

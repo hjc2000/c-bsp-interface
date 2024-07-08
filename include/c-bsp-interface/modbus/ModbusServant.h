@@ -9,6 +9,13 @@ typedef struct ModbusServantReadWriteCallbackHub
 {
 	/// @brief 传入数据地址，返回这个数据是对应什么 ModbusMultibyteSizeEnum
 	/// @note 此函数指针必须设置。
+	/// @note 主机发过来一串数据，虽然 modbus 是以记录为单位的，但是主机经常需要将 uint32_t
+	/// 之类的数据发送过来，而一个记录是 16 位，只有 2 个字节，所以需要占用多个记录去发送。
+	/// 区分数据的字节数的唯一方式就是它的地址。它的地址决定了用途，也被事先规定了这是一个多大的
+	/// 数据，所以需要此回调。
+	/// @note GetMultibyteDataSize 回调函数会传入字节流中当前位置的字节的 modbus 数据地址，
+	/// 用户需要在回调函数的返回值中告知此字节开始的数据是一个多少个字节的数据，这样才能正确触发
+	/// Write2ByteCallback，Write4ByteCallback，Write8ByteCallback 等回调。
 	///
 	/// @param data_addr 数据地址
 	/// @return 这个地址的数据是对应什么 ModbusMultibyteSizeEnum
