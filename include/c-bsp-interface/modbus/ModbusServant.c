@@ -68,10 +68,10 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	uint8_t *info_buffer = pdu + 1;
 	int32_t info_buffer_offset = 0;
 
-	// 数据地址
-	uint16_t data_addr = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
-													 info_buffer,
-													 info_buffer_offset);
+	// 起始位地址
+	uint16_t start_bit_addr = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+														  info_buffer,
+														  info_buffer_offset);
 	info_buffer_offset += 2;
 
 	// 位数据个数
@@ -106,7 +106,7 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	// 位数据不需要多个字节，每个位的地址加 1。（每个线圈占用 1 个地址，且必须连续逐 1 递增）
 	for (int i = 0; i < bit_count; i++)
 	{
-		uint8_t bit_value = o->ReadBitCallback(data_addr + i);
+		uint8_t bit_value = o->ReadBitCallback(start_bit_addr + i);
 		if (bit_value)
 		{
 			bit_register |= 1 << (i % 8);
@@ -137,10 +137,10 @@ static void ReadInputBits(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	uint8_t *info_buffer = pdu + 1;
 	int32_t offset = 0;
 
-	// 数据地址
-	uint16_t data_addr = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
-													 info_buffer,
-													 offset);
+	// 起始位地址
+	uint16_t start_bit_addr = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+														  info_buffer,
+														  offset);
 	offset += 2;
 
 	// 位数据个数
@@ -175,7 +175,7 @@ static void ReadInputBits(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	// 位数据不需要多个字节，每个位的地址加 1。
 	for (int i = 0; i < bit_count; i++)
 	{
-		uint8_t bit_value = o->ReadBitCallback(data_addr + i);
+		uint8_t bit_value = o->ReadBitCallback(start_bit_addr + i);
 		if (bit_value)
 		{
 			bit_register |= 1 << (i % 8);
