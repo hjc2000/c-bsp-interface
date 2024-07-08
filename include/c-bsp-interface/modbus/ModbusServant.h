@@ -29,12 +29,10 @@ typedef struct ModbusServantReadWriteCallbackHub
 	/// @param count 响应帧的字节数。
 	void (*SendResponse)(uint8_t *buffer, int32_t offset, int32_t count);
 
-	uint8_t (*ReadByteCallback)(uint32_t data_addr);
 	uint16_t (*Read2ByteCallback)(uint32_t data_addr);
 	uint32_t (*Read4ByteCallback)(uint32_t data_addr);
 	uint64_t (*Read8ByteCallback)(uint32_t data_addr);
 
-	void (*WriteByteCallback)(uint32_t data_addr, uint8_t value);
 	void (*Write2ByteCallback)(uint32_t data_addr, uint16_t value);
 	void (*Write4ByteCallback)(uint32_t data_addr, uint32_t value);
 	void (*Write8ByteCallback)(uint32_t data_addr, uint64_t value);

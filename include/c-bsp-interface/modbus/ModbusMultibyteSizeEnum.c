@@ -4,10 +4,6 @@ int ModbusMultibyteSizeEnum_To_ByteCount(ModbusMultibyteSizeEnum value)
 {
 	switch (value)
 	{
-	case ModbusMultibyteSizeEnum_Byte:
-	{
-		return 1;
-	}
 	case ModbusMultibyteSizeEnum_2Byte:
 	{
 		return 2;

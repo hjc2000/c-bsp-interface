@@ -2,7 +2,6 @@
 
 typedef enum ModbusMultibyteSizeEnum
 {
-	ModbusMultibyteSizeEnum_Byte,
 	ModbusMultibyteSizeEnum_2Byte,
 	ModbusMultibyteSizeEnum_4Byte,
 	ModbusMultibyteSizeEnum_8Byte,
