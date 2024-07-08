@@ -254,6 +254,7 @@ static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_siz
 		if (record_addr_offset > record_count)
 		{
 			// 超出了就不对了，说明上位机想要读取的记录数与本从机的数据大小不符，上位机错了
+			// TODO: 发回例外响应。
 			return;
 		}
 
@@ -303,6 +304,7 @@ static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_siz
 		default:
 		{
 			// 不支持的数据大小
+			// TODO: 发回例外响应。
 			return;
 		}
 		}

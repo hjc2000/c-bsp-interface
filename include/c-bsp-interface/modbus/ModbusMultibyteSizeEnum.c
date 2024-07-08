@@ -18,5 +18,10 @@ int ModbusMultibyteSizeEnum_To_ByteCount(ModbusMultibyteSizeEnum value)
 	}
 	}
 
-	return 1;
+	return 2;
+}
+
+int ModbusMultibyteSizeEnum_To_RecordCount(ModbusMultibyteSizeEnum value)
+{
+	return ModbusMultibyteSizeEnum_To_ByteCount(value) / 2;
 }
