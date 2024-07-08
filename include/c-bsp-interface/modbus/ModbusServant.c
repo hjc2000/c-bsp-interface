@@ -37,6 +37,27 @@ typedef struct ModbusServant
 
 } ModbusServant;
 
+static void CalculateAndPushCrc16(ModbusServant *o)
+{
+	ModbusCrc16_ResetRegister(&o->_crc);
+	ModbusCrc16_AddArray(&o->_crc,
+						 Stack_Buffer(o->_send_buffer_stack),
+						 Stack_Sp(o->_send_buffer_stack));
+
+	uint8_t crc16_high_byte = ModbusCrc16_HighByte(&o->_crc);
+	uint8_t crc16_low_byte = ModbusCrc16_LowByte(&o->_crc);
+	if (o->_crc16_endian == BigEndian)
+	{
+		Stack_Push(o->_send_buffer_stack, &crc16_high_byte, 1);
+		Stack_Push(o->_send_buffer_stack, &crc16_low_byte, 1);
+	}
+	else
+	{
+		Stack_Push(o->_send_buffer_stack, &crc16_low_byte, 1);
+		Stack_Push(o->_send_buffer_stack, &crc16_high_byte, 1);
+	}
+}
+
 #pragma region 不同功能码的请求处理函数
 /// @brief 读一组线圈
 /// @param o
@@ -101,25 +122,7 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	}
 #pragma endregion
 
-#pragma region 准备CRC16
-	ModbusCrc16_ResetRegister(&o->_crc);
-	ModbusCrc16_AddArray(&o->_crc,
-						 Stack_Buffer(o->_send_buffer_stack),
-						 Stack_Sp(o->_send_buffer_stack));
-
-	uint8_t crc16_high_byte = ModbusCrc16_HighByte(&o->_crc);
-	uint8_t crc16_low_byte = ModbusCrc16_LowByte(&o->_crc);
-	if (o->_crc16_endian == BigEndian)
-	{
-		Stack_Push(o->_send_buffer_stack, &crc16_high_byte, 1);
-		Stack_Push(o->_send_buffer_stack, &crc16_low_byte, 1);
-	}
-	else
-	{
-		Stack_Push(o->_send_buffer_stack, &crc16_low_byte, 1);
-		Stack_Push(o->_send_buffer_stack, &crc16_high_byte, 1);
-	}
-#pragma endregion
+	CalculateAndPushCrc16(o);
 
 	// 发送响应帧
 	o->SendResponse(Stack_Buffer(o->_send_buffer_stack), 0, Stack_Sp(o->_send_buffer_stack));
@@ -131,6 +134,67 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 /// @param pdu_size
 static void ReadInputBits(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 {
+#pragma region 获取请求信息
+	// 信息域缓冲区
+	uint8_t *info_buffer = pdu + 1;
+	int32_t offset = 0;
+
+	// 数据地址
+	uint16_t data_addr = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+													 info_buffer,
+													 offset);
+	offset += 2;
+
+	// 位数据个数
+	int32_t bit_count = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+													info_buffer,
+													offset);
+	offset += 2;
+#pragma endregion
+
+#pragma region 准备响应帧
+	// 清空发送缓冲区
+	Stack_Clear(o->_send_buffer_stack);
+
+	// 放入站号
+	Stack_Push(o->_send_buffer_stack, &o->_servant_address, 1);
+
+	// 放入功能码
+	/* 功能码在 modbus 传输中占用 1 字节，但是枚举量是一个 int，占用 4 字节。
+	 * 这里要赋值给 uint8_t 类型的变量，然后才能将指针传给 Stack_Push 函数。
+	 */
+	uint8_t function_code = ModbusFunctionCode_ReadInputBits;
+	Stack_Push(o->_send_buffer_stack, &function_code, 1);
+
+	// 放入数据字节数
+	uint8_t byte_count = bit_count / 8;
+	Stack_Push(o->_send_buffer_stack, &byte_count, 1);
+#pragma endregion
+
+#pragma region 放入位数据
+	uint8_t bit_register = 0;
+
+	// 位数据不需要多个字节，每个位的地址加 1。
+	for (int i = 0; i < bit_count; i++)
+	{
+		uint8_t bit_value = o->ReadBitCallback(data_addr + i);
+		if (bit_value)
+		{
+			bit_register |= 1 << (i % 8);
+		}
+
+		if (i % 8 == 7)
+		{
+			Stack_Push(o->_send_buffer_stack, &bit_register, 1);
+			bit_register = 0;
+		}
+	}
+#pragma endregion
+
+	CalculateAndPushCrc16(o);
+
+	// 发送响应帧
+	o->SendResponse(Stack_Buffer(o->_send_buffer_stack), 0, Stack_Sp(o->_send_buffer_stack));
 }
 
 /// @brief 读一组保持寄存器
@@ -139,6 +203,57 @@ static void ReadInputBits(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 /// @param pdu_size
 static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 {
+#pragma region 获取请求信息
+	// 信息域缓冲区
+	uint8_t *info_buffer = pdu + 1;
+	int32_t offset = 0;
+
+	// 数据地址
+	uint16_t data_addr = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+													 info_buffer,
+													 offset);
+	offset += 2;
+
+	// 要读取的记录数
+	int32_t record_count = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+													   info_buffer,
+													   offset);
+	offset += 2;
+#pragma endregion
+
+#pragma region 准备响应帧
+	// 清空发送缓冲区
+	Stack_Clear(o->_send_buffer_stack);
+
+	// 放入站号
+	Stack_Push(o->_send_buffer_stack, &o->_servant_address, 1);
+
+	// 放入功能码
+	/* 功能码在 modbus 传输中占用 1 字节，但是枚举量是一个 int，占用 4 字节。
+	 * 这里要赋值给 uint8_t 类型的变量，然后才能将指针传给 Stack_Push 函数。
+	 */
+	uint8_t function_code = ModbusFunctionCode_ReadHoldingRegisters;
+	Stack_Push(o->_send_buffer_stack, &function_code, 1);
+
+	// 放入数据字节数
+	uint8_t byte_count = record_count * 2;
+	Stack_Push(o->_send_buffer_stack, &byte_count, 1);
+#pragma endregion
+
+#pragma region 放入数据
+	/* 记录的地址的偏移量。
+	 * 例如读取一个 uint32_t ，有 2 个记录，则 record_addr_offset 递增 2.
+	 */
+	int32_t record_addr_offset = 0;
+	while (1)
+	{
+	}
+#pragma endregion
+
+	CalculateAndPushCrc16(o);
+
+	// 发送响应帧
+	o->SendResponse(Stack_Buffer(o->_send_buffer_stack), 0, Stack_Sp(o->_send_buffer_stack));
 }
 
 /// @brief 读取一组输入寄存器
@@ -147,6 +262,10 @@ static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_siz
 /// @param pdu_size
 static void ReadInputRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 {
+	CalculateAndPushCrc16(o);
+
+	// 发送响应帧
+	o->SendResponse(Stack_Buffer(o->_send_buffer_stack), 0, Stack_Sp(o->_send_buffer_stack));
 }
 
 /// @brief 写单个线圈
@@ -155,6 +274,10 @@ static void ReadInputRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 /// @param pdu_size
 static void WriteSingleCoil(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 {
+	CalculateAndPushCrc16(o);
+
+	// 发送响应帧
+	o->SendResponse(Stack_Buffer(o->_send_buffer_stack), 0, Stack_Sp(o->_send_buffer_stack));
 }
 
 /// @brief 写一组线圈
@@ -163,6 +286,10 @@ static void WriteSingleCoil(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 /// @param pdu_size
 static void WriteCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 {
+	CalculateAndPushCrc16(o);
+
+	// 发送响应帧
+	o->SendResponse(Stack_Buffer(o->_send_buffer_stack), 0, Stack_Sp(o->_send_buffer_stack));
 }
 
 /// @brief 写一组保持寄存器
@@ -171,6 +298,10 @@ static void WriteCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 /// @param pdu_size
 static void WriteHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 {
+	CalculateAndPushCrc16(o);
+
+	// 发送响应帧
+	o->SendResponse(Stack_Buffer(o->_send_buffer_stack), 0, Stack_Sp(o->_send_buffer_stack));
 }
 
 /// @brief 诊断
@@ -179,6 +310,10 @@ static void WriteHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_si
 /// @param pdu_size
 static void Diagnosis(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 {
+	CalculateAndPushCrc16(o);
+
+	// 发送响应帧
+	o->SendResponse(Stack_Buffer(o->_send_buffer_stack), 0, Stack_Sp(o->_send_buffer_stack));
 }
 #pragma endregion
 
