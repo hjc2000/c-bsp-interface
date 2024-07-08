@@ -35,6 +35,8 @@ typedef struct ModbusServant
 
 } ModbusServant;
 
+/// @brief 计算 CRC16 并放入缓冲区
+/// @param o
 static void CalculateAndPushCrc16(ModbusServant *o)
 {
 	ModbusCrc16_ResetRegister(&o->_crc);
@@ -354,7 +356,7 @@ static void ReadInputRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	/* 功能码在 modbus 传输中占用 1 字节，但是枚举量是一个 int，占用 4 字节。
 	 * 这里要赋值给 uint8_t 类型的变量，然后才能将指针传给 Stack_Push 函数。
 	 */
-	uint8_t function_code = ModbusFunctionCode_ReadHoldingRegisters;
+	uint8_t function_code = ModbusFunctionCode_ReadInputRegisters;
 	Stack_Push(o->_send_buffer_stack, &function_code, 1);
 
 	// 放入数据字节数
@@ -450,6 +452,55 @@ static void ReadInputRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 /// @param pdu_size
 static void WriteSingleCoil(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 {
+#pragma region 获取请求信息
+	// 信息域缓冲区
+	uint8_t *info_buffer = pdu + 1;
+	int32_t offset = 0;
+
+	// 位地址
+	uint16_t bit_addr = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+													info_buffer,
+													offset);
+	offset += 2;
+
+	// 位数据。0x0000 表示 OFF，0xff00 表示 ON
+	int32_t bit_data = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+												   info_buffer,
+												   offset);
+	offset += 2;
+
+	uint8_t bit_value;
+	if (bit_data == 0)
+	{
+		bit_value = 0;
+	}
+	else if (bit_data == 0Xff00)
+	{
+		bit_value = 1;
+	}
+	else
+	{
+		// 非法的数据
+		// 0x0000 表示 OFF，0xff00 表示 ON，其他的都是非法的
+		// TODO: 发回例外响应
+	}
+#pragma endregion
+
+#pragma region 准备响应帧
+	// 清空发送缓冲区
+	Stack_Clear(o->_send_buffer_stack);
+
+	// 放入站号
+	Stack_Push(o->_send_buffer_stack, &o->_servant_address, 1);
+
+	// 放入功能码
+	/* 功能码在 modbus 传输中占用 1 字节，但是枚举量是一个 int，占用 4 字节。
+	 * 这里要赋值给 uint8_t 类型的变量，然后才能将指针传给 Stack_Push 函数。
+	 */
+	uint8_t function_code = ModbusFunctionCode_WriteSingleCoil;
+	Stack_Push(o->_send_buffer_stack, &function_code, 1);
+#pragma endregion
+
 	CalculateAndPushCrc16(o);
 
 	// 发送响应帧
