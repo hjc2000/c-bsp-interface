@@ -21,6 +21,12 @@ typedef struct ModbusServantReadWriteCallbackHub
 	/// @return 这个地址的数据是对应什么 ModbusMultibyteSizeEnum
 	ModbusMultibyteSizeEnum (*GetMultibyteDataSize)(uint32_t data_addr);
 
+	/// @brief 发送回调函数。
+	/// @note 本类对象内部准备好响应帧后会回调此函数，将响应帧发送给主机。
+	///
+	/// @param buffer 装着响应帧的缓冲区。
+	/// @param offset 响应帧在 buffer 中的偏移量。
+	/// @param count 响应帧的字节数。
 	void (*SendResponse)(uint8_t *buffer, int32_t offset, int32_t count);
 
 	uint8_t (*ReadByteCallback)(uint32_t data_addr);

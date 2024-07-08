@@ -77,11 +77,13 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	Stack_Push(o->_send_buffer_stack, &function_code, 1);
 
 	// 放入数据字节数
-	uint8_t byte_count = bit_count % 8;
+	uint8_t byte_count = bit_count / 8;
 	Stack_Push(o->_send_buffer_stack, &byte_count, 1);
+#pragma endregion
 
-	// 放入位数据
+#pragma region 放入位数据
 	uint8_t bit_register = 0;
+
 	// 位数据不需要多个字节，每个位的地址加 1。（每个线圈占用 1 个地址，且必须连续逐 1 递增）
 	for (int i = 0; i < bit_count; i++)
 	{
@@ -97,7 +99,9 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 			bit_register = 0;
 		}
 	}
+#pragma endregion
 
+#pragma region 准备CRC16
 	ModbusCrc16_ResetRegister(&o->_crc);
 	ModbusCrc16_AddArray(&o->_crc,
 						 Stack_Buffer(o->_send_buffer_stack),
@@ -109,6 +113,11 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	{
 		Stack_Push(o->_send_buffer_stack, &crc16_high_byte, 1);
 		Stack_Push(o->_send_buffer_stack, &crc16_low_byte, 1);
+	}
+	else
+	{
+		Stack_Push(o->_send_buffer_stack, &crc16_low_byte, 1);
+		Stack_Push(o->_send_buffer_stack, &crc16_high_byte, 1);
 	}
 #pragma endregion
 
