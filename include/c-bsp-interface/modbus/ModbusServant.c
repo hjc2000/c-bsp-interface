@@ -326,6 +326,119 @@ static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_siz
 /// @param pdu_size
 static void ReadInputRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 {
+#pragma region 获取请求信息
+	// 信息域缓冲区
+	uint8_t *info_buffer = pdu + 1;
+	int32_t info_buffer_offset = 0;
+
+	// 起始记录地址
+	uint16_t start_record_addr = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+															 info_buffer,
+															 info_buffer_offset);
+	info_buffer_offset += 2;
+
+	// 要读取的记录数
+	int32_t record_count = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+													   info_buffer,
+													   info_buffer_offset);
+	info_buffer_offset += 2;
+#pragma endregion
+
+#pragma region 准备响应帧
+	// 清空发送缓冲区
+	Stack_Clear(o->_send_buffer_stack);
+
+	// 放入站号
+	Stack_Push(o->_send_buffer_stack, &o->_servant_address, 1);
+
+	// 放入功能码
+	/* 功能码在 modbus 传输中占用 1 字节，但是枚举量是一个 int，占用 4 字节。
+	 * 这里要赋值给 uint8_t 类型的变量，然后才能将指针传给 Stack_Push 函数。
+	 */
+	uint8_t function_code = ModbusFunctionCode_ReadHoldingRegisters;
+	Stack_Push(o->_send_buffer_stack, &function_code, 1);
+
+	// 放入数据字节数
+	uint8_t byte_count = record_count * 2;
+	Stack_Push(o->_send_buffer_stack, &byte_count, 1);
+#pragma endregion
+
+#pragma region 放入数据
+	/* 记录的地址的偏移量。
+	 * 例如读取一个 uint32_t ，有 2 个记录，则 record_addr_offset 递增 2.
+	 * 每读取 1 个记录，record_addr_offset 递增 1.
+	 */
+	int32_t record_addr_offset = 0;
+	while (1)
+	{
+		if (record_addr_offset == record_count)
+		{
+			break;
+		}
+
+		if (record_addr_offset > record_count)
+		{
+			// 超出了就不对了，说明上位机想要读取的记录数与本从机的数据大小不符，上位机错了
+			// TODO: 发回例外响应。
+			return;
+		}
+
+		int32_t current_record_addr = start_record_addr + record_addr_offset;
+		ModbusMultibyteSizeEnum current_data_size_enum = o->GetMultibyteDataSize(current_record_addr);
+		switch (current_data_size_enum)
+		{
+		case ModbusMultibyteSizeEnum_2Byte:
+		{
+			uint16_t data = o->Read2ByteCallback(current_record_addr);
+			uint8_t temp_buffer[sizeof(data)];
+			ModbusBitConverter_GetBytesFromUInt16(o->_bit_converter_unit,
+												  data,
+												  temp_buffer,
+												  0);
+
+			Stack_Push(o->_send_buffer_stack, temp_buffer, sizeof(temp_buffer));
+			record_addr_offset += 1;
+			break;
+		}
+		case ModbusMultibyteSizeEnum_4Byte:
+		{
+			uint32_t data = o->Read4ByteCallback(current_record_addr);
+			uint8_t temp_buffer[sizeof(data)];
+			ModbusBitConverter_GetBytesFromUInt32(o->_bit_converter_unit,
+												  data,
+												  temp_buffer,
+												  0);
+
+			Stack_Push(o->_send_buffer_stack, temp_buffer, sizeof(temp_buffer));
+			record_addr_offset += 2;
+			break;
+		}
+		case ModbusMultibyteSizeEnum_8Byte:
+		{
+			uint64_t data = o->Read8ByteCallback(current_record_addr);
+			uint8_t temp_buffer[sizeof(data)];
+			ModbusBitConverter_GetBytesFromUInt64(o->_bit_converter_unit,
+												  data,
+												  temp_buffer,
+												  0);
+
+			Stack_Push(o->_send_buffer_stack, temp_buffer, sizeof(temp_buffer));
+			record_addr_offset += 4;
+			break;
+		}
+		default:
+		{
+			// 不支持的数据大小。
+			// 从机出错了，不应该有任何一个地址的数据的大小不在 ModbusMultibyteSizeEnum 的范围内。
+			while (1)
+			{
+				// 卡在死循环，便于调试的时候发现错误
+			}
+		}
+		}
+	}
+#pragma endregion
+
 	CalculateAndPushCrc16(o);
 
 	// 发送响应帧
