@@ -58,6 +58,43 @@ static void CalculateAndPushCrc16(ModbusServant *o)
 	}
 }
 
+/// @brief 将 uint16_t 放入发送缓冲栈。
+/// @note 会进行字节序转换
+/// @param o
+/// @param value
+static void PushUInt16(ModbusServant *o, uint16_t value)
+{
+	uint8_t temp_buffer[sizeof(value)];
+	ModbusBitConverter_GetBytesFromUInt16(o->_bit_converter_unit,
+										  value,
+										  temp_buffer,
+										  0);
+
+	Stack_Push(o->_send_buffer_stack, temp_buffer, sizeof(temp_buffer));
+}
+
+static void PushUInt32(ModbusServant *o, uint32_t value)
+{
+	uint8_t temp_buffer[sizeof(value)];
+	ModbusBitConverter_GetBytesFromUInt32(o->_bit_converter_unit,
+										  value,
+										  temp_buffer,
+										  0);
+
+	Stack_Push(o->_send_buffer_stack, temp_buffer, sizeof(temp_buffer));
+}
+
+static void PushUInt64(ModbusServant *o, uint64_t value)
+{
+	uint8_t temp_buffer[sizeof(value)];
+	ModbusBitConverter_GetBytesFromUInt64(o->_bit_converter_unit,
+										  value,
+										  temp_buffer,
+										  0);
+
+	Stack_Push(o->_send_buffer_stack, temp_buffer, sizeof(temp_buffer));
+}
+
 /// @brief 读一组线圈
 /// @param o
 /// @param pdu 传进来的是完整的 PDU，包括 1 字节的功能码和后面的信息域。
@@ -206,39 +243,21 @@ static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_siz
 		case ModbusMultibyteSizeEnum_2Byte:
 		{
 			uint16_t data = o->Read2ByteCallback(current_record_addr);
-			uint8_t temp_buffer[sizeof(data)];
-			ModbusBitConverter_GetBytesFromUInt16(o->_bit_converter_unit,
-												  data,
-												  temp_buffer,
-												  0);
-
-			Stack_Push(o->_send_buffer_stack, temp_buffer, sizeof(temp_buffer));
+			PushUInt16(o, data);
 			record_addr_offset += 1;
 			break;
 		}
 		case ModbusMultibyteSizeEnum_4Byte:
 		{
 			uint32_t data = o->Read4ByteCallback(current_record_addr);
-			uint8_t temp_buffer[sizeof(data)];
-			ModbusBitConverter_GetBytesFromUInt32(o->_bit_converter_unit,
-												  data,
-												  temp_buffer,
-												  0);
-
-			Stack_Push(o->_send_buffer_stack, temp_buffer, sizeof(temp_buffer));
+			PushUInt32(o, data);
 			record_addr_offset += 2;
 			break;
 		}
 		case ModbusMultibyteSizeEnum_8Byte:
 		{
 			uint64_t data = o->Read8ByteCallback(current_record_addr);
-			uint8_t temp_buffer[sizeof(data)];
-			ModbusBitConverter_GetBytesFromUInt64(o->_bit_converter_unit,
-												  data,
-												  temp_buffer,
-												  0);
-
-			Stack_Push(o->_send_buffer_stack, temp_buffer, sizeof(temp_buffer));
+			PushUInt64(o, data);
 			record_addr_offset += 4;
 			break;
 		}
@@ -294,11 +313,11 @@ static void WriteSingleCoil(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	offset += 2;
 
 	uint8_t bit_value;
-	if (bit_data == 0)
+	if (bit_data == 0x0000)
 	{
 		bit_value = 0;
 	}
-	else if (bit_data == 0Xff00)
+	else if (bit_data == 0xff00)
 	{
 		bit_value = 1;
 	}
