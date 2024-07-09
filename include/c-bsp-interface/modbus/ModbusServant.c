@@ -10,7 +10,7 @@ typedef struct ModbusServant
 {
 	/// @brief 从机站号
 	uint8_t _servant_address;
-	ModbusCrc16 _crc;
+	ModbusCrc16 *_crc;
 	Endian _crc16_endian;
 	ModbusBitConverterUnit _bit_converter_unit;
 
@@ -40,13 +40,13 @@ typedef struct ModbusServant
 /// @param o
 static void CalculateAndPushCrc16(ModbusServant *o)
 {
-	ModbusCrc16_ResetRegister(&o->_crc);
-	ModbusCrc16_AddArray(&o->_crc,
+	ModbusCrc16_ResetRegister(o->_crc);
+	ModbusCrc16_AddArray(o->_crc,
 						 Stack_Buffer(o->_send_buffer_stack),
 						 Stack_Sp(o->_send_buffer_stack));
 
-	uint8_t crc16_high_byte = ModbusCrc16_HighByte(&o->_crc);
-	uint8_t crc16_low_byte = ModbusCrc16_LowByte(&o->_crc);
+	uint8_t crc16_high_byte = ModbusCrc16_HighByte(o->_crc);
+	uint8_t crc16_low_byte = ModbusCrc16_LowByte(o->_crc);
 	if (o->_crc16_endian == BigEndian)
 	{
 		Stack_Push(o->_send_buffer_stack, &crc16_high_byte, 1);
@@ -689,7 +689,7 @@ ModbusServant *ModbusServant_StackHeapAlloc(uint8_t servant_address,
 	o->WriteBitCallback = read_write_callback_hub->WriteBitCallback;
 #pragma endregion
 
-	ModbusCrc16_Init(&o->_crc);
+	o->_crc = ModbusCrc16_StackHeapAlloc();
 	return o;
 }
 
@@ -713,9 +713,9 @@ void ModbusServant_ParseReceivedBuffer(ModbusServant *o,
 
 	// 站号匹配或者是广播帧
 	// 进行 CRC 校验
-	ModbusCrc16_ResetRegister(&o->_crc);
-	ModbusCrc16_AddArray(&o->_crc, adu, size - 2);
-	uint8_t crc16_check_result = ModbusCrc16_CompareRegister(&o->_crc,
+	ModbusCrc16_ResetRegister(o->_crc);
+	ModbusCrc16_AddArray(o->_crc, adu, size - 2);
+	uint8_t crc16_check_result = ModbusCrc16_CompareRegister(o->_crc,
 															 adu + size - 2,
 															 o->_crc16_endian);
 	if (!crc16_check_result)

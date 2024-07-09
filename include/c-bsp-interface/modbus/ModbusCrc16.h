@@ -2,18 +2,9 @@
 #include <c-bsp-interface/Endian.h>
 #include <stdint.h>
 
-typedef struct ModbusCrc16
-{
-#pragma region private
-	uint16_t _crc16_register;
-	uint16_t _polynomial;
-#pragma endregion
+typedef struct ModbusCrc16 ModbusCrc16;
 
-} ModbusCrc16;
-
-/// @brief 传入一个 ModbusCrc16 对象进行初始化。
-/// @param o
-void ModbusCrc16_Init(ModbusCrc16 *o);
+ModbusCrc16 *ModbusCrc16_StackHeapAlloc();
 
 /// @brief 开始新的一轮校验时需要重置 CRC16 寄存器，否则添加计算的字节会与上一轮校验的字节
 /// 叠加在一起。

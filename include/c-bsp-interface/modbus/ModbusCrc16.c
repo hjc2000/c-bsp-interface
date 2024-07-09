@@ -1,7 +1,15 @@
 #include "ModbusCrc16.h"
+#include <c-bsp-interface/memory/StackHeap.h>
 
-void ModbusCrc16_Init(ModbusCrc16 *o)
+typedef struct ModbusCrc16
 {
+	uint16_t _crc16_register;
+	uint16_t _polynomial;
+} ModbusCrc16;
+
+ModbusCrc16 *ModbusCrc16_StackHeapAlloc()
+{
+	ModbusCrc16 *o = StackHeapAlignAlloc(sizeof(ModbusCrc16), 4);
 	ModbusCrc16_ResetRegister(o);
 
 	/* 默认的生成多项式是：
@@ -22,6 +30,8 @@ void ModbusCrc16_Init(ModbusCrc16 *o)
 	 * 转化为 16 进制就是 0xA001。
 	 */
 	o->_polynomial = 0xA001;
+
+	return o;
 }
 
 void ModbusCrc16_ResetRegister(ModbusCrc16 *o)
