@@ -80,7 +80,6 @@ uint8_t ModbusCrc16_CompareRegister(ModbusCrc16 *o,
 									uint8_t *crc16_register_buffer,
 									Endian crc16_register_buffer_endian)
 {
-	ModbusCrc16_AddArray(o, crc16_register_buffer, 2);
 	uint8_t buffer_low_byte;
 	uint8_t buffer_high_byte;
 
