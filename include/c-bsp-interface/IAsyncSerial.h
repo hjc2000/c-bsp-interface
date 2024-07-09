@@ -68,7 +68,6 @@ typedef struct IAsyncSerial
 	/// @brief 打开串口。成功返回 0，失败返回负数的错误代码
 	int32_t (*Open)();
 
-#pragma region AsyncStream
 	/// @brief 异步读取。此函数不会阻塞，会立刻返回。
 	/// @return 成功返回 0，失败返回负数的错误代码。
 	/// @note 错误代码：
@@ -90,5 +89,4 @@ typedef struct IAsyncSerial
 
 	/// @brief 调用 WriteAsync 后，写完成会触发此回调。
 	void (*WriteCompleteCallback)();
-#pragma endregion
 } IAsyncSerial;
