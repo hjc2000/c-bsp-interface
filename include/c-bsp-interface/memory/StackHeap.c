@@ -7,15 +7,22 @@ static void (*_overflow_handler)() = 0;
 
 static void AlignSp(int32_t align)
 {
-	if (align < 0)
+	if (align <= 1)
 	{
+		// 1 字节对齐就是不用对齐
+		// 小于等于 0 没有意义
 		return;
 	}
 
-	uint32_t current_addr = (uint32_t)_buffer + _sp;
+	size_t current_addr = (size_t)_buffer + _sp;
 
 	// 当前地址比上一个对齐的地址多出了多少个字节
 	uint32_t mod = current_addr % align;
+	if (mod == 0)
+	{
+		// 本来就是对齐的，直接返回
+		return;
+	}
 
 	// 当前地址离下一个对其的地址还差 align - mod
 	_sp += align - mod;
