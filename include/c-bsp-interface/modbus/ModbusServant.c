@@ -414,6 +414,23 @@ static void WriteCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	}
 #pragma endregion
 
+	for (int32_t i = 0; i < byte_count; i++)
+	{
+		// 获取储存着位数据的字节
+		int32_t bits = ModbusBitConverter_ToUInt8(ModbusBitConverterUnit_Whole,
+												  info_buffer,
+												  info_buffer_offset);
+		info_buffer_offset += 1;
+
+		for (int32_t j = 0; j < 8; j++)
+		{
+			int32_t current_bit_addr_offset = i * 8 + j;
+			int32_t current_bit_addr = start_bit_addr + current_bit_addr_offset;
+			uint8_t mask = (uint8_t)1 << j;
+			o->WriteBitCallback(current_bit_addr, bits & mask);
+		}
+	}
+
 #pragma region 准备响应帧
 	// 清空发送缓冲区
 	Stack_Clear(o->_send_buffer_stack);
@@ -424,8 +441,8 @@ static void WriteCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	// 放入功能码
 	PushUInt8(o, ModbusFunctionCode_ReadCoils);
 
-	// 放入数据字节数
-	PushUInt8(o, bit_count / 8);
+	PushUInt16(o, start_bit_addr);
+	PushUInt16(o, bit_count);
 #pragma endregion
 
 	CalculateAndPushCrc16(o);
@@ -434,12 +451,124 @@ static void WriteCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	o->SendResponse(Stack_Buffer(o->_send_buffer_stack), 0, Stack_Sp(o->_send_buffer_stack));
 }
 
+/// @brief WriteHoldingRegisters 用来检查数据字节数是否合法。
+/// @param record_count
+/// @param byte_count
+/// @return 合法返回 true，非法返回 false.
+static uint8_t WriteHoldingRegisters_CheckByteCount(int32_t record_count, int32_t byte_count)
+{
+	return record_count * 2 == byte_count;
+}
+
 /// @brief 写一组保持寄存器
 /// @param o
 /// @param pdu 传进来的是完整的 PDU，包括 1 字节的功能码和后面的信息域。
 /// @param pdu_size
 static void WriteHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 {
+#pragma region 获取请求信息
+	// 信息域缓冲区
+	uint8_t *info_buffer = pdu + 1;
+	int32_t info_buffer_offset = 0;
+
+	// 起始记录地址
+	uint16_t start_record_addr = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+															 info_buffer,
+															 info_buffer_offset);
+	info_buffer_offset += 2;
+
+	// 要读取的记录数
+	int32_t record_count = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+													   info_buffer,
+													   info_buffer_offset);
+	info_buffer_offset += 2;
+
+	// 数据字节数
+	int32_t byte_count = ModbusBitConverter_ToUInt8(ModbusBitConverterUnit_Whole,
+													info_buffer,
+													info_buffer_offset);
+	info_buffer_offset += 1;
+
+	if (!WriteHoldingRegisters_CheckByteCount(record_count, byte_count))
+	{
+		// TODO: 例外响应
+		return;
+	}
+#pragma endregion
+
+	int32_t record_addr_offset = 0;
+	while (1)
+	{
+		if (record_addr_offset == record_count)
+		{
+			break;
+		}
+
+		if (record_addr_offset > record_count)
+		{
+			return;
+		}
+
+		int32_t current_record_addr = start_record_addr + record_addr_offset;
+		ModbusMultibyteSizeEnum current_data_size_enum = o->GetMultibyteDataSize(current_record_addr);
+		switch (current_data_size_enum)
+		{
+		case ModbusMultibyteSizeEnum_2Byte:
+		{
+			uint16_t value = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+														 info_buffer,
+														 info_buffer_offset);
+			info_buffer_offset += 2;
+			o->Write2ByteCallback(current_record_addr, value);
+			record_addr_offset += 1;
+			break;
+		}
+		case ModbusMultibyteSizeEnum_4Byte:
+		{
+			uint32_t value = ModbusBitConverter_ToUInt32(ModbusBitConverterUnit_Whole,
+														 info_buffer,
+														 info_buffer_offset);
+			info_buffer_offset += 4;
+			o->Write4ByteCallback(current_record_addr, value);
+			record_addr_offset += 2;
+			break;
+		}
+		case ModbusMultibyteSizeEnum_8Byte:
+		{
+			uint64_t value = ModbusBitConverter_ToUInt64(ModbusBitConverterUnit_Whole,
+														 info_buffer,
+														 info_buffer_offset);
+			info_buffer_offset += 8;
+			o->Write8ByteCallback(current_record_addr, value);
+			record_addr_offset += 4;
+			break;
+		}
+		default:
+		{
+			// 不支持的数据大小。
+			// 从机出错了，GetMultibyteDataSize 回调函数的返回值不能不在 ModbusMultibyteSizeEnum 的范围内。
+			while (1)
+			{
+				// 卡在死循环，便于调试的时候发现错误
+			}
+		}
+		}
+	}
+
+#pragma region 准备响应帧
+	// 清空发送缓冲区
+	Stack_Clear(o->_send_buffer_stack);
+
+	// 放入站号
+	Stack_Push(o->_send_buffer_stack, &o->_servant_address, 1);
+
+	// 放入功能码
+	PushUInt8(o, ModbusFunctionCode_ReadHoldingRegisters);
+
+	PushUInt16(o, start_record_addr);
+	PushUInt16(o, record_count);
+#pragma endregion
+
 	CalculateAndPushCrc16(o);
 
 	// 发送响应帧
@@ -452,10 +581,6 @@ static void WriteHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_si
 /// @param pdu_size
 static void Diagnosis(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 {
-	CalculateAndPushCrc16(o);
-
-	// 发送响应帧
-	o->SendResponse(Stack_Buffer(o->_send_buffer_stack), 0, Stack_Sp(o->_send_buffer_stack));
 }
 
 /// @brief 处理普通的 PDU
