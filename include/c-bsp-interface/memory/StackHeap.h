@@ -29,4 +29,7 @@ uint8_t StackHeapOverflow();
 /// @param func
 void SetStackHeapOverflowHandler(void (*func)());
 
+/// @brief 当前栈顶指针的位置。
+/// @note 这个栈顶指针并不是一个真的指针。他只是从 0 开始的，对缓冲区头指针的偏移量。
+/// @return
 uint32_t StackHeapSp();
