@@ -30,7 +30,7 @@ int32_t Stream_ReadExactly(Stream *o, uint8_t *buffer, int32_t offset, int32_t c
 
 void Stream_CopyTo(Stream *o,
 				   Stream *dst_stream,
-				   volatile uint8_t *cancellation_flag)
+				   volatile uint8_t const *cancellation_flag)
 {
 	uint8_t temp_buf[128];
 
