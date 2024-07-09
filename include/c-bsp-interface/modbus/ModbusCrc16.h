@@ -4,6 +4,8 @@
 
 typedef struct ModbusCrc16 ModbusCrc16;
 
+/// @brief 在栈堆上构造 ModbusCrc16 对象
+/// @return 构造出的对象的指针。
 ModbusCrc16 *ModbusCrc16_StackHeapAlloc();
 
 /// @brief 开始新的一轮校验时需要重置 CRC16 寄存器，否则添加计算的字节会与上一轮校验的字节

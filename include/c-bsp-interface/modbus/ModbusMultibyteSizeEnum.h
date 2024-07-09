@@ -1,5 +1,6 @@
 #pragma once
 
+/// @brief 多字节数据的大小的枚举
 typedef enum ModbusMultibyteSizeEnum
 {
 	ModbusMultibyteSizeEnum_2Byte,
