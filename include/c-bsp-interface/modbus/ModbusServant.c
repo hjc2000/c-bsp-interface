@@ -148,30 +148,46 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	PushUInt8(o, ModbusFunctionCode_ReadCoils);
 
 	// 放入数据字节数
-	PushUInt8(o, bit_count / 8);
+	uint8_t byte_count = bit_count / 8;
+	if (bit_count % 8 != 0)
+	{
+		byte_count++;
+	}
+
+	PushUInt8(o, byte_count);
 #pragma endregion
 
 #pragma region 放入位数据
-	uint8_t bit_register = 0;
+	// 能被 8 整除的部分先每 8 个位为一组
+	for (int group = 0; group < bit_count / 8; group++)
+	{
+		uint8_t bit_register = 0;
+		for (int i = 0; i < 8; i++)
+		{
+			// 每个位的地址比前一个位增加 1
+			uint8_t bit_value = o->ReadBitCallback(start_bit_addr + group * 8 + i);
+			if (bit_value)
+			{
+				bit_register |= 1 << (i % 8);
+			}
+		}
 
-	for (int i = 0; i < bit_count; i++)
+		PushUInt8(o, bit_register);
+	}
+
+	// 剩下几个位，不够被 8 整除
+	uint8_t bit_register = 0;
+	for (int i = 0; i < bit_count % 8; i++)
 	{
 		// 每个位的地址比前一个位增加 1
-		uint8_t bit_value = o->ReadBitCallback(start_bit_addr + i);
+		uint8_t bit_value = o->ReadBitCallback(start_bit_addr + (bit_count / 8) * 8 + i);
 		if (bit_value)
 		{
 			bit_register |= 1 << (i % 8);
 		}
-
-		if (i % 8 == 7)
-		{
-			/* 这个直接已经装满 8 个位了，将这个直接放入发送缓冲区，清空 bit_register 以准备
-			 * 继续接收下一个位数据。
-			 */
-			PushUInt8(o, bit_register);
-			bit_register = 0;
-		}
 	}
+
+	PushUInt8(o, bit_register);
 #pragma endregion
 
 	CalculateAndPushCrc16(o);
