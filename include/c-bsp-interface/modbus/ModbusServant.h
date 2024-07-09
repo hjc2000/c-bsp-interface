@@ -52,11 +52,10 @@ typedef struct ModbusServant ModbusServant;
 ///
 /// @param read_write_callback_hub 调用者在栈上构造此结构体，为字段赋值后将指针传进来，
 /// 随后这个对象可被销毁，内部不会引用此对象。
-void ModbusServant_Init(ModbusServant *o,
-						uint8_t servant_address,
-						Endian crc16_endian,
-						ModbusBitConverterUnit bit_converter_unit,
-						ModbusServantReadWriteCallbackHub *read_write_callback_hub);
+ModbusServant *ModbusServant_StackHeapAlloc(uint8_t servant_address,
+											Endian crc16_endian,
+											ModbusBitConverterUnit bit_converter_unit,
+											ModbusServantReadWriteCallbackHub *read_write_callback_hub);
 
 /// @brief 将接收缓冲区送给 ModbusServant 进行分析。分析完后会触发回调。
 /// @param o

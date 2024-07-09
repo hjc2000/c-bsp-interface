@@ -662,12 +662,12 @@ static void HandleBrocastPdu(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	HandlePdu(o, pdu, pdu_size);
 }
 
-void ModbusServant_Init(ModbusServant *o,
-						uint8_t servant_address,
-						Endian crc16_endian,
-						ModbusBitConverterUnit bit_converter_unit,
-						ModbusServantReadWriteCallbackHub *read_write_callback_hub)
+ModbusServant *ModbusServant_StackHeapAlloc(uint8_t servant_address,
+											Endian crc16_endian,
+											ModbusBitConverterUnit bit_converter_unit,
+											ModbusServantReadWriteCallbackHub *read_write_callback_hub)
 {
+	ModbusServant *o = StackHeapAlignAlloc(sizeof(ModbusServant), 4);
 	o->_servant_address = servant_address;
 	o->_crc16_endian = crc16_endian;
 	o->_bit_converter_unit = bit_converter_unit;
@@ -690,6 +690,7 @@ void ModbusServant_Init(ModbusServant *o,
 #pragma endregion
 
 	ModbusCrc16_Init(&o->_crc);
+	return o;
 }
 
 void ModbusServant_ParseReceivedBuffer(ModbusServant *o,
