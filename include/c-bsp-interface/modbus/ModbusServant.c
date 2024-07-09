@@ -35,6 +35,7 @@ typedef struct ModbusServant
 
 } ModbusServant;
 
+#pragma region Push
 /// @brief 计算 CRC16 并放入缓冲区
 /// @param o
 static void CalculateAndPushCrc16(ModbusServant *o)
@@ -58,7 +59,15 @@ static void CalculateAndPushCrc16(ModbusServant *o)
 	}
 }
 
-/// @brief 将 uint16_t 放入发送缓冲栈。
+/// @brief 将 uint8_t 放入发送栈中。
+/// @param o
+/// @param value
+static void PushUInt8(ModbusServant *o, uint8_t value)
+{
+	Stack_Push(o->_send_buffer_stack, &value, 1);
+}
+
+/// @brief 将 uint16_t 放入发送栈中。
 /// @note 会进行字节序转换
 /// @param o
 /// @param value
@@ -73,6 +82,10 @@ static void PushUInt16(ModbusServant *o, uint16_t value)
 	Stack_Push(o->_send_buffer_stack, temp_buffer, sizeof(temp_buffer));
 }
 
+/// @brief 将 uint32_t 放入发送栈中。
+/// @note 会进行字节序转换
+/// @param o
+/// @param value
 static void PushUInt32(ModbusServant *o, uint32_t value)
 {
 	uint8_t temp_buffer[sizeof(value)];
@@ -84,6 +97,10 @@ static void PushUInt32(ModbusServant *o, uint32_t value)
 	Stack_Push(o->_send_buffer_stack, temp_buffer, sizeof(temp_buffer));
 }
 
+/// @brief 将 uint64_t 放入发送栈中。
+/// @note 会进行字节序转换
+/// @param o
+/// @param value
 static void PushUInt64(ModbusServant *o, uint64_t value)
 {
 	uint8_t temp_buffer[sizeof(value)];
@@ -94,6 +111,7 @@ static void PushUInt64(ModbusServant *o, uint64_t value)
 
 	Stack_Push(o->_send_buffer_stack, temp_buffer, sizeof(temp_buffer));
 }
+#pragma endregion
 
 /// @brief 读一组线圈
 /// @param o
@@ -127,15 +145,10 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	Stack_Push(o->_send_buffer_stack, &o->_servant_address, 1);
 
 	// 放入功能码
-	/* 功能码在 modbus 传输中占用 1 字节，但是枚举量是一个 int，占用 4 字节。
-	 * 这里要赋值给 uint8_t 类型的变量，然后才能将指针传给 Stack_Push 函数。
-	 */
-	uint8_t function_code = ModbusFunctionCode_ReadCoils;
-	Stack_Push(o->_send_buffer_stack, &function_code, 1);
+	PushUInt8(o, ModbusFunctionCode_ReadCoils);
 
 	// 放入数据字节数
-	uint8_t byte_count = bit_count / 8;
-	Stack_Push(o->_send_buffer_stack, &byte_count, 1);
+	PushUInt8(o, bit_count / 8);
 #pragma endregion
 
 #pragma region 放入位数据
@@ -155,7 +168,7 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 			/* 这个直接已经装满 8 个位了，将这个直接放入发送缓冲区，清空 bit_register 以准备
 			 * 继续接收下一个位数据。
 			 */
-			Stack_Push(o->_send_buffer_stack, &bit_register, 1);
+			PushUInt8(o, bit_register);
 			bit_register = 0;
 		}
 	}
@@ -208,15 +221,10 @@ static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_siz
 	Stack_Push(o->_send_buffer_stack, &o->_servant_address, 1);
 
 	// 放入功能码
-	/* 功能码在 modbus 传输中占用 1 字节，但是枚举量是一个 int，占用 4 字节。
-	 * 这里要赋值给 uint8_t 类型的变量，然后才能将指针传给 Stack_Push 函数。
-	 */
-	uint8_t function_code = ModbusFunctionCode_ReadHoldingRegisters;
-	Stack_Push(o->_send_buffer_stack, &function_code, 1);
+	PushUInt8(o, ModbusFunctionCode_ReadHoldingRegisters);
 
 	// 放入数据字节数
-	uint8_t byte_count = record_count * 2;
-	Stack_Push(o->_send_buffer_stack, &byte_count, 1);
+	PushUInt8(o, record_count * 2);
 #pragma endregion
 
 #pragma region 放入数据
@@ -340,11 +348,13 @@ static void WriteSingleCoil(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	Stack_Push(o->_send_buffer_stack, &o->_servant_address, 1);
 
 	// 放入功能码
-	/* 功能码在 modbus 传输中占用 1 字节，但是枚举量是一个 int，占用 4 字节。
-	 * 这里要赋值给 uint8_t 类型的变量，然后才能将指针传给 Stack_Push 函数。
-	 */
-	uint8_t function_code = ModbusFunctionCode_WriteSingleCoil;
-	Stack_Push(o->_send_buffer_stack, &function_code, 1);
+	PushUInt8(o, ModbusFunctionCode_WriteSingleCoil);
+
+	// 放入位地址
+	PushUInt16(o, bit_addr);
+
+	// 放入位数据
+	PushUInt16(o, bit_value ? 0xff00 : 0x0000);
 #pragma endregion
 
 	CalculateAndPushCrc16(o);
