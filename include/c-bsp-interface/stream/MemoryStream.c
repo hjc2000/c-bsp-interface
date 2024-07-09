@@ -66,4 +66,15 @@ MemoryStream *MemoryStream_StackHeapAlloc(int32_t max_size)
 
 void MemoryStream_AsStream(MemoryStream *o, Stream *stream)
 {
+	stream->CanRead = o->CanRead;
+	stream->CanWrite = o->CanWrite;
+	stream->CanSeek = o->CanSeek;
+	stream->Length = o->Length;
+	stream->SetLength = o->SetLength;
+	stream->Read = o->Read;
+	stream->Write = o->Write;
+	stream->Flush = o->Flush;
+	stream->Close = o->Close;
+	stream->Position = o->Position;
+	stream->SetPosition = o->SetPosition;
 }
