@@ -363,12 +363,71 @@ static void WriteSingleCoil(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	o->SendResponse(Stack_Buffer(o->_send_buffer_stack), 0, Stack_Sp(o->_send_buffer_stack));
 }
 
+/// @brief 检查主机发过来的位数据个数和字节数是否对应。
+/// @param bit_count
+/// @param byte_count
+/// @return 对应则返回 true，否则返回 false.
+static uint8_t WriteCoils_CheckByteCount(int32_t bit_count, int32_t byte_count)
+{
+	int32_t calculated_byte_count = bit_count / 8;
+	if (bit_count % 8 != 0)
+	{
+		calculated_byte_count++;
+	}
+
+	return calculated_byte_count == byte_count;
+}
+
 /// @brief 写一组线圈
 /// @param o
 /// @param pdu 传进来的是完整的 PDU，包括 1 字节的功能码和后面的信息域。
 /// @param pdu_size
 static void WriteCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 {
+#pragma region 获取请求信息
+	// 信息域缓冲区
+	uint8_t *info_buffer = pdu + 1;
+	int32_t info_buffer_offset = 0;
+
+	// 起始位地址
+	uint16_t start_bit_addr = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+														  info_buffer,
+														  info_buffer_offset);
+	info_buffer_offset += 2;
+
+	// 位数据个数
+	int32_t bit_count = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+													info_buffer,
+													info_buffer_offset);
+	info_buffer_offset += 2;
+
+	// 数据字节数
+	int32_t byte_count = ModbusBitConverter_ToUInt8(ModbusBitConverterUnit_Whole,
+													info_buffer,
+													info_buffer_offset);
+	info_buffer_offset += 1;
+
+	if (!WriteCoils_CheckByteCount(bit_count, byte_count))
+	{
+		// TODO: 例外响应
+		return;
+	}
+#pragma endregion
+
+#pragma region 准备响应帧
+	// 清空发送缓冲区
+	Stack_Clear(o->_send_buffer_stack);
+
+	// 放入站号
+	Stack_Push(o->_send_buffer_stack, &o->_servant_address, 1);
+
+	// 放入功能码
+	PushUInt8(o, ModbusFunctionCode_ReadCoils);
+
+	// 放入数据字节数
+	PushUInt8(o, bit_count / 8);
+#pragma endregion
+
 	CalculateAndPushCrc16(o);
 
 	// 发送响应帧

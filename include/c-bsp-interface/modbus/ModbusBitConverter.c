@@ -4,6 +4,20 @@
 #include <string.h>
 
 #pragma region 转数字
+uint8_t ModbusBitConverter_ToUInt8(ModbusBitConverterUnit unit,
+								   uint8_t const *buffer, int32_t offset)
+{
+	uint8_t const *p = (uint8_t const *)(buffer + offset);
+	uint8_t value = *p;
+	return value;
+}
+
+uint8_t ModbusBitConverter_ToInt8(ModbusBitConverterUnit unit,
+								  uint8_t const *buffer, int32_t offset)
+{
+	return ModbusBitConverter_ToUInt8(unit, buffer, offset);
+}
+
 uint16_t ModbusBitConverter_ToUInt16(ModbusBitConverterUnit unit,
 									 uint8_t const *buffer, int32_t offset)
 {
