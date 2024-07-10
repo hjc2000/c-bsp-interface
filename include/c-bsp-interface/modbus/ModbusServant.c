@@ -47,42 +47,6 @@ static void CalculateAndWriteCrc16ToMemoryStream(ModbusServant *self)
 									  self->_crc16_endian);
 }
 
-static void MemoryStream_WriteUInt16(ModbusServant *o, uint16_t value)
-{
-	uint8_t temp_buffer[sizeof(value)];
-	ModbusBitConverter_GetBytesFromUInt16(o->_bit_converter_unit,
-										  value,
-										  temp_buffer,
-										  0);
-
-	MemoryStream_Write(o->_send_buffer_memory_stream,
-					   temp_buffer, 0, sizeof(temp_buffer));
-}
-
-static void MemoryStream_WriteUInt32(ModbusServant *o, uint32_t value)
-{
-	uint8_t temp_buffer[sizeof(value)];
-	ModbusBitConverter_GetBytesFromUInt32(o->_bit_converter_unit,
-										  value,
-										  temp_buffer,
-										  0);
-
-	MemoryStream_Write(o->_send_buffer_memory_stream,
-					   temp_buffer, 0, sizeof(temp_buffer));
-}
-
-static void MemoryStream_WriteUInt64(ModbusServant *o, uint64_t value)
-{
-	uint8_t temp_buffer[sizeof(value)];
-	ModbusBitConverter_GetBytesFromUInt64(o->_bit_converter_unit,
-										  value,
-										  temp_buffer,
-										  0);
-
-	MemoryStream_Write(o->_send_buffer_memory_stream,
-					   temp_buffer, 0, sizeof(temp_buffer));
-}
-
 /// @brief 读一组线圈
 /// @param o
 /// @param pdu 传进来的是完整的 PDU，包括 1 字节的功能码和后面的信息域。
@@ -240,21 +204,21 @@ static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_siz
 		case ModbusMultibyteSizeEnum_2Byte:
 		{
 			uint16_t data = o->Read2ByteCallback(current_record_addr);
-			MemoryStream_WriteUInt16(o, data);
+			ModbusStreamWriter_WriteUInt16(o->_writer, data);
 			record_addr_offset += 1;
 			break;
 		}
 		case ModbusMultibyteSizeEnum_4Byte:
 		{
 			uint32_t data = o->Read4ByteCallback(current_record_addr);
-			MemoryStream_WriteUInt32(o, data);
+			ModbusStreamWriter_WriteUInt32(o->_writer, data);
 			record_addr_offset += 2;
 			break;
 		}
 		case ModbusMultibyteSizeEnum_8Byte:
 		{
 			uint64_t data = o->Read8ByteCallback(current_record_addr);
-			MemoryStream_WriteUInt64(o, data);
+			ModbusStreamWriter_WriteUInt64(o->_writer, data);
 			record_addr_offset += 4;
 			break;
 		}
@@ -342,10 +306,10 @@ static void WriteSingleCoil(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	ModbusStreamWriter_WriteUInt8(o->_writer, ModbusFunctionCode_WriteSingleCoil);
 
 	// 放入位地址
-	MemoryStream_WriteUInt16(o, bit_addr);
+	ModbusStreamWriter_WriteUInt16(o->_writer, bit_addr);
 
 	// 放入位数据
-	MemoryStream_WriteUInt16(o, bit_value ? 0xff00 : 0x0000);
+	ModbusStreamWriter_WriteUInt16(o->_writer, bit_value ? 0xff00 : 0x0000);
 #pragma endregion
 
 	CalculateAndWriteCrc16ToMemoryStream(o);
@@ -434,8 +398,8 @@ static void WriteCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	// 放入功能码
 	ModbusStreamWriter_WriteUInt8(o->_writer, ModbusFunctionCode_ReadCoils);
 
-	MemoryStream_WriteUInt16(o, start_bit_addr);
-	MemoryStream_WriteUInt16(o, bit_count);
+	ModbusStreamWriter_WriteUInt16(o->_writer, start_bit_addr);
+	ModbusStreamWriter_WriteUInt16(o->_writer, bit_count);
 #pragma endregion
 
 	CalculateAndWriteCrc16ToMemoryStream(o);
@@ -560,8 +524,8 @@ static void WriteHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_si
 	// 放入功能码
 	ModbusStreamWriter_WriteUInt8(o->_writer, ModbusFunctionCode_ReadHoldingRegisters);
 
-	MemoryStream_WriteUInt16(o, start_record_addr);
-	MemoryStream_WriteUInt16(o, record_count);
+	ModbusStreamWriter_WriteUInt16(o->_writer, start_record_addr);
+	ModbusStreamWriter_WriteUInt16(o->_writer, record_count);
 #pragma endregion
 
 	CalculateAndWriteCrc16ToMemoryStream(o);
