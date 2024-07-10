@@ -140,23 +140,14 @@ static void ReadInputBits(ModbusServant *self, uint8_t *pdu, int32_t pdu_size)
 /// @param pdu_size
 static void ReadHoldingRegisters(ModbusServant *self, uint8_t *pdu, int32_t pdu_size)
 {
-#pragma region 获取请求信息
-	// 信息域缓冲区
-	uint8_t *info_buffer = pdu + 1;
-	int32_t info_buffer_offset = 0;
+	ModbusBufferReader reader;
+	ModbusBufferReader_Init(&reader, pdu + 1, self->_bit_converter_unit);
 
 	// 起始记录地址
-	uint16_t start_record_addr = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
-															 info_buffer,
-															 info_buffer_offset);
-	info_buffer_offset += 2;
+	uint16_t start_record_addr = ModbusBufferReader_ReadUInt16(&reader);
 
 	// 要读取的记录数
-	int32_t record_count = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
-													   info_buffer,
-													   info_buffer_offset);
-	info_buffer_offset += 2;
-#pragma endregion
+	int32_t record_count = ModbusBufferReader_ReadUInt16(&reader);
 
 #pragma region 准备响应帧
 	// 清空发送缓冲区
@@ -251,21 +242,14 @@ static void ReadInputRegisters(ModbusServant *self, uint8_t *pdu, int32_t pdu_si
 static void WriteSingleCoil(ModbusServant *self, uint8_t *pdu, int32_t pdu_size)
 {
 #pragma region 获取请求信息
-	// 信息域缓冲区
-	uint8_t *info_buffer = pdu + 1;
-	int32_t offset = 0;
+	ModbusBufferReader reader;
+	ModbusBufferReader_Init(&reader, pdu + 1, self->_bit_converter_unit);
 
 	// 位地址
-	uint16_t bit_addr = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
-													info_buffer,
-													offset);
-	offset += 2;
+	uint16_t bit_addr = ModbusBufferReader_ReadUInt16(&reader);
 
 	// 位数据。0x0000 表示 OFF，0xff00 表示 ON
-	int32_t bit_data = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
-												   info_buffer,
-												   offset);
-	offset += 2;
+	int32_t bit_data = ModbusBufferReader_ReadUInt16(&reader);
 
 	uint8_t bit_value;
 	if (bit_data == 0x0000)
@@ -334,27 +318,17 @@ static uint8_t WriteCoils_CheckByteCount(int32_t bit_count, int32_t byte_count)
 static void WriteCoils(ModbusServant *self, uint8_t *pdu, int32_t pdu_size)
 {
 #pragma region 获取请求信息
-	// 信息域缓冲区
-	uint8_t *info_buffer = pdu + 1;
-	int32_t info_buffer_offset = 0;
+	ModbusBufferReader reader;
+	ModbusBufferReader_Init(&reader, pdu + 1, self->_bit_converter_unit);
 
 	// 起始位地址
-	uint16_t start_bit_addr = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
-														  info_buffer,
-														  info_buffer_offset);
-	info_buffer_offset += 2;
+	uint16_t start_bit_addr = ModbusBufferReader_ReadUInt16(&reader);
 
 	// 位数据个数
-	int32_t bit_count = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
-													info_buffer,
-													info_buffer_offset);
-	info_buffer_offset += 2;
+	int32_t bit_count = ModbusBufferReader_ReadUInt16(&reader);
 
 	// 数据字节数
-	int32_t byte_count = ModbusBitConverter_ToUInt8(ModbusBitConverterUnit_Whole,
-													info_buffer,
-													info_buffer_offset);
-	info_buffer_offset += 1;
+	int32_t byte_count = ModbusBufferReader_ReadUInt8(&reader);
 
 	if (!WriteCoils_CheckByteCount(bit_count, byte_count))
 	{
@@ -366,11 +340,7 @@ static void WriteCoils(ModbusServant *self, uint8_t *pdu, int32_t pdu_size)
 	for (int32_t i = 0; i < byte_count; i++)
 	{
 		// 获取储存着位数据的字节
-		int32_t bits = ModbusBitConverter_ToUInt8(ModbusBitConverterUnit_Whole,
-												  info_buffer,
-												  info_buffer_offset);
-		info_buffer_offset += 1;
-
+		int32_t bits = ModbusBufferReader_ReadUInt8(&reader);
 		for (int32_t j = 0; j < 8; j++)
 		{
 			int32_t current_bit_addr_offset = i * 8 + j;

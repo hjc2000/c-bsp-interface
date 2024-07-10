@@ -44,7 +44,7 @@ typedef struct ModbusServantReadWriteCallbackHub
 /// @brief modbus 从机
 typedef struct ModbusServant ModbusServant;
 
-/// @brief 准备一个静态的 ModbusServant 对象，传进来进行初始化。
+/// @brief 在栈堆上构造一个 ModbusServant
 /// @param o
 /// @param servant_address 本从站的地址（站号）。
 /// @param crc16_endian CRC16 的 2 个字节用什么字节序存放。
