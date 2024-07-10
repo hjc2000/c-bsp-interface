@@ -73,7 +73,7 @@ uint64_t ModbusBufferReader_ReadUInt64(ModbusBufferReader *self)
 
 int64_t ModbusBufferReader_ReadInt64(ModbusBufferReader *self)
 {
-	int64_t value = ModbusBitConverter_ToUInt64(self->_unit, self->_buffer, self->_position);
+	int64_t value = ModbusBitConverter_ToInt64(self->_unit, self->_buffer, self->_position);
 	self->_position += 8;
 	return value;
 }
@@ -87,7 +87,7 @@ float ModbusBufferReader_ReadFloat(ModbusBufferReader *self)
 
 double ModbusBufferReader_ReadDouble(ModbusBufferReader *self)
 {
-	double value = ModbusBitConverter_ToFloat(self->_unit, self->_buffer, self->_position);
+	double value = ModbusBitConverter_ToDouble(self->_unit, self->_buffer, self->_position);
 	self->_position += 8;
 	return value;
 }
