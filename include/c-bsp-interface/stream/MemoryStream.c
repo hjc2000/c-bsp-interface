@@ -16,6 +16,8 @@ typedef struct MemoryStream
 	/// 	@li 当 _length = 0 时，_buffer[0] 是无效数据，流中没有数据。
 	/// 	@li _length 不为 0 时，[0 , _length - 1] 闭区间上是有效数据。
 	int32_t _length;
+
+	Stream *_as_stream;
 } MemoryStream;
 
 MemoryStream *MemoryStream_StackHeapAlloc(int32_t buffer_size)
@@ -25,31 +27,35 @@ MemoryStream *MemoryStream_StackHeapAlloc(int32_t buffer_size)
 	self->_buffer = StackHeapAlloc(buffer_size);
 	self->_position = 0;
 	self->_length = 0;
+	self->_as_stream = 0;
 	return self;
 }
 
-Stream MemoryStream_AsStream(MemoryStream *self)
+Stream *MemoryStream_AsStream(MemoryStream *self)
 {
-	Stream stream;
-	stream._self = self;
+	if (self->_as_stream == 0)
+	{
+		self->_as_stream = StackHeapAlignAlloc(sizeof(Stream), 4);
+		self->_as_stream->_self = self;
 
-	stream.CanRead = (uint8_t(*)(void *self))MemoryStream_CanRead;
-	stream.CanWrite = (uint8_t(*)(void *self))MemoryStream_CanWrite;
-	stream.CanSeek = (uint8_t(*)(void *self))MemoryStream_CanSeek;
+		self->_as_stream->CanRead = (uint8_t(*)(void *self))MemoryStream_CanRead;
+		self->_as_stream->CanWrite = (uint8_t(*)(void *self))MemoryStream_CanWrite;
+		self->_as_stream->CanSeek = (uint8_t(*)(void *self))MemoryStream_CanSeek;
 
-	stream.Length = (int64_t(*)(void *self))MemoryStream_Length;
-	stream.SetLength = (void (*)(void *self, int64_t value))MemoryStream_SetLength;
+		self->_as_stream->Length = (int64_t(*)(void *self))MemoryStream_Length;
+		self->_as_stream->SetLength = (void (*)(void *self, int64_t value))MemoryStream_SetLength;
 
-	stream.Position = (int64_t(*)(void *self))MemoryStream_Position;
-	stream.SetPosition = (void (*)(void *self, int64_t value))MemoryStream_SetPosition;
+		self->_as_stream->Position = (int64_t(*)(void *self))MemoryStream_Position;
+		self->_as_stream->SetPosition = (void (*)(void *self, int64_t value))MemoryStream_SetPosition;
 
-	stream.Read = (int32_t(*)(void *self, uint8_t *buffer, int32_t offset, int32_t count))MemoryStream_Read;
-	stream.Write = (int32_t(*)(void *self, uint8_t const *buffer, int32_t offset, int32_t count))MemoryStream_Write;
+		self->_as_stream->Read = (int32_t(*)(void *self, uint8_t *buffer, int32_t offset, int32_t count))MemoryStream_Read;
+		self->_as_stream->Write = (int32_t(*)(void *self, uint8_t const *buffer, int32_t offset, int32_t count))MemoryStream_Write;
 
-	stream.Close = (void (*)(void *self))MemoryStream_Close;
-	stream.Flush = (void (*)(void *self))MemoryStream_Flush;
+		self->_as_stream->Close = (void (*)(void *self))MemoryStream_Close;
+		self->_as_stream->Flush = (void (*)(void *self))MemoryStream_Flush;
+	}
 
-	return stream;
+	return self->_as_stream;
 }
 
 uint8_t *MemoryStream_Buffer(MemoryStream *self)

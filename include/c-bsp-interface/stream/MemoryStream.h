@@ -10,8 +10,8 @@ MemoryStream *MemoryStream_StackHeapAlloc(int32_t buffer_size);
 
 /// @brief 将 MemoryStream 作为 Stream
 /// @param self
-/// @return Stream 接口。
-Stream MemoryStream_AsStream(MemoryStream *self);
+/// @return Stream 接口对象。
+Stream *MemoryStream_AsStream(MemoryStream *self);
 
 /// @brief 获取本流的缓冲区
 /// @return
