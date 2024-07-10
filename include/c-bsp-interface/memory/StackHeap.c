@@ -1,4 +1,5 @@
 #include "StackHeap.h"
+#include <stddef.h>
 
 static uint8_t _buffer[STACK_HEAP_SIZE];
 static uint32_t _sp = 0;
