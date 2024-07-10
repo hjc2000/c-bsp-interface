@@ -3,6 +3,7 @@
 #include <c-bsp-interface/modbus/ModbusBitConverter.h>
 #include <c-bsp-interface/modbus/ModbusCrc16.h>
 #include <c-bsp-interface/modbus/ModbusFunctionCode.h>
+#include <c-bsp-interface/modbus/ModbusStreamWriter.h>
 #include <c-bsp-interface/stream/MemoryStream.h>
 
 /// @brief modbus 从机
@@ -14,6 +15,7 @@ typedef struct ModbusServant
 	Endian _crc16_endian;
 	ModbusBitConverterUnit _bit_converter_unit;
 	MemoryStream *_send_buffer_memory_stream;
+	ModbusStreamWriter *_writer;
 
 #pragma region 读写回调函数
 	ModbusMultibyteSizeEnum (*GetMultibyteDataSize)(uint32_t data_addr);
@@ -112,7 +114,7 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 
 #pragma region 准备响应帧
 	// 清空发送缓冲区
-	MemoryStream_SetLength(o->_send_buffer_memory_stream, 0);
+	MemoryStream_Clear(o->_send_buffer_memory_stream);
 
 	// 放入站号
 	MemoryStream_Write(o->_send_buffer_memory_stream,
@@ -207,7 +209,7 @@ static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_siz
 
 #pragma region 准备响应帧
 	// 清空发送缓冲区
-	MemoryStream_SetLength(o->_send_buffer_memory_stream, 0);
+	MemoryStream_Clear(o->_send_buffer_memory_stream);
 
 	// 放入站号
 	MemoryStream_WriteUInt8(o, o->_servant_address);
@@ -336,7 +338,7 @@ static void WriteSingleCoil(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 
 #pragma region 准备响应帧
 	// 清空发送缓冲区
-	MemoryStream_SetLength(o->_send_buffer_memory_stream, 0);
+	MemoryStream_Clear(o->_send_buffer_memory_stream);
 
 	// 放入站号
 	MemoryStream_WriteUInt8(o, o->_servant_address);
@@ -429,7 +431,7 @@ static void WriteCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 
 #pragma region 准备响应帧
 	// 清空发送缓冲区
-	MemoryStream_SetLength(o->_send_buffer_memory_stream, 0);
+	MemoryStream_Clear(o->_send_buffer_memory_stream);
 
 	// 放入站号
 	MemoryStream_WriteUInt8(o, o->_servant_address);
@@ -555,7 +557,7 @@ static void WriteHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_si
 
 #pragma region 准备响应帧
 	// 清空发送缓冲区
-	MemoryStream_SetLength(o->_send_buffer_memory_stream, 0);
+	MemoryStream_Clear(o->_send_buffer_memory_stream);
 
 	// 放入站号
 	MemoryStream_WriteUInt8(o, o->_servant_address);
@@ -672,6 +674,8 @@ ModbusServant *ModbusServant_StackHeapAlloc(uint8_t servant_address,
 	o->_crc16_endian = crc16_endian;
 	o->_bit_converter_unit = bit_converter_unit;
 	o->_send_buffer_memory_stream = MemoryStream_StackHeapAlloc(512);
+	o->_writer = ModbusStreamWriter_StackHeapAlloc(MemoryStream_AsStream(o->_send_buffer_memory_stream),
+												   o->_bit_converter_unit);
 
 #pragma region 读写数据回调函数
 	o->GetMultibyteDataSize = read_write_callback_hub->GetMultibyteDataSize;
