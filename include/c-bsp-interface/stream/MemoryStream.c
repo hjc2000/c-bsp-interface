@@ -128,7 +128,8 @@ int32_t MemoryStream_Read(MemoryStream *self, uint8_t *buffer, int32_t offset, i
 	return have_read;
 }
 
-int32_t MemoryStream_Write(MemoryStream *self, uint8_t const *buffer, int32_t offset, int32_t count)
+int32_t MemoryStream_Write(MemoryStream *self,
+						   uint8_t const *buffer, int32_t offset, int32_t count)
 {
 	if (count > MemoryStream_AvaliableToWrite(self))
 	{

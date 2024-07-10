@@ -10,7 +10,7 @@ MemoryStream *MemoryStream_StackHeapAlloc(int32_t buffer_size);
 
 /// @brief 将 MemoryStream 作为 Stream
 /// @param self
-/// @return
+/// @return Stream 接口。
 Stream MemoryStream_AsStream(MemoryStream *self);
 
 /// @brief 获取本流的缓冲区
@@ -52,7 +52,8 @@ void MemoryStream_SetLength(MemoryStream *self, int64_t value);
 /// @param count
 /// @return
 /// @exception buffer 为空指针会抛出 std::invalid_argument 异常。
-int32_t MemoryStream_Read(MemoryStream *self, uint8_t *buffer, int32_t offset, int32_t count);
+int32_t MemoryStream_Read(MemoryStream *self,
+						  uint8_t *buffer, int32_t offset, int32_t count);
 
 /// @brief
 /// @param buffer
@@ -60,7 +61,8 @@ int32_t MemoryStream_Read(MemoryStream *self, uint8_t *buffer, int32_t offset, i
 /// @param count
 /// @return 成功返回 0，失败返回负数的错误代码。
 /// @exception std::invalid_argument
-int32_t MemoryStream_Write(MemoryStream *self, uint8_t const *buffer, int32_t offset, int32_t count);
+int32_t MemoryStream_Write(MemoryStream *self,
+						   uint8_t const *buffer, int32_t offset, int32_t count);
 
 void MemoryStream_Flush(MemoryStream *self);
 
