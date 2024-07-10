@@ -22,7 +22,7 @@ typedef struct MemoryStream
 
 MemoryStream *MemoryStream_StackHeapAlloc(int32_t buffer_size)
 {
-	MemoryStream *self = StackHeapAlignAlloc(sizeof(MemoryStream), 4);
+	MemoryStream *self = StackHeapObjAlloc(sizeof(MemoryStream));
 	self->_buffer_size = buffer_size;
 	self->_buffer = StackHeapAlloc(buffer_size);
 	self->_position = 0;
@@ -35,7 +35,7 @@ Stream *MemoryStream_AsStream(MemoryStream *self)
 {
 	if (self->_as_stream == 0)
 	{
-		self->_as_stream = StackHeapAlignAlloc(sizeof(Stream), 4);
+		self->_as_stream = StackHeapObjAlloc(sizeof(Stream));
 		self->_as_stream->_self = self;
 
 		self->_as_stream->CanRead = (uint8_t(*)(void *self))MemoryStream_CanRead;

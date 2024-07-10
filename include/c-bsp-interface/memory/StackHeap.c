@@ -63,6 +63,11 @@ void *StackHeapAlignAlloc(int32_t size, int32_t align)
 	return StackHeapAlloc(size);
 }
 
+void *StackHeapObjAlloc(int32_t size)
+{
+	return StackHeapAlignAlloc(size, 8);
+}
+
 uint8_t StackHeapOverflow()
 {
 	return _overflow;

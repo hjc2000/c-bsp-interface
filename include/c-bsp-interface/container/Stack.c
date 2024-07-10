@@ -11,7 +11,7 @@ typedef struct Stack
 
 Stack *Stack_StackHeapAlloc(int32_t max_size)
 {
-	Stack *o = StackHeapAlignAlloc(sizeof(Stack), 4);
+	Stack *o = StackHeapObjAlloc(sizeof(Stack));
 	o->_buffer = StackHeapAlloc(max_size);
 	o->_max_size = max_size;
 	o->_sp = 0;

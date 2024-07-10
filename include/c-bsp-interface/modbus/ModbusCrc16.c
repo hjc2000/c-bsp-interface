@@ -9,7 +9,7 @@ typedef struct ModbusCrc16
 
 ModbusCrc16 *ModbusCrc16_StackHeapAlloc()
 {
-	ModbusCrc16 *o = StackHeapAlignAlloc(sizeof(ModbusCrc16), 4);
+	ModbusCrc16 *o = StackHeapObjAlloc(sizeof(ModbusCrc16));
 	ModbusCrc16_ResetRegister(o);
 
 	/* 默认的生成多项式是：

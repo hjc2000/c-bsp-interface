@@ -21,6 +21,11 @@ void *StackHeapAlloc(int32_t size);
 /// @return
 void *StackHeapAlignAlloc(int32_t size, int32_t align);
 
+/// @brief 按照 8 字节对齐在栈堆上分配对象的内存。
+/// @param size
+/// @return
+void *StackHeapObjAlloc(int32_t size);
+
 /// @brief 检查栈堆是否发生过溢出
 /// @return 栈堆发生过溢出就会返回 true，否则返回 false
 uint8_t StackHeapOverflow();

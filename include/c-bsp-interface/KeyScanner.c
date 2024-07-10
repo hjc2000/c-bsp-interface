@@ -48,10 +48,10 @@ KeyScanner *KeyScanner_StackHeapAlloc(int32_t key_count,
 		return 0;
 	}
 
-	KeyScanner *o = (KeyScanner *)StackHeapAlignAlloc(sizeof(KeyScanner), 4);
+	KeyScanner *o = (KeyScanner *)StackHeapObjAlloc(sizeof(KeyScanner));
 
 	// 能够装下 key_count 个指针的指针数组
-	o->_keys = StackHeapAlignAlloc(sizeof(IKey *) * key_count, 4);
+	o->_keys = StackHeapObjAlloc(sizeof(IKey *) * key_count);
 	o->_key_count = key_count;
 
 	o->_key_pressed_state_bitset = Bitset_StackHeapAlloc(key_count);

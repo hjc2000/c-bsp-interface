@@ -12,7 +12,7 @@ typedef struct FixedSizeVector
 
 FixedSizeVector *FixedSizeVector_StackHeapAlloc(int32_t element_size, int32_t max_element_count)
 {
-	FixedSizeVector *o = StackHeapAlignAlloc(sizeof(FixedSizeVector), 4);
+	FixedSizeVector *o = StackHeapObjAlloc(sizeof(FixedSizeVector));
 	o->_max_size = max_element_count * element_size;
 	o->_buffer = StackHeapAlloc(o->_max_size);
 	o->_pos = 0;

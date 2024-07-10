@@ -683,7 +683,7 @@ ModbusServant *ModbusServant_StackHeapAlloc(uint8_t servant_address,
 											ModbusBitConverterUnit bit_converter_unit,
 											ModbusServantReadWriteCallbackHub *read_write_callback_hub)
 {
-	ModbusServant *o = StackHeapAlignAlloc(sizeof(ModbusServant), 4);
+	ModbusServant *o = StackHeapObjAlloc(sizeof(ModbusServant));
 	o->_servant_address = servant_address;
 	o->_crc16_endian = crc16_endian;
 	o->_bit_converter_unit = bit_converter_unit;

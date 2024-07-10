@@ -10,7 +10,7 @@ typedef struct AutoBitConverter
 
 AutoBitConverter *AutoBitConverter_StackHeapAlloc(Endian remote_endian)
 {
-	AutoBitConverter *o = StackHeapAlignAlloc(sizeof(AutoBitConverter), 4);
+	AutoBitConverter *o = StackHeapObjAlloc(sizeof(AutoBitConverter));
 	o->_remote_endian = remote_endian;
 	return o;
 }
