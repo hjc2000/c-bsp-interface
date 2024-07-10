@@ -33,25 +33,16 @@ typedef struct ModbusServant
 
 } ModbusServant;
 
-static void CalculateAndWriteCrc16ToMemoryStream(ModbusServant *o)
+static void CalculateAndWriteCrc16ToMemoryStream(ModbusServant *self)
 {
-	ModbusCrc16_ResetRegister(o->_crc);
-	ModbusCrc16_AddArray(o->_crc,
-						 MemoryStream_Buffer(o->_send_buffer_memory_stream),
-						 MemoryStream_Position(o->_send_buffer_memory_stream));
+	ModbusCrc16_ResetRegister(self->_crc);
+	ModbusCrc16_AddArray(self->_crc,
+						 MemoryStream_Buffer(self->_send_buffer_memory_stream),
+						 MemoryStream_Position(self->_send_buffer_memory_stream));
 
-	uint8_t crc16_high_byte = ModbusCrc16_HighByte(o->_crc);
-	uint8_t crc16_low_byte = ModbusCrc16_LowByte(o->_crc);
-	if (o->_crc16_endian == BigEndian)
-	{
-		MemoryStream_Write(o->_send_buffer_memory_stream, &crc16_high_byte, 0, 1);
-		MemoryStream_Write(o->_send_buffer_memory_stream, &crc16_low_byte, 0, 1);
-	}
-	else
-	{
-		MemoryStream_Write(o->_send_buffer_memory_stream, &crc16_low_byte, 0, 1);
-		MemoryStream_Write(o->_send_buffer_memory_stream, &crc16_high_byte, 0, 1);
-	}
+	ModbusCrc16_WriteRegisterToStream(self->_crc,
+									  MemoryStream_AsStream(self->_send_buffer_memory_stream),
+									  self->_crc16_endian);
 }
 
 static void MemoryStream_WriteUInt8(ModbusServant *o, uint8_t value)
