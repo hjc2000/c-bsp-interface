@@ -47,11 +47,6 @@ static void CalculateAndWriteCrc16ToMemoryStream(ModbusServant *self)
 									  self->_crc16_endian);
 }
 
-static void MemoryStream_WriteUInt8(ModbusServant *o, uint8_t value)
-{
-	MemoryStream_Write(o->_send_buffer_memory_stream, &value, 0, 1);
-}
-
 static void MemoryStream_WriteUInt16(ModbusServant *o, uint16_t value)
 {
 	uint8_t temp_buffer[sizeof(value)];
@@ -121,7 +116,7 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 					   &o->_servant_address, 0, 1);
 
 	// 放入功能码
-	MemoryStream_WriteUInt8(o, ModbusFunctionCode_ReadCoils);
+	ModbusStreamWriter_WriteUInt8(o->_writer, ModbusFunctionCode_ReadCoils);
 
 	// 放入数据字节数
 	uint8_t byte_count = bit_count / 8;
@@ -130,7 +125,7 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 		byte_count++;
 	}
 
-	MemoryStream_WriteUInt8(o, byte_count);
+	ModbusStreamWriter_WriteUInt8(o->_writer, byte_count);
 #pragma endregion
 
 #pragma region 放入位数据
@@ -148,7 +143,7 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 			}
 		}
 
-		MemoryStream_WriteUInt8(o, bit_register);
+		ModbusStreamWriter_WriteUInt8(o->_writer, bit_register);
 	}
 
 	// 剩下几个位，不够被 8 整除
@@ -163,7 +158,7 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 		}
 	}
 
-	MemoryStream_WriteUInt8(o, bit_register);
+	ModbusStreamWriter_WriteUInt8(o->_writer, bit_register);
 #pragma endregion
 
 	CalculateAndWriteCrc16ToMemoryStream(o);
@@ -212,13 +207,13 @@ static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_siz
 	MemoryStream_Clear(o->_send_buffer_memory_stream);
 
 	// 放入站号
-	MemoryStream_WriteUInt8(o, o->_servant_address);
+	ModbusStreamWriter_WriteUInt8(o->_writer, o->_servant_address);
 
 	// 放入功能码
-	MemoryStream_WriteUInt8(o, ModbusFunctionCode_ReadHoldingRegisters);
+	ModbusStreamWriter_WriteUInt8(o->_writer, ModbusFunctionCode_ReadHoldingRegisters);
 
 	// 放入数据字节数
-	MemoryStream_WriteUInt8(o, record_count * 2);
+	ModbusStreamWriter_WriteUInt8(o->_writer, record_count * 2);
 #pragma endregion
 
 #pragma region 放入数据
@@ -341,10 +336,10 @@ static void WriteSingleCoil(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	MemoryStream_Clear(o->_send_buffer_memory_stream);
 
 	// 放入站号
-	MemoryStream_WriteUInt8(o, o->_servant_address);
+	ModbusStreamWriter_WriteUInt8(o->_writer, o->_servant_address);
 
 	// 放入功能码
-	MemoryStream_WriteUInt8(o, ModbusFunctionCode_WriteSingleCoil);
+	ModbusStreamWriter_WriteUInt8(o->_writer, ModbusFunctionCode_WriteSingleCoil);
 
 	// 放入位地址
 	MemoryStream_WriteUInt16(o, bit_addr);
@@ -434,10 +429,10 @@ static void WriteCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	MemoryStream_Clear(o->_send_buffer_memory_stream);
 
 	// 放入站号
-	MemoryStream_WriteUInt8(o, o->_servant_address);
+	ModbusStreamWriter_WriteUInt8(o->_writer, o->_servant_address);
 
 	// 放入功能码
-	MemoryStream_WriteUInt8(o, ModbusFunctionCode_ReadCoils);
+	ModbusStreamWriter_WriteUInt8(o->_writer, ModbusFunctionCode_ReadCoils);
 
 	MemoryStream_WriteUInt16(o, start_bit_addr);
 	MemoryStream_WriteUInt16(o, bit_count);
@@ -560,10 +555,10 @@ static void WriteHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_si
 	MemoryStream_Clear(o->_send_buffer_memory_stream);
 
 	// 放入站号
-	MemoryStream_WriteUInt8(o, o->_servant_address);
+	ModbusStreamWriter_WriteUInt8(o->_writer, o->_servant_address);
 
 	// 放入功能码
-	MemoryStream_WriteUInt8(o, ModbusFunctionCode_ReadHoldingRegisters);
+	ModbusStreamWriter_WriteUInt8(o->_writer, ModbusFunctionCode_ReadHoldingRegisters);
 
 	MemoryStream_WriteUInt16(o, start_record_addr);
 	MemoryStream_WriteUInt16(o, record_count);

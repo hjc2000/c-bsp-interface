@@ -18,7 +18,7 @@ ModbusStreamWriter *ModbusStreamWriter_StackHeapAlloc(Stream *dst_stream,
 
 void ModbusStreamWriter_WriteUInt8(ModbusStreamWriter *self, uint8_t data)
 {
-	self->_stream->Write(self->_stream, &data, 0, 1);
+	self->_stream->Write(self->_stream->_self, &data, 0, 1);
 }
 
 void ModbusStreamWriter_WriteUInt16(ModbusStreamWriter *self, uint16_t data)
@@ -29,7 +29,7 @@ void ModbusStreamWriter_WriteUInt16(ModbusStreamWriter *self, uint16_t data)
 										  temp_buffer,
 										  0);
 
-	self->_stream->Write(self->_stream, temp_buffer, 0, sizeof(temp_buffer));
+	self->_stream->Write(self->_stream->_self, temp_buffer, 0, sizeof(temp_buffer));
 }
 
 void ModbusStreamWriter_WriteUInt32(ModbusStreamWriter *self, uint32_t data)
@@ -40,7 +40,7 @@ void ModbusStreamWriter_WriteUInt32(ModbusStreamWriter *self, uint32_t data)
 										  temp_buffer,
 										  0);
 
-	self->_stream->Write(self->_stream, temp_buffer, 0, sizeof(temp_buffer));
+	self->_stream->Write(self->_stream->_self, temp_buffer, 0, sizeof(temp_buffer));
 }
 
 void ModbusStreamWriter_WriteUInt64(ModbusStreamWriter *self, uint64_t data)
@@ -51,5 +51,5 @@ void ModbusStreamWriter_WriteUInt64(ModbusStreamWriter *self, uint64_t data)
 										  temp_buffer,
 										  0);
 
-	self->_stream->Write(self->_stream, temp_buffer, 0, sizeof(temp_buffer));
+	self->_stream->Write(self->_stream->_self, temp_buffer, 0, sizeof(temp_buffer));
 }
