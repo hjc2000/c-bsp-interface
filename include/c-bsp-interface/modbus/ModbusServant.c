@@ -42,9 +42,9 @@ static void CalculateAndWriteCrc16ToMemoryStream(ModbusServant *self)
 						 MemoryStream_Buffer(self->_send_buffer_memory_stream),
 						 MemoryStream_Position(self->_send_buffer_memory_stream));
 
-	ModbusCrc16_WriteRegisterToStream(self->_crc,
-									  MemoryStream_AsStream(self->_send_buffer_memory_stream),
-									  self->_crc16_endian);
+	ModbusStreamWriter_WriteCrc16(self->_writer,
+								  ModbusCrc16_Register(self->_crc),
+								  self->_crc16_endian);
 }
 
 /// @brief 读一组线圈
