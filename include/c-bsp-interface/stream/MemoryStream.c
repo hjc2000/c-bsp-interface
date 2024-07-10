@@ -44,7 +44,7 @@ Stream MemoryStream_AsStream(MemoryStream *self)
 	stream.SetPosition = (void (*)(void *self, int64_t value))MemoryStream_SetPosition;
 
 	stream.Read = (int32_t(*)(void *self, uint8_t *buffer, int32_t offset, int32_t count))MemoryStream_Read;
-	stream.Write = (void (*)(void *self, uint8_t const *buffer, int32_t offset, int32_t count))MemoryStream_Write;
+	stream.Write = (int32_t(*)(void *self, uint8_t const *buffer, int32_t offset, int32_t count))MemoryStream_Write;
 
 	stream.Close = (void (*)(void *self))MemoryStream_Close;
 	stream.Flush = (void (*)(void *self))MemoryStream_Flush;
@@ -128,11 +128,11 @@ int32_t MemoryStream_Read(MemoryStream *self, uint8_t *buffer, int32_t offset, i
 	return have_read;
 }
 
-void MemoryStream_Write(MemoryStream *self, uint8_t const *buffer, int32_t offset, int32_t count)
+int32_t MemoryStream_Write(MemoryStream *self, uint8_t const *buffer, int32_t offset, int32_t count)
 {
 	if (count > MemoryStream_AvaliableToWrite(self))
 	{
-		return;
+		return -1;
 	}
 
 	// 从传进来的缓冲区复制到本对象的缓冲区
@@ -143,6 +143,8 @@ void MemoryStream_Write(MemoryStream *self, uint8_t const *buffer, int32_t offse
 		// 写完后当前位置超过流的长度，则将流的长度设为当前位置，使流的长度增大。
 		self->_length = self->_position;
 	}
+
+	return 0;
 }
 
 void MemoryStream_Flush(MemoryStream *self)

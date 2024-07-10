@@ -58,8 +58,9 @@ int32_t MemoryStream_Read(MemoryStream *self, uint8_t *buffer, int32_t offset, i
 /// @param buffer
 /// @param offset
 /// @param count
+/// @return 成功返回 0，失败返回负数的错误代码。
 /// @exception std::invalid_argument
-void MemoryStream_Write(MemoryStream *self, uint8_t const *buffer, int32_t offset, int32_t count);
+int32_t MemoryStream_Write(MemoryStream *self, uint8_t const *buffer, int32_t offset, int32_t count);
 
 void MemoryStream_Flush(MemoryStream *self);
 

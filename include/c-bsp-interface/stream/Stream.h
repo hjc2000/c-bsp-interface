@@ -18,7 +18,7 @@ typedef struct Stream
 	/// @param buffer 要将读取到的数据写入的缓冲区。
 	/// @param offset 将读取到的数据写入 dst_buf 时的起始位置。
 	/// @param count 要读取的字节数。
-	/// @return 实际读取的字节数。如果返回 0，说明此流结束。
+	/// @return 实际读取的字节数。如果返回 0，说明此流结束。失败返回负数的错误代码。
 	int32_t (*Read)(void *self, uint8_t *buffer, int32_t offset, int32_t count);
 
 	/// @brief 将 buffer 中的数据写入流中。
@@ -26,7 +26,8 @@ typedef struct Stream
 	/// @param buffer
 	/// @param offset
 	/// @param count
-	void (*Write)(void *self, uint8_t const *buffer, int32_t offset, int32_t count);
+	/// @return 成功返回 0，失败返回负数的错误代码。
+	int32_t (*Write)(void *self, uint8_t const *buffer, int32_t offset, int32_t count);
 
 	/// @brief 冲洗流
 	/// @note 对于写入的数据，作用是将其从内部缓冲区转移到底层。
