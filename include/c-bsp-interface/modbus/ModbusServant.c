@@ -33,10 +33,7 @@ typedef struct ModbusServant
 
 } ModbusServant;
 
-#pragma region Push
-/// @brief 计算 CRC16 并放入缓冲区
-/// @param o
-static void CalculateAndPushCrc16(ModbusServant *o)
+static void CalculateAndWriteCrc16ToMemoryStream(ModbusServant *o)
 {
 	ModbusCrc16_ResetRegister(o->_crc);
 	ModbusCrc16_AddArray(o->_crc,
@@ -57,19 +54,12 @@ static void CalculateAndPushCrc16(ModbusServant *o)
 	}
 }
 
-/// @brief 将 uint8_t 放入发送栈中。
-/// @param o
-/// @param value
-static void PushUInt8(ModbusServant *o, uint8_t value)
+static void MemoryStream_WriteUInt8(ModbusServant *o, uint8_t value)
 {
 	MemoryStream_Write(o->_send_buffer_memory_stream, &value, 0, 1);
 }
 
-/// @brief 将 uint16_t 放入发送栈中。
-/// @note 会进行字节序转换
-/// @param o
-/// @param value
-static void PushUInt16(ModbusServant *o, uint16_t value)
+static void MemoryStream_WriteUInt16(ModbusServant *o, uint16_t value)
 {
 	uint8_t temp_buffer[sizeof(value)];
 	ModbusBitConverter_GetBytesFromUInt16(o->_bit_converter_unit,
@@ -81,11 +71,7 @@ static void PushUInt16(ModbusServant *o, uint16_t value)
 					   temp_buffer, 0, sizeof(temp_buffer));
 }
 
-/// @brief 将 uint32_t 放入发送栈中。
-/// @note 会进行字节序转换
-/// @param o
-/// @param value
-static void PushUInt32(ModbusServant *o, uint32_t value)
+static void MemoryStream_WriteUInt32(ModbusServant *o, uint32_t value)
 {
 	uint8_t temp_buffer[sizeof(value)];
 	ModbusBitConverter_GetBytesFromUInt32(o->_bit_converter_unit,
@@ -97,11 +83,7 @@ static void PushUInt32(ModbusServant *o, uint32_t value)
 					   temp_buffer, 0, sizeof(temp_buffer));
 }
 
-/// @brief 将 uint64_t 放入发送栈中。
-/// @note 会进行字节序转换
-/// @param o
-/// @param value
-static void PushUInt64(ModbusServant *o, uint64_t value)
+static void MemoryStream_WriteUInt64(ModbusServant *o, uint64_t value)
 {
 	uint8_t temp_buffer[sizeof(value)];
 	ModbusBitConverter_GetBytesFromUInt64(o->_bit_converter_unit,
@@ -112,7 +94,6 @@ static void PushUInt64(ModbusServant *o, uint64_t value)
 	MemoryStream_Write(o->_send_buffer_memory_stream,
 					   temp_buffer, 0, sizeof(temp_buffer));
 }
-#pragma endregion
 
 /// @brief 读一组线圈
 /// @param o
@@ -147,7 +128,7 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 					   &o->_servant_address, 0, 1);
 
 	// 放入功能码
-	PushUInt8(o, ModbusFunctionCode_ReadCoils);
+	MemoryStream_WriteUInt8(o, ModbusFunctionCode_ReadCoils);
 
 	// 放入数据字节数
 	uint8_t byte_count = bit_count / 8;
@@ -156,7 +137,7 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 		byte_count++;
 	}
 
-	PushUInt8(o, byte_count);
+	MemoryStream_WriteUInt8(o, byte_count);
 #pragma endregion
 
 #pragma region 放入位数据
@@ -174,7 +155,7 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 			}
 		}
 
-		PushUInt8(o, bit_register);
+		MemoryStream_WriteUInt8(o, bit_register);
 	}
 
 	// 剩下几个位，不够被 8 整除
@@ -189,10 +170,10 @@ static void ReadCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 		}
 	}
 
-	PushUInt8(o, bit_register);
+	MemoryStream_WriteUInt8(o, bit_register);
 #pragma endregion
 
-	CalculateAndPushCrc16(o);
+	CalculateAndWriteCrc16ToMemoryStream(o);
 
 	// 发送响应帧
 	o->SendResponse(MemoryStream_Buffer(o->_send_buffer_memory_stream),
@@ -238,13 +219,13 @@ static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_siz
 	MemoryStream_SetLength(o->_send_buffer_memory_stream, 0);
 
 	// 放入站号
-	PushUInt8(o, o->_servant_address);
+	MemoryStream_WriteUInt8(o, o->_servant_address);
 
 	// 放入功能码
-	PushUInt8(o, ModbusFunctionCode_ReadHoldingRegisters);
+	MemoryStream_WriteUInt8(o, ModbusFunctionCode_ReadHoldingRegisters);
 
 	// 放入数据字节数
-	PushUInt8(o, record_count * 2);
+	MemoryStream_WriteUInt8(o, record_count * 2);
 #pragma endregion
 
 #pragma region 放入数据
@@ -271,21 +252,21 @@ static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_siz
 		case ModbusMultibyteSizeEnum_2Byte:
 		{
 			uint16_t data = o->Read2ByteCallback(current_record_addr);
-			PushUInt16(o, data);
+			MemoryStream_WriteUInt16(o, data);
 			record_addr_offset += 1;
 			break;
 		}
 		case ModbusMultibyteSizeEnum_4Byte:
 		{
 			uint32_t data = o->Read4ByteCallback(current_record_addr);
-			PushUInt32(o, data);
+			MemoryStream_WriteUInt32(o, data);
 			record_addr_offset += 2;
 			break;
 		}
 		case ModbusMultibyteSizeEnum_8Byte:
 		{
 			uint64_t data = o->Read8ByteCallback(current_record_addr);
-			PushUInt64(o, data);
+			MemoryStream_WriteUInt64(o, data);
 			record_addr_offset += 4;
 			break;
 		}
@@ -302,7 +283,7 @@ static void ReadHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_siz
 	}
 #pragma endregion
 
-	CalculateAndPushCrc16(o);
+	CalculateAndWriteCrc16ToMemoryStream(o);
 
 	// 发送响应帧
 	o->SendResponse(MemoryStream_Buffer(o->_send_buffer_memory_stream),
@@ -367,19 +348,19 @@ static void WriteSingleCoil(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	MemoryStream_SetLength(o->_send_buffer_memory_stream, 0);
 
 	// 放入站号
-	PushUInt8(o, o->_servant_address);
+	MemoryStream_WriteUInt8(o, o->_servant_address);
 
 	// 放入功能码
-	PushUInt8(o, ModbusFunctionCode_WriteSingleCoil);
+	MemoryStream_WriteUInt8(o, ModbusFunctionCode_WriteSingleCoil);
 
 	// 放入位地址
-	PushUInt16(o, bit_addr);
+	MemoryStream_WriteUInt16(o, bit_addr);
 
 	// 放入位数据
-	PushUInt16(o, bit_value ? 0xff00 : 0x0000);
+	MemoryStream_WriteUInt16(o, bit_value ? 0xff00 : 0x0000);
 #pragma endregion
 
-	CalculateAndPushCrc16(o);
+	CalculateAndWriteCrc16ToMemoryStream(o);
 
 	// 发送响应帧
 	o->SendResponse(MemoryStream_Buffer(o->_send_buffer_memory_stream),
@@ -460,16 +441,16 @@ static void WriteCoils(ModbusServant *o, uint8_t *pdu, int32_t pdu_size)
 	MemoryStream_SetLength(o->_send_buffer_memory_stream, 0);
 
 	// 放入站号
-	PushUInt8(o, o->_servant_address);
+	MemoryStream_WriteUInt8(o, o->_servant_address);
 
 	// 放入功能码
-	PushUInt8(o, ModbusFunctionCode_ReadCoils);
+	MemoryStream_WriteUInt8(o, ModbusFunctionCode_ReadCoils);
 
-	PushUInt16(o, start_bit_addr);
-	PushUInt16(o, bit_count);
+	MemoryStream_WriteUInt16(o, start_bit_addr);
+	MemoryStream_WriteUInt16(o, bit_count);
 #pragma endregion
 
-	CalculateAndPushCrc16(o);
+	CalculateAndWriteCrc16ToMemoryStream(o);
 
 	// 发送响应帧
 	o->SendResponse(MemoryStream_Buffer(o->_send_buffer_memory_stream),
@@ -586,16 +567,16 @@ static void WriteHoldingRegisters(ModbusServant *o, uint8_t *pdu, int32_t pdu_si
 	MemoryStream_SetLength(o->_send_buffer_memory_stream, 0);
 
 	// 放入站号
-	PushUInt8(o, o->_servant_address);
+	MemoryStream_WriteUInt8(o, o->_servant_address);
 
 	// 放入功能码
-	PushUInt8(o, ModbusFunctionCode_ReadHoldingRegisters);
+	MemoryStream_WriteUInt8(o, ModbusFunctionCode_ReadHoldingRegisters);
 
-	PushUInt16(o, start_record_addr);
-	PushUInt16(o, record_count);
+	MemoryStream_WriteUInt16(o, start_record_addr);
+	MemoryStream_WriteUInt16(o, record_count);
 #pragma endregion
 
-	CalculateAndPushCrc16(o);
+	CalculateAndWriteCrc16ToMemoryStream(o);
 
 	// 发送响应帧
 	o->SendResponse(MemoryStream_Buffer(o->_send_buffer_memory_stream),

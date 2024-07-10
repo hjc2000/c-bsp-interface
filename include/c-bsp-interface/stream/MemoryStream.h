@@ -9,6 +9,9 @@ typedef struct MemoryStream MemoryStream;
 MemoryStream *MemoryStream_StackHeapAlloc(int32_t buffer_size);
 
 /// @brief 将 MemoryStream 作为 Stream
+/// @note 一个 MemoryStream 对象只会绑定一个 Stream 结构体对象，无论调用多少次本函数，
+/// 返回的都是同一个 Stream 对象。
+///
 /// @param self
 /// @return Stream 接口对象。
 Stream *MemoryStream_AsStream(MemoryStream *self);
