@@ -1,25 +1,13 @@
 #include "ModbusBufferReader.h"
 #include <c-bsp-interface/memory/StackHeap.h>
 
-typedef struct ModbusBufferReader
-{
-	uint8_t *_buffer;
-	int32_t _position;
-	ModbusBitConverterUnit _unit;
-} ModbusBufferReader;
-
-ModbusBufferReader *ModbusBufferReader_StackHeapAlloc(ModbusBitConverterUnit unit)
-{
-	ModbusBufferReader *self = StackHeapObjAlloc(sizeof(ModbusBufferReader));
-	self->_buffer = 0;
-	self->_position = 0;
-	self->_unit = unit;
-	return self;
-}
-
-void ModbusBufferReader_SetBuffer(ModbusBufferReader *self, uint8_t *buffer)
+void ModbusBufferReader_Init(ModbusBufferReader *self,
+							 uint8_t *buffer,
+							 ModbusBitConverterUnit unit)
 {
 	self->_buffer = buffer;
+	self->_position = 0;
+	self->_unit = unit;
 }
 
 uint8_t ModbusBufferReader_ReadUInt8(ModbusBufferReader *self)

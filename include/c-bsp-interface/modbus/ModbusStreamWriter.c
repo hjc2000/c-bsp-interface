@@ -54,6 +54,28 @@ void ModbusStreamWriter_WriteUInt64(ModbusStreamWriter *self, uint64_t data)
 	self->_stream->Write(self->_stream->_self, temp_buffer, 0, sizeof(temp_buffer));
 }
 
+void ModbusStreamWriter_WriteFloat(ModbusStreamWriter *self, float data)
+{
+	uint8_t temp_buffer[sizeof(data)];
+	ModbusBitConverter_GetBytesFromFloat(self->_unit,
+										 data,
+										 temp_buffer,
+										 0);
+
+	self->_stream->Write(self->_stream->_self, temp_buffer, 0, sizeof(temp_buffer));
+}
+
+void ModbusStreamWriter_WriteDouble(ModbusStreamWriter *self, double data)
+{
+	uint8_t temp_buffer[sizeof(data)];
+	ModbusBitConverter_GetBytesFromDouble(self->_unit,
+										  data,
+										  temp_buffer,
+										  0);
+
+	self->_stream->Write(self->_stream->_self, temp_buffer, 0, sizeof(temp_buffer));
+}
+
 void ModbusStreamWriter_WriteCrc16(ModbusStreamWriter *self,
 								   uint16_t crc16_register, Endian crc16_endian)
 {

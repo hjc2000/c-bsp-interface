@@ -2,20 +2,20 @@
 #include <c-bsp-interface/modbus/ModbusBitConverter.h>
 
 /// @brief 读取接收缓冲区。每次读取，内部记录的当前位置会自动递增。
-typedef struct ModbusBufferReader ModbusBufferReader;
+typedef struct ModbusBufferReader
+{
+	uint8_t *_buffer;
+	int32_t _position;
+	ModbusBitConverterUnit _unit;
+} ModbusBufferReader;
 
-/// @brief 在栈堆上构造
-/// @warning 构造后需要使用 ModbusBufferReader_SetBuffer 设置一个缓冲区才能读取。
-/// 读取完 1 个缓冲区后需要再次调用 ModbusBufferReader_SetBuffer 设置一个新的缓冲区。
-///
-/// @param unit 转换单位
-/// @return
-ModbusBufferReader *ModbusBufferReader_StackHeapAlloc(ModbusBitConverterUnit unit);
-
-/// @brief 设置一个缓冲区。设置后才能读取，否则就会读取空指针或野指针指向的内存。
+/// @brief 初始化
 /// @param self
 /// @param buffer
-void ModbusBufferReader_SetBuffer(ModbusBufferReader *self, uint8_t *buffer);
+/// @param unit
+void ModbusBufferReader_Init(ModbusBufferReader *self,
+							 uint8_t *buffer,
+							 ModbusBitConverterUnit unit);
 
 uint8_t ModbusBufferReader_ReadUInt8(ModbusBufferReader *self);
 int8_t ModbusBufferReader_ReadInt8(ModbusBufferReader *self);
