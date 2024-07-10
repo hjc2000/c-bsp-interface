@@ -175,6 +175,15 @@ double ModbusBitConverter_ToDouble(ModbusBitConverterUnit unit,
 #pragma endregion
 
 #pragma region 转字节数组
+void ModbusBitConverter_GetBytesFromUInt8(ModbusBitConverterUnit unit,
+										  uint8_t value, uint8_t *out_buffer, int32_t offset)
+{
+	/* 这里是 uint8_t 所以直接使用赋值。2 个字节以及上的数据类型不能这么做，因为可能会有对齐问题。
+	 * 对没有对齐的内存地址的整型操作可能会引发硬件错误
+	 */
+	*(out_buffer + offset) = value;
+}
+
 void ModbusBitConverter_GetBytesFromUInt16(ModbusBitConverterUnit unit,
 										   uint16_t value, uint8_t *out_buffer, int32_t offset)
 {

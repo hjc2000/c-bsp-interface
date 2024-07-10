@@ -91,6 +91,9 @@ double ModbusBitConverter_ToDouble(ModbusBitConverterUnit unit,
 #pragma endregion
 
 #pragma region 转字节数组
+void ModbusBitConverter_GetBytesFromUInt8(ModbusBitConverterUnit unit,
+										  uint8_t value, uint8_t *out_buffer, int32_t offset);
+
 void ModbusBitConverter_GetBytesFromUInt16(ModbusBitConverterUnit unit,
 										   uint16_t value, uint8_t *out_buffer, int32_t offset);
 
