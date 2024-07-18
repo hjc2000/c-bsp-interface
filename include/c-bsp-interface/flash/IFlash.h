@@ -48,18 +48,19 @@ typedef struct IFlash
 	/// @param bank_id bank 的 id。例如 bank1 的 id 是 1.
 	///
 	/// @param addr 要写入的数据相对于此 bank 的起始地址的地址。
-	/// @note 此地址必须能被 MinProgrammingUnit 整除。
+	/// @warning 此地址必须能被 MinProgrammingUnit 整除。
 	///
 	/// @param buffer 要写入到 flash 的数据所在的缓冲区。
 	/// @warning buffer 的字节数必须 >= MinProgrammingUnit，否则将发生内存访问越界。
-	///
-	/// @exception 不同平台对 buffer 有对齐要求。例如 stm32 的 HAL 要求 buffer 要 4 字节
-	/// 对齐。这里使用 uint8_t const * ，接口的实现者自己计算 buffer 能否被对齐字节数整除，
-	/// 不能整除抛出异常。
+	/// @warning 不同平台对 buffer 有对齐要求。例如 stm32 的 HAL 要求 buffer 要 4 字节
+	/// 对齐。
 	void (*ProgramAsync)(int32_t bank_id, size_t addr, uint8_t const *buffer);
 
 	/// @brief 异步操作完成回调。
 	void (*AsyncOperationCompletedCallback)();
+
+	/// @brief 发生错误
+	void (*AsyncOperationErrorCallback)();
 } IFlash;
 
 /// @brief 将相对于指定 bank 的起始地址的地址转化为绝对地址。
