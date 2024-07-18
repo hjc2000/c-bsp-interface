@@ -36,14 +36,14 @@ typedef struct IFlash
 	/// @brief 擦除一整个 bank。
 	/// @param self
 	/// @param bank_id bank 的 id。例如 bank1 的 id 是 1.
-	void (*EraseBank)(void *self, int32_t bank_id);
+	void (*EraseBankAsync)(void *self, int32_t bank_id);
 
 	/// @brief 擦除指定 bank 中从 start_sector_index 开始的 sector_count 个扇区。
 	/// @param self
 	/// @param bank_id bank 的 id。例如 bank1 的 id 是 1.
 	/// @param start_sector_index 要擦除的扇区的起始索引。
 	/// @param sector_count 要擦除的扇区的数量。
-	void (*EraseSector)(void *self, int32_t bank_id, int32_t start_sector_index, int32_t sector_count);
+	void (*EraseSectorAsync)(void *self, int32_t bank_id, int32_t start_sector_index, int32_t sector_count);
 
 	/// @brief 将 flash 的数据读取到缓冲区中
 	/// @param self
@@ -51,7 +51,7 @@ typedef struct IFlash
 	/// @param addr
 	/// @param buffer
 	/// @param count
-	void (*ReadBuffer)(void *self, int32_t bank_id, size_t addr, uint8_t *buffer, int32_t count);
+	void (*ReadBufferAsync)(void *self, int32_t bank_id, size_t addr, uint8_t *buffer, int32_t count);
 
 	/// @brief 编程
 	/// @param self
@@ -66,7 +66,10 @@ typedef struct IFlash
 	/// @exception 不同平台对 buffer 有对齐要求。例如 stm32 的 HAL 要求 buffer 要 4 字节
 	/// 对齐。这里使用 uint8_t const * ，接口的实现者自己计算 buffer 能否被对齐字节数整除，
 	/// 不能整除抛出异常。
-	void (*Program)(void *self, int32_t bank_id, size_t addr, uint8_t const *buffer);
+	void (*ProgramAsync)(void *self, int32_t bank_id, size_t addr, uint8_t const *buffer);
+
+	/// @brief 异步操作完成回调。
+	void (*AsyncOperationCompletedCallback)();
 } IFlash;
 
 /// @brief 将相对于指定 bank 的起始地址的地址转化为绝对地址。
