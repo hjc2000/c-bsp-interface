@@ -4,8 +4,13 @@
 
 typedef struct IFlash
 {
-	void (*Lock)();
-	void (*Unlock)();
+	/// @brief 锁 flash
+	/// @return 成功返回 0，失败返回负数的错误代码
+	int (*Lock)();
+
+	/// @brief 解锁 flash
+	/// @return 成功返回 0，失败返回负数的错误代码
+	int (*Unlock)();
 
 	/// @brief 获取此 flash 的 bank 数量。
 	/// @return
@@ -29,20 +34,23 @@ typedef struct IFlash
 
 	/// @brief 擦除一整个 bank。
 	/// @param bank_id bank 的 id。例如 bank1 的 id 是 1.
-	void (*EraseBankAsync)(int32_t bank_id);
+	/// @return 成功返回 0，失败返回负数的错误代码
+	int (*EraseBankAsync)(int32_t bank_id);
 
 	/// @brief 擦除指定 bank 中从 start_sector_index 开始的 sector_count 个扇区。
 	/// @param bank_id bank 的 id。例如 bank1 的 id 是 1.
 	/// @param start_sector_index 要擦除的扇区的起始索引。
 	/// @param sector_count 要擦除的扇区的数量。
-	void (*EraseSectorAsync)(int32_t bank_id, int32_t start_sector_index, int32_t sector_count);
+	/// @return 成功返回 0，失败返回负数的错误代码
+	int (*EraseSectorAsync)(int32_t bank_id, int32_t start_sector_index, int32_t sector_count);
 
 	/// @brief 将 flash 的数据读取到缓冲区中
 	/// @param bank_id bank 的 id。例如 bank1 的 id 是 1.
 	/// @param addr
 	/// @param buffer
 	/// @param count
-	void (*ReadBufferAsync)(int32_t bank_id, size_t addr, uint8_t *buffer, int32_t count);
+	/// @return 成功返回 0，失败返回负数的错误代码
+	int (*ReadBufferAsync)(int32_t bank_id, size_t addr, uint8_t *buffer, int32_t count);
 
 	/// @brief 编程
 	/// @param bank_id bank 的 id。例如 bank1 的 id 是 1.
@@ -54,13 +62,14 @@ typedef struct IFlash
 	/// @warning buffer 的字节数必须 >= MinProgrammingUnit，否则将发生内存访问越界。
 	/// @warning 不同平台对 buffer 有对齐要求。例如 stm32 的 HAL 要求 buffer 要 4 字节
 	/// 对齐。
-	void (*ProgramAsync)(int32_t bank_id, size_t addr, uint8_t const *buffer);
+	/// @return 成功返回 0，失败返回负数的错误代码
+	int (*ProgramAsync)(int32_t bank_id, size_t addr, uint8_t const *buffer);
 
-	/// @brief 操作完成回调。
-	void (*OperationCompletedCallback)();
+	/// @brief 异步操作完成回调。
+	void (*AsyncOperationCompletedCallback)();
 
-	/// @brief 发生错误
-	void (*OperationErrorCallback)();
+	/// @brief 异步操作发生错误。
+	void (*AsyncOperationErrorCallback)();
 } IFlash;
 
 /// @brief 将相对于指定 bank 的起始地址的地址转化为绝对地址。
