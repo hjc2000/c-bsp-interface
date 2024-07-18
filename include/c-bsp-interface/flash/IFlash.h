@@ -56,11 +56,11 @@ typedef struct IFlash
 	/// 对齐。
 	void (*ProgramAsync)(int32_t bank_id, size_t addr, uint8_t const *buffer);
 
-	/// @brief 异步操作完成回调。
-	void (*AsyncOperationCompletedCallback)();
+	/// @brief 操作完成回调。
+	void (*OperationCompletedCallback)();
 
 	/// @brief 发生错误
-	void (*AsyncOperationErrorCallback)();
+	void (*OperationErrorCallback)();
 } IFlash;
 
 /// @brief 将相对于指定 bank 的起始地址的地址转化为绝对地址。
