@@ -1,7 +1,7 @@
 #include "AutoBitConverter.h"
 #include <c-bsp-interface/BitConverter.h>
-#include <c-bsp-interface/Reverse.h>
 #include <c-bsp-interface/memory/StackHeap.h>
+#include <c-bsp-interface/Reverse.h>
 
 typedef struct AutoBitConverter
 {
@@ -20,7 +20,8 @@ static uint8_t AutoBitConverter_ShouldReverse(AutoBitConverter *o)
 	return LocalHostEndian() != o->_remote_endian;
 }
 
-#pragma region 转数字
+// #region 转数字
+
 uint16_t AutoBitConverter_ToUInt16(AutoBitConverter *o, uint8_t const *buffer, int32_t offset)
 {
 	uint16_t ret = BitConverter_ByteArrayToUInt16(buffer, offset);
@@ -108,9 +109,11 @@ double AutoBitConverter_ToDouble(AutoBitConverter *o, uint8_t const *buffer, int
 
 	return ret;
 }
-#pragma endregion
 
-#pragma region 转字节数组
+// #endregion
+
+// #region 转字节数组
+
 void AutoBitConverter_GetBytesFromUInt16(AutoBitConverter *o,
 										 uint16_t value, uint8_t *out_buffer, int32_t offset)
 {
@@ -190,4 +193,5 @@ void AutoBitConverter_GetBytesFromDouble(AutoBitConverter *o,
 		ReverseByteArray(out_buffer + offset, 8);
 	}
 }
-#pragma endregion
+
+// #endregion

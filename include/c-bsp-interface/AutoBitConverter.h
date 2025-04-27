@@ -8,7 +8,8 @@ typedef struct AutoBitConverter AutoBitConverter;
 
 AutoBitConverter *AutoBitConverter_StackHeapAlloc(Endian remote_endian);
 
-#pragma region 转数字
+/* #region 转数字 */
+
 uint16_t AutoBitConverter_ToUInt16(AutoBitConverter *o, uint8_t const *buffer, int32_t offset);
 int16_t AutoBitConverter_ToInt16(AutoBitConverter *o, uint8_t const *buffer, int32_t offset);
 
@@ -20,9 +21,11 @@ int64_t AutoBitConverter_ToInt64(AutoBitConverter *o, uint8_t const *buffer, int
 
 float AutoBitConverter_ToFloat(AutoBitConverter *o, uint8_t const *buffer, int32_t offset);
 double AutoBitConverter_ToDouble(AutoBitConverter *o, uint8_t const *buffer, int32_t offset);
-#pragma endregion
 
-#pragma region 转字节数组
+/* #endregion */
+
+/* #region 转字节数组 */
+
 void AutoBitConverter_GetBytesFromUInt16(AutoBitConverter *o,
 										 uint16_t value, uint8_t *out_buffer, int32_t offset);
 void AutoBitConverter_GetBytesFromInt16(AutoBitConverter *o,
@@ -42,4 +45,5 @@ void AutoBitConverter_GetBytesFromFloat(AutoBitConverter *o,
 										float value, uint8_t *out_buffer, int32_t offset);
 void AutoBitConverter_GetBytesFromDouble(AutoBitConverter *o,
 										 double value, uint8_t *out_buffer, int32_t offset);
-#pragma endregion
+
+/* #endregion */
