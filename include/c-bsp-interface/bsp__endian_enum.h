@@ -1,18 +1,18 @@
 #pragma once
 #include <stdint.h>
 
-typedef enum bsp_endian_t
+typedef enum bsp__endian_enum
 {
 	BigEndian,
 	LittleEndian,
-} bsp_endian_t;
+} bsp__endian_enum;
 
 ///
 /// @brief 获取本机字节序
 ///
 /// @return
 ///
-inline bsp_endian_t bsp__local_host_endian()
+inline bsp__endian_enum bsp__local_host_endian()
 {
 	int32_t a = 1;
 	int8_t *p = (int8_t *)(&a);

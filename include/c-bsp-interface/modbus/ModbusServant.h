@@ -1,7 +1,7 @@
 #pragma once
-#include <c-bsp-interface/bsp_endian_t.h>
-#include <c-bsp-interface/modbus/ModbusBitConverter.h>
-#include <c-bsp-interface/modbus/ModbusMultibyteSizeEnum.h>
+#include "c-bsp-interface/bsp__endian_enum.h"
+#include "c-bsp-interface/modbus/ModbusBitConverter.h"
+#include "c-bsp-interface/modbus/ModbusMultibyteSizeEnum.h"
 #include <stdint.h>
 
 /// @brief 读写回调函数中心
@@ -53,7 +53,7 @@ typedef struct ModbusServant ModbusServant;
 /// @param read_write_callback_hub 调用者在栈上构造此结构体，为字段赋值后将指针传进来，
 /// 随后这个对象可被销毁，内部不会引用此对象。
 ModbusServant *ModbusServant_StackHeapAlloc(uint8_t servant_address,
-											bsp_endian_t crc16_endian,
+											bsp__endian_enum crc16_endian,
 											ModbusBitConverterUnit bit_converter_unit,
 											ModbusServantReadWriteCallbackHub *read_write_callback_hub);
 
