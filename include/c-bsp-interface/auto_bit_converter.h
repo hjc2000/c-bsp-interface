@@ -7,15 +7,13 @@
 
 typedef struct bsp__auto_bit_converter
 {
-	bsp__endian _remote_endian;
 	bsp__bool _should_reverse;
 } bsp__auto_bit_converter;
 
 inline void bsp__auto_bit_converter__initialize(
 	bsp__auto_bit_converter *self, bsp__endian remote_endian)
 {
-	self->_remote_endian = remote_endian;
-	self->_should_reverse = bsp__local_host_endian() != self->_remote_endian;
+	self->_should_reverse = bsp__local_host_endian() != remote_endian;
 }
 
 /* #region 转数字 */
