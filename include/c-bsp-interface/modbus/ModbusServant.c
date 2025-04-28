@@ -13,7 +13,7 @@ typedef struct ModbusServant
 	/// @brief 从机站号
 	uint8_t _servant_address;
 	ModbusCrc16 *_crc;
-	Endian _crc16_endian;
+	bsp_endian_t _crc16_endian;
 	ModbusBitConverterUnit _bit_converter_unit;
 	MemoryStream *_send_buffer_memory_stream;
 	ModbusStreamWriter *_writer;
@@ -185,35 +185,35 @@ static void ReadHoldingRegisters(ModbusServant *self, uint8_t *pdu, int32_t pdu_
 		switch (current_data_size_enum)
 		{
 		case ModbusMultibyteSizeEnum_2Byte:
-		{
-			uint16_t data = self->Read2ByteCallback(current_record_addr);
-			ModbusStreamWriter_WriteUInt16(self->_writer, data);
-			record_addr_offset += 1;
-			break;
-		}
-		case ModbusMultibyteSizeEnum_4Byte:
-		{
-			uint32_t data = self->Read4ByteCallback(current_record_addr);
-			ModbusStreamWriter_WriteUInt32(self->_writer, data);
-			record_addr_offset += 2;
-			break;
-		}
-		case ModbusMultibyteSizeEnum_8Byte:
-		{
-			uint64_t data = self->Read8ByteCallback(current_record_addr);
-			ModbusStreamWriter_WriteUInt64(self->_writer, data);
-			record_addr_offset += 4;
-			break;
-		}
-		default:
-		{
-			// 不支持的数据大小。
-			// 从机出错了，GetMultibyteDataSize 回调函数的返回值不能不在 ModbusMultibyteSizeEnum 的范围内。
-			while (1)
 			{
-				// 卡在死循环，便于调试的时候发现错误
+				uint16_t data = self->Read2ByteCallback(current_record_addr);
+				ModbusStreamWriter_WriteUInt16(self->_writer, data);
+				record_addr_offset += 1;
+				break;
 			}
-		}
+		case ModbusMultibyteSizeEnum_4Byte:
+			{
+				uint32_t data = self->Read4ByteCallback(current_record_addr);
+				ModbusStreamWriter_WriteUInt32(self->_writer, data);
+				record_addr_offset += 2;
+				break;
+			}
+		case ModbusMultibyteSizeEnum_8Byte:
+			{
+				uint64_t data = self->Read8ByteCallback(current_record_addr);
+				ModbusStreamWriter_WriteUInt64(self->_writer, data);
+				record_addr_offset += 4;
+				break;
+			}
+		default:
+			{
+				// 不支持的数据大小。
+				// 从机出错了，GetMultibyteDataSize 回调函数的返回值不能不在 ModbusMultibyteSizeEnum 的范围内。
+				while (1)
+				{
+					// 卡在死循环，便于调试的时候发现错误
+				}
+			}
 		}
 	}
 #pragma endregion
@@ -435,44 +435,44 @@ static void WriteHoldingRegisters(ModbusServant *self, uint8_t *pdu, int32_t pdu
 		switch (current_data_size_enum)
 		{
 		case ModbusMultibyteSizeEnum_2Byte:
-		{
-			uint16_t value = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
-														 info_buffer,
-														 info_buffer_offset);
-			info_buffer_offset += 2;
-			self->Write2ByteCallback(current_record_addr, value);
-			record_addr_offset += 1;
-			break;
-		}
-		case ModbusMultibyteSizeEnum_4Byte:
-		{
-			uint32_t value = ModbusBitConverter_ToUInt32(ModbusBitConverterUnit_Whole,
-														 info_buffer,
-														 info_buffer_offset);
-			info_buffer_offset += 4;
-			self->Write4ByteCallback(current_record_addr, value);
-			record_addr_offset += 2;
-			break;
-		}
-		case ModbusMultibyteSizeEnum_8Byte:
-		{
-			uint64_t value = ModbusBitConverter_ToUInt64(ModbusBitConverterUnit_Whole,
-														 info_buffer,
-														 info_buffer_offset);
-			info_buffer_offset += 8;
-			self->Write8ByteCallback(current_record_addr, value);
-			record_addr_offset += 4;
-			break;
-		}
-		default:
-		{
-			// 不支持的数据大小。
-			// 从机出错了，GetMultibyteDataSize 回调函数的返回值不能不在 ModbusMultibyteSizeEnum 的范围内。
-			while (1)
 			{
-				// 卡在死循环，便于调试的时候发现错误
+				uint16_t value = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
+															 info_buffer,
+															 info_buffer_offset);
+				info_buffer_offset += 2;
+				self->Write2ByteCallback(current_record_addr, value);
+				record_addr_offset += 1;
+				break;
 			}
-		}
+		case ModbusMultibyteSizeEnum_4Byte:
+			{
+				uint32_t value = ModbusBitConverter_ToUInt32(ModbusBitConverterUnit_Whole,
+															 info_buffer,
+															 info_buffer_offset);
+				info_buffer_offset += 4;
+				self->Write4ByteCallback(current_record_addr, value);
+				record_addr_offset += 2;
+				break;
+			}
+		case ModbusMultibyteSizeEnum_8Byte:
+			{
+				uint64_t value = ModbusBitConverter_ToUInt64(ModbusBitConverterUnit_Whole,
+															 info_buffer,
+															 info_buffer_offset);
+				info_buffer_offset += 8;
+				self->Write8ByteCallback(current_record_addr, value);
+				record_addr_offset += 4;
+				break;
+			}
+		default:
+			{
+				// 不支持的数据大小。
+				// 从机出错了，GetMultibyteDataSize 回调函数的返回值不能不在 ModbusMultibyteSizeEnum 的范围内。
+				while (1)
+				{
+					// 卡在死循环，便于调试的时候发现错误
+				}
+			}
 		}
 	}
 
@@ -524,53 +524,53 @@ static void HandlePdu(ModbusServant *self, uint8_t *pdu, int32_t pdu_size)
 	switch (function_code)
 	{
 	case ModbusFunctionCode_ReadCoils:
-	{
-		// 读取一组线圈
-		ReadCoils(self, pdu, pdu_size);
-		break;
-	}
+		{
+			// 读取一组线圈
+			ReadCoils(self, pdu, pdu_size);
+			break;
+		}
 	case ModbusFunctionCode_ReadInputBits:
-	{
-		// 读取一组输入位
-		ReadInputBits(self, pdu, pdu_size);
-		break;
-	}
+		{
+			// 读取一组输入位
+			ReadInputBits(self, pdu, pdu_size);
+			break;
+		}
 	case ModbusFunctionCode_ReadHoldingRegisters:
-	{
-		// 读取一组保持寄存器
-		ReadHoldingRegisters(self, pdu, pdu_size);
-		break;
-	}
+		{
+			// 读取一组保持寄存器
+			ReadHoldingRegisters(self, pdu, pdu_size);
+			break;
+		}
 	case ModbusFunctionCode_ReadInputRegisters:
-	{
-		// 读取一组输入寄存器
-		ReadInputRegisters(self, pdu, pdu_size);
-		break;
-	}
+		{
+			// 读取一组输入寄存器
+			ReadInputRegisters(self, pdu, pdu_size);
+			break;
+		}
 	case ModbusFunctionCode_WriteSingleCoil:
-	{
-		// 写单个线圈
-		WriteSingleCoil(self, pdu, pdu_size);
-		break;
-	}
+		{
+			// 写单个线圈
+			WriteSingleCoil(self, pdu, pdu_size);
+			break;
+		}
 	case ModbusFunctionCode_WriteCoils:
-	{
-		// 写入一组线圈
-		WriteCoils(self, pdu, pdu_size);
-		break;
-	}
+		{
+			// 写入一组线圈
+			WriteCoils(self, pdu, pdu_size);
+			break;
+		}
 	case ModbusFunctionCode_WriteHoldingRegisters:
-	{
-		// 写入多个保持寄存器
-		WriteHoldingRegisters(self, pdu, pdu_size);
-		break;
-	}
+		{
+			// 写入多个保持寄存器
+			WriteHoldingRegisters(self, pdu, pdu_size);
+			break;
+		}
 	case ModbusFunctionCode_Diagnosis:
-	{
-		// 诊断
-		Diagnosis(self, pdu, pdu_size);
-		break;
-	}
+		{
+			// 诊断
+			Diagnosis(self, pdu, pdu_size);
+			break;
+		}
 	}
 }
 
@@ -586,7 +586,7 @@ static void HandleBrocastPdu(ModbusServant *self, uint8_t *pdu, int32_t pdu_size
 }
 
 ModbusServant *ModbusServant_StackHeapAlloc(uint8_t servant_address,
-											Endian crc16_endian,
+											bsp_endian_t crc16_endian,
 											ModbusBitConverterUnit bit_converter_unit,
 											ModbusServantReadWriteCallbackHub *read_write_callback_hub)
 {

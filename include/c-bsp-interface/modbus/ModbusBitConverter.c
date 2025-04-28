@@ -1,9 +1,10 @@
 #include "ModbusBitConverter.h"
-#include <c-bsp-interface/Endian.h>
+#include <c-bsp-interface/bsp_endian_t.h>
 #include <c-bsp-interface/Reverse.h>
 #include <string.h>
 
 #pragma region 转数字
+
 uint8_t ModbusBitConverter_ToUInt8(ModbusBitConverterUnit unit,
 								   uint8_t const *buffer, int32_t offset)
 {
@@ -172,9 +173,11 @@ double ModbusBitConverter_ToDouble(ModbusBitConverterUnit unit,
 	ReverseByteArray((uint8_t *)(&value), 8);
 	return value;
 }
+
 #pragma endregion
 
 #pragma region 转字节数组
+
 void ModbusBitConverter_GetBytesFromUInt8(ModbusBitConverterUnit unit,
 										  uint8_t value, uint8_t *out_buffer, int32_t offset)
 {

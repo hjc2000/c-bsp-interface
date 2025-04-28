@@ -77,7 +77,7 @@ void ModbusStreamWriter_WriteDouble(ModbusStreamWriter *self, double data)
 }
 
 void ModbusStreamWriter_WriteCrc16(ModbusStreamWriter *self,
-								   uint16_t crc16_register, Endian crc16_endian)
+								   uint16_t crc16_register, bsp_endian_t crc16_endian)
 {
 	uint8_t high_byte = (uint8_t)(crc16_register >> 8);
 	uint8_t low_byte = (uint8_t)crc16_register;

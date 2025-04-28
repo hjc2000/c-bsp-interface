@@ -1,5 +1,5 @@
 #pragma once
-#include <c-bsp-interface/Endian.h>
+#include <c-bsp-interface/bsp_endian_t.h>
 #include <c-bsp-interface/modbus/ModbusBitConverter.h>
 #include <c-bsp-interface/stream/Stream.h>
 
@@ -16,4 +16,4 @@ void ModbusStreamWriter_WriteFloat(ModbusStreamWriter *self, float data);
 void ModbusStreamWriter_WriteDouble(ModbusStreamWriter *self, double data);
 
 void ModbusStreamWriter_WriteCrc16(ModbusStreamWriter *self,
-								   uint16_t crc16_register, Endian crc16_endian);
+								   uint16_t crc16_register, bsp_endian_t crc16_endian);
