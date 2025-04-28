@@ -1,7 +1,7 @@
 #pragma once
 #include "c-bsp-interface/BitConverter.h"
+#include "c-bsp-interface/bsp_endian_t.h"
 #include "c-bsp-interface/Reverse.h"
-#include <c-bsp-interface/bsp_endian_t.h>
 #include <stdint.h>
 
 typedef struct bsp_auto_bit_converter_t
