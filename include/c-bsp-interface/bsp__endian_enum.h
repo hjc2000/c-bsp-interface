@@ -3,8 +3,8 @@
 
 typedef enum bsp__endian_enum
 {
-	BigEndian,
-	LittleEndian,
+	bsp__endian_enum__big_endian,
+	bsp__endian_enum__little_endian,
 } bsp__endian_enum;
 
 ///
@@ -18,8 +18,8 @@ inline bsp__endian_enum bsp__local_host_endian()
 	int8_t *p = (int8_t *)(&a);
 	if (*p)
 	{
-		return LittleEndian;
+		return bsp__endian_enum__little_endian;
 	}
 
-	return BigEndian;
+	return bsp__endian_enum__big_endian;
 }

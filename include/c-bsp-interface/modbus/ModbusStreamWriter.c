@@ -81,7 +81,7 @@ void ModbusStreamWriter_WriteCrc16(ModbusStreamWriter *self,
 {
 	uint8_t high_byte = (uint8_t)(crc16_register >> 8);
 	uint8_t low_byte = (uint8_t)crc16_register;
-	if (crc16_endian == BigEndian)
+	if (crc16_endian == bsp__endian_enum__big_endian)
 	{
 		self->_stream->Write(self->_stream->_self, &high_byte, 0, 1);
 		self->_stream->Write(self->_stream->_self, &low_byte, 0, 1);
