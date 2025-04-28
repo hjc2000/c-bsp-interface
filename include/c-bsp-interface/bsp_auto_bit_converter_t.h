@@ -117,15 +117,44 @@ extern inline double AutoBitConverter_ToDouble(bsp_auto_bit_converter_t *self, u
 /* #region 转字节数组 */
 
 extern inline void AutoBitConverter_GetBytesFromUInt16(bsp_auto_bit_converter_t *self,
-													   uint16_t value, uint8_t *out_buffer, int32_t offset);
+													   uint16_t value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	if (bsp_auto_bit_converter_t__should_reverse(self))
+	{
+		ReverseByteArray(out_buffer + offset, 2);
+	}
+}
 
 extern inline void AutoBitConverter_GetBytesFromInt16(bsp_auto_bit_converter_t *self,
-													  int16_t value, uint8_t *out_buffer, int32_t offset);
+													  int16_t value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	if (bsp_auto_bit_converter_t__should_reverse(self))
+	{
+		ReverseByteArray(out_buffer + offset, 2);
+	}
+}
 
 extern inline void AutoBitConverter_GetBytesFromUInt32(bsp_auto_bit_converter_t *self,
-													   uint32_t value, uint8_t *out_buffer, int32_t offset);
+													   uint32_t value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	if (bsp_auto_bit_converter_t__should_reverse(self))
+	{
+		ReverseByteArray(out_buffer + offset, 4);
+	}
+}
+
 extern inline void AutoBitConverter_GetBytesFromInt32(bsp_auto_bit_converter_t *self,
-													  int32_t value, uint8_t *out_buffer, int32_t offset);
+													  int32_t value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	if (bsp_auto_bit_converter_t__should_reverse(self))
+	{
+		ReverseByteArray(out_buffer + offset, 4);
+	}
+}
 
 extern inline void AutoBitConverter_GetBytesFromUInt64(bsp_auto_bit_converter_t *self,
 													   uint64_t value, uint8_t *out_buffer, int32_t offset);
