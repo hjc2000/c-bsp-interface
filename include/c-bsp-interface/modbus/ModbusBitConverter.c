@@ -1,6 +1,6 @@
 #include "ModbusBitConverter.h"
 #include <c-bsp-interface/endian.h>
-#include <c-bsp-interface/Reverse.h>
+#include <c-bsp-interface/reverse.h>
 #include <string.h>
 
 #pragma region 转数字
@@ -24,9 +24,9 @@ uint16_t Modbusbsp__bit_converter__ToUInt16(ModbusBitConverterUnit unit,
 {
 	uint16_t const *p = (uint16_t const *)(buffer + offset);
 	uint16_t value = *p;
-	if (LocalHostEndian() == bsp__endian__little_endian)
+	if (bsp__local_host_endian() == bsp__endian__little_endian)
 	{
-		ReverseByteArray((uint8_t *)(&value), 2);
+		bsp__reverse_byte_array((uint8_t *)(&value), 2);
 	}
 
 	return value;
@@ -47,25 +47,25 @@ uint32_t Modbusbsp__bit_converter__ToUInt32(ModbusBitConverterUnit unit,
 	// 以整体为转换单位
 	if (unit == ModbusBitConverterUnit_Whole)
 	{
-		if (LocalHostEndian() == bsp__endian__big_endian)
+		if (bsp__local_host_endian() == bsp__endian__big_endian)
 		{
 			return value;
 		}
 
-		ReverseByteArray((uint8_t *)(&value), 4);
+		bsp__reverse_byte_array((uint8_t *)(&value), 4);
 		return value;
 	}
 
 	// 以记录为转换单位
 	// 逐 2 字节翻转
-	ReverseByteArrayPerElement((uint8_t *)(&value), 2, 2);
-	if (LocalHostEndian() == bsp__endian__little_endian)
+	bsp__reverse_byte_array_per_element((uint8_t *)(&value), 2, 2);
+	if (bsp__local_host_endian() == bsp__endian__little_endian)
 	{
 		return value;
 	}
 
 	// 如果本机是大端序，还要整体翻转一次
-	ReverseByteArray((uint8_t *)(&value), 4);
+	bsp__reverse_byte_array((uint8_t *)(&value), 4);
 	return value;
 }
 
@@ -84,25 +84,25 @@ uint64_t Modbusbsp__bit_converter__ToUInt64(ModbusBitConverterUnit unit,
 	// 以整体为转换单位
 	if (unit == ModbusBitConverterUnit_Whole)
 	{
-		if (LocalHostEndian() == bsp__endian__big_endian)
+		if (bsp__local_host_endian() == bsp__endian__big_endian)
 		{
 			return value;
 		}
 
-		ReverseByteArray((uint8_t *)(&value), 8);
+		bsp__reverse_byte_array((uint8_t *)(&value), 8);
 		return value;
 	}
 
 	// 以记录为转换单位
 	// 逐 2 字节翻转
-	ReverseByteArrayPerElement((uint8_t *)(&value), 2, 4);
-	if (LocalHostEndian() == bsp__endian__little_endian)
+	bsp__reverse_byte_array_per_element((uint8_t *)(&value), 2, 4);
+	if (bsp__local_host_endian() == bsp__endian__little_endian)
 	{
 		return value;
 	}
 
 	// 如果本机是大端序，还要整体翻转一次
-	ReverseByteArray((uint8_t *)(&value), 8);
+	bsp__reverse_byte_array((uint8_t *)(&value), 8);
 	return value;
 }
 
@@ -121,25 +121,25 @@ float Modbusbsp__bit_converter__ToFloat(ModbusBitConverterUnit unit,
 	// 以整体为转换单位
 	if (unit == ModbusBitConverterUnit_Whole)
 	{
-		if (LocalHostEndian() == bsp__endian__big_endian)
+		if (bsp__local_host_endian() == bsp__endian__big_endian)
 		{
 			return value;
 		}
 
-		ReverseByteArray((uint8_t *)(&value), 4);
+		bsp__reverse_byte_array((uint8_t *)(&value), 4);
 		return value;
 	}
 
 	// 以记录为转换单位
 	// 逐 2 字节翻转
-	ReverseByteArrayPerElement((uint8_t *)(&value), 2, 2);
-	if (LocalHostEndian() == bsp__endian__little_endian)
+	bsp__reverse_byte_array_per_element((uint8_t *)(&value), 2, 2);
+	if (bsp__local_host_endian() == bsp__endian__little_endian)
 	{
 		return value;
 	}
 
 	// 如果本机是大端序，还要整体翻转一次
-	ReverseByteArray((uint8_t *)(&value), 4);
+	bsp__reverse_byte_array((uint8_t *)(&value), 4);
 	return value;
 }
 
@@ -152,25 +152,25 @@ double Modbusbsp__bit_converter__ToDouble(ModbusBitConverterUnit unit,
 	// 以整体为转换单位
 	if (unit == ModbusBitConverterUnit_Whole)
 	{
-		if (LocalHostEndian() == bsp__endian__big_endian)
+		if (bsp__local_host_endian() == bsp__endian__big_endian)
 		{
 			return value;
 		}
 
-		ReverseByteArray((uint8_t *)(&value), 8);
+		bsp__reverse_byte_array((uint8_t *)(&value), 8);
 		return value;
 	}
 
 	// 以记录为转换单位
 	// 逐 2 字节翻转
-	ReverseByteArrayPerElement((uint8_t *)(&value), 2, 4);
-	if (LocalHostEndian() == bsp__endian__little_endian)
+	bsp__reverse_byte_array_per_element((uint8_t *)(&value), 2, 4);
+	if (bsp__local_host_endian() == bsp__endian__little_endian)
 	{
 		return value;
 	}
 
 	// 如果本机是大端序，还要整体翻转一次
-	ReverseByteArray((uint8_t *)(&value), 8);
+	bsp__reverse_byte_array((uint8_t *)(&value), 8);
 	return value;
 }
 
@@ -192,9 +192,9 @@ void Modbusbsp__bit_converter__GetBytesFromUInt16(ModbusBitConverterUnit unit,
 {
 	uint8_t *value_buffer = (uint8_t *)(&value);
 	memcpy(out_buffer + offset, value_buffer, 2);
-	if (LocalHostEndian() == bsp__endian__little_endian)
+	if (bsp__local_host_endian() == bsp__endian__little_endian)
 	{
-		ReverseByteArray(out_buffer + offset, 2);
+		bsp__reverse_byte_array(out_buffer + offset, 2);
 	}
 }
 
@@ -211,10 +211,10 @@ void Modbusbsp__bit_converter__GetBytesFromUInt32(ModbusBitConverterUnit unit,
 	memcpy(out_buffer + offset, value_buffer, 4);
 	if (unit == ModbusBitConverterUnit_Whole)
 	{
-		if (LocalHostEndian() == bsp__endian__little_endian)
+		if (bsp__local_host_endian() == bsp__endian__little_endian)
 		{
 			// 本机是小端序，翻转后返回
-			ReverseByteArray(out_buffer + offset, 4);
+			bsp__reverse_byte_array(out_buffer + offset, 4);
 			return;
 		}
 
@@ -223,18 +223,18 @@ void Modbusbsp__bit_converter__GetBytesFromUInt32(ModbusBitConverterUnit unit,
 	}
 
 	// 逐个记录进行转换
-	if (LocalHostEndian() == bsp__endian__big_endian)
+	if (bsp__local_host_endian() == bsp__endian__big_endian)
 	{
 		/* 本机是大端序，因为低 16 位要在第 1 个记录，所以先整体翻转，随后再逐个记录再次翻转，
 		 * 使每个记录变成大端序
 		 */
-		ReverseByteArray(out_buffer + offset, 4);
+		bsp__reverse_byte_array(out_buffer + offset, 4);
 	}
 
 	// 本机是小端序不用先经过整体翻转
 
 	// 逐个记录进行翻转，也就是逐 2 字节进行翻转
-	ReverseByteArrayPerElement(out_buffer + offset, 2, 2);
+	bsp__reverse_byte_array_per_element(out_buffer + offset, 2, 2);
 }
 
 void Modbusbsp__bit_converter__GetBytesFromInt32(ModbusBitConverterUnit unit,
@@ -250,10 +250,10 @@ void Modbusbsp__bit_converter__GetBytesFromUInt64(ModbusBitConverterUnit unit,
 	memcpy(out_buffer + offset, value_buffer, 8);
 	if (unit == ModbusBitConverterUnit_Whole)
 	{
-		if (LocalHostEndian() == bsp__endian__little_endian)
+		if (bsp__local_host_endian() == bsp__endian__little_endian)
 		{
 			// 本机是小端序，翻转后返回
-			ReverseByteArray(out_buffer + offset, 8);
+			bsp__reverse_byte_array(out_buffer + offset, 8);
 			return;
 		}
 
@@ -262,18 +262,18 @@ void Modbusbsp__bit_converter__GetBytesFromUInt64(ModbusBitConverterUnit unit,
 	}
 
 	// 逐个记录进行转换
-	if (LocalHostEndian() == bsp__endian__big_endian)
+	if (bsp__local_host_endian() == bsp__endian__big_endian)
 	{
 		/* 本机是大端序，因为低 16 位要在第 1 个记录，所以先整体翻转，随后再逐个记录再次翻转，
 		 * 使每个记录变成大端序
 		 */
-		ReverseByteArray(out_buffer + offset, 8);
+		bsp__reverse_byte_array(out_buffer + offset, 8);
 	}
 
 	// 本机是小端序不用先经过整体翻转
 
 	// 逐个记录进行翻转，也就是逐 2 字节进行翻转
-	ReverseByteArrayPerElement(out_buffer + offset, 2, 4);
+	bsp__reverse_byte_array_per_element(out_buffer + offset, 2, 4);
 }
 
 void Modbusbsp__bit_converter__GetBytesFromInt64(ModbusBitConverterUnit unit,
@@ -289,10 +289,10 @@ void Modbusbsp__bit_converter__GetBytesFromFloat(ModbusBitConverterUnit unit,
 	memcpy(out_buffer + offset, value_buffer, 4);
 	if (unit == ModbusBitConverterUnit_Whole)
 	{
-		if (LocalHostEndian() == bsp__endian__little_endian)
+		if (bsp__local_host_endian() == bsp__endian__little_endian)
 		{
 			// 本机是小端序，翻转后返回
-			ReverseByteArray(out_buffer + offset, 4);
+			bsp__reverse_byte_array(out_buffer + offset, 4);
 			return;
 		}
 
@@ -301,18 +301,18 @@ void Modbusbsp__bit_converter__GetBytesFromFloat(ModbusBitConverterUnit unit,
 	}
 
 	// 逐个记录进行转换
-	if (LocalHostEndian() == bsp__endian__big_endian)
+	if (bsp__local_host_endian() == bsp__endian__big_endian)
 	{
 		/* 本机是大端序，因为低 16 位要在第 1 个记录，所以先整体翻转，随后再逐个记录再次翻转，
 		 * 使每个记录变成大端序
 		 */
-		ReverseByteArray(out_buffer + offset, 4);
+		bsp__reverse_byte_array(out_buffer + offset, 4);
 	}
 
 	// 本机是小端序不用先经过整体翻转
 
 	// 逐个记录进行翻转，也就是逐 2 字节进行翻转
-	ReverseByteArrayPerElement(out_buffer + offset, 2, 2);
+	bsp__reverse_byte_array_per_element(out_buffer + offset, 2, 2);
 }
 
 void Modbusbsp__bit_converter__GetBytesFromDouble(ModbusBitConverterUnit unit,
@@ -322,10 +322,10 @@ void Modbusbsp__bit_converter__GetBytesFromDouble(ModbusBitConverterUnit unit,
 	memcpy(out_buffer + offset, value_buffer, 8);
 	if (unit == ModbusBitConverterUnit_Whole)
 	{
-		if (LocalHostEndian() == bsp__endian__little_endian)
+		if (bsp__local_host_endian() == bsp__endian__little_endian)
 		{
 			// 本机是小端序，翻转后返回
-			ReverseByteArray(out_buffer + offset, 8);
+			bsp__reverse_byte_array(out_buffer + offset, 8);
 			return;
 		}
 
@@ -334,18 +334,18 @@ void Modbusbsp__bit_converter__GetBytesFromDouble(ModbusBitConverterUnit unit,
 	}
 
 	// 逐个记录进行转换
-	if (LocalHostEndian() == bsp__endian__big_endian)
+	if (bsp__local_host_endian() == bsp__endian__big_endian)
 	{
 		/* 本机是大端序，因为低 16 位要在第 1 个记录，所以先整体翻转，随后再逐个记录再次翻转，
 		 * 使每个记录变成大端序
 		 */
-		ReverseByteArray(out_buffer + offset, 8);
+		bsp__reverse_byte_array(out_buffer + offset, 8);
 	}
 
 	// 本机是小端序不用先经过整体翻转
 
 	// 逐个记录进行翻转，也就是逐 2 字节进行翻转
-	ReverseByteArrayPerElement(out_buffer + offset, 2, 4);
+	bsp__reverse_byte_array_per_element(out_buffer + offset, 2, 4);
 }
 
 #pragma endregion
