@@ -140,7 +140,7 @@ inline void bsp__auto_bit_converter_t__get_bytes_from_int16(
 	}
 }
 
-inline void AutoBitConverter_GetBytesFromUInt32(
+inline void bsp__auto_bit_converter_t__get_bytes_from_uint32(
 	bsp_auto_bit_converter_t *self, uint32_t value, uint8_t *out_buffer, int32_t offset)
 {
 	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
@@ -150,7 +150,7 @@ inline void AutoBitConverter_GetBytesFromUInt32(
 	}
 }
 
-inline void AutoBitConverter_GetBytesFromInt32(
+inline void bsp__auto_bit_converter_t__get_bytes_from_int32(
 	bsp_auto_bit_converter_t *self, int32_t value, uint8_t *out_buffer, int32_t offset)
 {
 	BitConverter_GetBytesFromInt32(value, out_buffer, offset);
@@ -160,7 +160,7 @@ inline void AutoBitConverter_GetBytesFromInt32(
 	}
 }
 
-inline void AutoBitConverter_GetBytesFromUInt64(
+inline void bsp__auto_bit_converter_t__get_bytes_from_uint64(
 	bsp_auto_bit_converter_t *self, uint64_t value, uint8_t *out_buffer, int32_t offset)
 {
 	BitConverter_GetBytesFromUInt64(value, out_buffer, offset);
