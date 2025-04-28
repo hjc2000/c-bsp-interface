@@ -149,7 +149,7 @@ extern inline void AutoBitConverter_GetBytesFromUInt32(bsp_auto_bit_converter_t 
 extern inline void AutoBitConverter_GetBytesFromInt32(bsp_auto_bit_converter_t *self,
 													  int32_t value, uint8_t *out_buffer, int32_t offset)
 {
-	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	BitConverter_GetBytesFromInt32(value, out_buffer, offset);
 	if (bsp_auto_bit_converter_t__should_reverse(self))
 	{
 		ReverseByteArray(out_buffer + offset, 4);
@@ -157,14 +157,43 @@ extern inline void AutoBitConverter_GetBytesFromInt32(bsp_auto_bit_converter_t *
 }
 
 extern inline void AutoBitConverter_GetBytesFromUInt64(bsp_auto_bit_converter_t *self,
-													   uint64_t value, uint8_t *out_buffer, int32_t offset);
+													   uint64_t value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt64(value, out_buffer, offset);
+	if (bsp_auto_bit_converter_t__should_reverse(self))
+	{
+		ReverseByteArray(out_buffer + offset, 8);
+	}
+}
+
 extern inline void AutoBitConverter_GetBytesFromInt64(bsp_auto_bit_converter_t *self,
-													  int64_t value, uint8_t *out_buffer, int32_t offset);
+													  int64_t value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	if (bsp_auto_bit_converter_t__should_reverse(self))
+	{
+		ReverseByteArray(out_buffer + offset, 8);
+	}
+}
 
 extern inline void AutoBitConverter_GetBytesFromFloat(bsp_auto_bit_converter_t *self,
-													  float value, uint8_t *out_buffer, int32_t offset);
+													  float value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	if (bsp_auto_bit_converter_t__should_reverse(self))
+	{
+		ReverseByteArray(out_buffer + offset, 4);
+	}
+}
 
 extern inline void AutoBitConverter_GetBytesFromDouble(bsp_auto_bit_converter_t *self,
-													   double value, uint8_t *out_buffer, int32_t offset);
+													   double value, uint8_t *out_buffer, int32_t offset)
+{
+	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
+	if (bsp_auto_bit_converter_t__should_reverse(self))
+	{
+		ReverseByteArray(out_buffer + offset, 8);
+	}
+}
 
 /* #endregion */
