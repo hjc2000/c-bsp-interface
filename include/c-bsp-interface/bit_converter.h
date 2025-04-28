@@ -3,7 +3,7 @@
 
 /* #region 转数字 */
 
-inline uint16_t BitConverter_ByteArrayToUInt16(uint8_t const *buffer, int32_t offset)
+inline uint16_t bsp__bit_converter__byte_array_to_uint16(uint8_t const *buffer, int32_t offset)
 {
 	uint16_t const *p = (uint16_t const *)(buffer + offset);
 	return *p;
