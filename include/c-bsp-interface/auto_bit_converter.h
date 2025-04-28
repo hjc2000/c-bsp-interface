@@ -18,13 +18,12 @@ inline void bsp__auto_bit_converter__initialize(
 
 /* #region 转数字 */
 
-inline uint16_t bsp__auto_bit_converter__to_uint16(
-	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
+inline uint16_t bsp__auto_bit_converter__to_uint16(bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
 	uint16_t ret = bsp__bit_converter__byte_array_to_uint16(buffer, offset);
 	if (self->_should_reverse)
 	{
-		ReverseByteArray((uint8_t *)(&ret), 2);
+		ReverseByteArray((uint8_t *)(&ret), sizeof(ret));
 	}
 
 	return ret;
@@ -33,22 +32,21 @@ inline uint16_t bsp__auto_bit_converter__to_uint16(
 inline int16_t bsp__auto_bit_converter__to_int16(
 	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
-	int16_t ret = bsp__bit_converter__ByteArrayToInt16(buffer, offset);
+	int16_t ret = bsp__bit_converter__byte_array_to_int16(buffer, offset);
 	if (self->_should_reverse)
 	{
-		ReverseByteArray((uint8_t *)(&ret), 2);
+		ReverseByteArray((uint8_t *)(&ret), sizeof(ret));
 	}
 
 	return ret;
 }
 
-inline uint32_t bsp__auto_bit_converter__to_uint32(
-	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
+inline uint32_t bsp__auto_bit_converter__to_uint32(bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
-	uint32_t ret = bsp__bit_converter__ByteArrayToUInt32(buffer, offset);
+	uint32_t ret = bsp__bit_converter__byte_array_to_uint32(buffer, offset);
 	if (self->_should_reverse)
 	{
-		ReverseByteArray((uint8_t *)(&ret), 4);
+		ReverseByteArray((uint8_t *)(&ret), sizeof(ret));
 	}
 
 	return ret;
@@ -57,34 +55,32 @@ inline uint32_t bsp__auto_bit_converter__to_uint32(
 inline int32_t bsp__auto_bit_converter__to_int32(
 	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
-	int32_t ret = bsp__bit_converter__ByteArrayToInt32(buffer, offset);
+	int32_t ret = bsp__bit_converter__byte_array_to_int32(buffer, offset);
 	if (self->_should_reverse)
 	{
-		ReverseByteArray((uint8_t *)(&ret), 4);
+		ReverseByteArray((uint8_t *)(&ret), sizeof(ret));
 	}
 
 	return ret;
 }
 
-inline uint64_t bsp__auto_bit_converter__to_uint64(
-	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
+inline uint64_t bsp__auto_bit_converter__to_uint64(bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
-	uint64_t ret = bsp__bit_converter__ByteArrayToUInt64(buffer, offset);
+	uint64_t ret = bsp__bit_converter__byte_array_to_uint64(buffer, offset);
 	if (self->_should_reverse)
 	{
-		ReverseByteArray((uint8_t *)(&ret), 8);
+		ReverseByteArray((uint8_t *)(&ret), sizeof(ret));
 	}
 
 	return ret;
 }
 
-inline int64_t bsp__auto_bit_converter__to_int64(
-	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
+inline int64_t bsp__auto_bit_converter__to_int64(bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
-	int64_t ret = bsp__bit_converter__ByteArrayToInt64(buffer, offset);
+	int64_t ret = bsp__bit_converter__byte_array_to_int64(buffer, offset);
 	if (self->_should_reverse)
 	{
-		ReverseByteArray((uint8_t *)(&ret), 8);
+		ReverseByteArray((uint8_t *)(&ret), sizeof(ret));
 	}
 
 	return ret;
@@ -93,22 +89,21 @@ inline int64_t bsp__auto_bit_converter__to_int64(
 inline float bsp__auto_bit_converter__to_float(
 	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
-	float ret = bsp__bit_converter__ByteArrayToFloat(buffer, offset);
+	float ret = bsp__bit_converter__byte_array_to_float(buffer, offset);
 	if (self->_should_reverse)
 	{
-		ReverseByteArray((uint8_t *)(&ret), 4);
+		ReverseByteArray((uint8_t *)(&ret), sizeof(ret));
 	}
 
 	return ret;
 }
 
-inline double bsp__auto_bit_converter__to_double(
-	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
+inline double bsp__auto_bit_converter__to_double(bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
-	double ret = bsp__bit_converter__ByteArrayToDouble(buffer, offset);
+	double ret = bsp__bit_converter__byte_array_to_double(buffer, offset);
 	if (self->_should_reverse)
 	{
-		ReverseByteArray((uint8_t *)(&ret), 8);
+		ReverseByteArray((uint8_t *)(&ret), sizeof(ret));
 	}
 
 	return ret;
