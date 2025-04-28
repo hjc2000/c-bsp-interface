@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 
 typedef enum bsp_endian_t
 {
@@ -11,4 +12,14 @@ typedef enum bsp_endian_t
 ///
 /// @return
 ///
-bsp_endian_t bsp_local_host_endian();
+inline bsp_endian_t bsp__local_host_endian()
+{
+	int32_t a = 1;
+	int8_t *p = (int8_t *)(&a);
+	if (*p)
+	{
+		return LittleEndian;
+	}
+
+	return BigEndian;
+}

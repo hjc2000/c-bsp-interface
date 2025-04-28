@@ -17,7 +17,7 @@ inline void bsp_auto_bit_converter_t__initialize(
 
 inline uint8_t bsp_auto_bit_converter_t__should_reverse(bsp_auto_bit_converter_t *self)
 {
-	return bsp_local_host_endian() != self->_remote_endian;
+	return bsp__local_host_endian() != self->_remote_endian;
 }
 
 /* #region 转数字 */
@@ -106,7 +106,7 @@ inline float AutoBitConverter_ToFloat(
 	return ret;
 }
 
-inline double AutoBitConverter_ToDouble(
+inline double bsp_auto_bit_converter_t__to_double(
 	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
 {
 	double ret = BitConverter_ByteArrayToDouble(buffer, offset);
