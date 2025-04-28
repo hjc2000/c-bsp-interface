@@ -5,14 +5,14 @@
 #include "type.h"
 #include <stdint.h>
 
-typedef struct bsp_auto_bit_converter_t
+typedef struct bsp__auto_bit_converter
 {
 	bsp__endian_enum _remote_endian;
 	bsp__bool _should_reverse;
-} bsp_auto_bit_converter_t;
+} bsp__auto_bit_converter;
 
 inline void bsp__auto_bit_converter_t__initialize(
-	bsp_auto_bit_converter_t *self, bsp__endian_enum remote_endian)
+	bsp__auto_bit_converter *self, bsp__endian_enum remote_endian)
 {
 	self->_remote_endian = remote_endian;
 	self->_should_reverse = bsp__local_host_endian() != self->_remote_endian;
@@ -21,7 +21,7 @@ inline void bsp__auto_bit_converter_t__initialize(
 /* #region 转数字 */
 
 inline uint16_t bsp__auto_bit_converter_t__to_uint16(
-	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
+	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
 	uint16_t ret = BitConverter_ByteArrayToUInt16(buffer, offset);
 	if (self->_should_reverse)
@@ -33,7 +33,7 @@ inline uint16_t bsp__auto_bit_converter_t__to_uint16(
 }
 
 inline int16_t bsp__auto_bit_converter_t__to_int16(
-	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
+	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
 	int16_t ret = BitConverter_ByteArrayToInt16(buffer, offset);
 	if (self->_should_reverse)
@@ -45,7 +45,7 @@ inline int16_t bsp__auto_bit_converter_t__to_int16(
 }
 
 inline uint32_t bsp__auto_bit_converter_t__to_uint32(
-	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
+	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
 	uint32_t ret = BitConverter_ByteArrayToUInt32(buffer, offset);
 	if (self->_should_reverse)
@@ -57,7 +57,7 @@ inline uint32_t bsp__auto_bit_converter_t__to_uint32(
 }
 
 inline int32_t bsp__auto_bit_converter_t__to_int32(
-	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
+	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
 	int32_t ret = BitConverter_ByteArrayToInt32(buffer, offset);
 	if (self->_should_reverse)
@@ -69,7 +69,7 @@ inline int32_t bsp__auto_bit_converter_t__to_int32(
 }
 
 inline uint64_t bsp__auto_bit_converter_t__to_uint64(
-	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
+	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
 	uint64_t ret = BitConverter_ByteArrayToUInt64(buffer, offset);
 	if (self->_should_reverse)
@@ -81,7 +81,7 @@ inline uint64_t bsp__auto_bit_converter_t__to_uint64(
 }
 
 inline int64_t bsp__auto_bit_converter_t__to_int64(
-	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
+	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
 	int64_t ret = BitConverter_ByteArrayToInt64(buffer, offset);
 	if (self->_should_reverse)
@@ -93,7 +93,7 @@ inline int64_t bsp__auto_bit_converter_t__to_int64(
 }
 
 inline float bsp__auto_bit_converter_t__to_float(
-	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
+	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
 	float ret = BitConverter_ByteArrayToFloat(buffer, offset);
 	if (self->_should_reverse)
@@ -105,7 +105,7 @@ inline float bsp__auto_bit_converter_t__to_float(
 }
 
 inline double bsp__auto_bit_converter_t__to_double(
-	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
+	bsp__auto_bit_converter *self, uint8_t const *buffer, int32_t offset)
 {
 	double ret = BitConverter_ByteArrayToDouble(buffer, offset);
 	if (self->_should_reverse)
@@ -121,7 +121,7 @@ inline double bsp__auto_bit_converter_t__to_double(
 /* #region 转字节数组 */
 
 inline void bsp__auto_bit_converter_t__get_bytes_from_uint16(
-	bsp_auto_bit_converter_t *self, uint16_t value, uint8_t *out_buffer, int32_t offset)
+	bsp__auto_bit_converter *self, uint16_t value, uint8_t *out_buffer, int32_t offset)
 {
 	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
 	if (self->_should_reverse)
@@ -131,7 +131,7 @@ inline void bsp__auto_bit_converter_t__get_bytes_from_uint16(
 }
 
 inline void bsp__auto_bit_converter_t__get_bytes_from_int16(
-	bsp_auto_bit_converter_t *self, int16_t value, uint8_t *out_buffer, int32_t offset)
+	bsp__auto_bit_converter *self, int16_t value, uint8_t *out_buffer, int32_t offset)
 {
 	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
 	if (self->_should_reverse)
@@ -141,7 +141,7 @@ inline void bsp__auto_bit_converter_t__get_bytes_from_int16(
 }
 
 inline void bsp__auto_bit_converter_t__get_bytes_from_uint32(
-	bsp_auto_bit_converter_t *self, uint32_t value, uint8_t *out_buffer, int32_t offset)
+	bsp__auto_bit_converter *self, uint32_t value, uint8_t *out_buffer, int32_t offset)
 {
 	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
 	if (self->_should_reverse)
@@ -151,7 +151,7 @@ inline void bsp__auto_bit_converter_t__get_bytes_from_uint32(
 }
 
 inline void bsp__auto_bit_converter_t__get_bytes_from_int32(
-	bsp_auto_bit_converter_t *self, int32_t value, uint8_t *out_buffer, int32_t offset)
+	bsp__auto_bit_converter *self, int32_t value, uint8_t *out_buffer, int32_t offset)
 {
 	BitConverter_GetBytesFromInt32(value, out_buffer, offset);
 	if (self->_should_reverse)
@@ -161,7 +161,7 @@ inline void bsp__auto_bit_converter_t__get_bytes_from_int32(
 }
 
 inline void bsp__auto_bit_converter_t__get_bytes_from_uint64(
-	bsp_auto_bit_converter_t *self, uint64_t value, uint8_t *out_buffer, int32_t offset)
+	bsp__auto_bit_converter *self, uint64_t value, uint8_t *out_buffer, int32_t offset)
 {
 	BitConverter_GetBytesFromUInt64(value, out_buffer, offset);
 	if (self->_should_reverse)
@@ -171,7 +171,7 @@ inline void bsp__auto_bit_converter_t__get_bytes_from_uint64(
 }
 
 inline void bsp__auto_bit_converter_t__get_bytes_from_int64(
-	bsp_auto_bit_converter_t *self, int64_t value, uint8_t *out_buffer, int32_t offset)
+	bsp__auto_bit_converter *self, int64_t value, uint8_t *out_buffer, int32_t offset)
 {
 	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
 	if (self->_should_reverse)
@@ -181,7 +181,7 @@ inline void bsp__auto_bit_converter_t__get_bytes_from_int64(
 }
 
 inline void bsp__auto_bit_converter_t__get_bytes_from_float(
-	bsp_auto_bit_converter_t *self, float value, uint8_t *out_buffer, int32_t offset)
+	bsp__auto_bit_converter *self, float value, uint8_t *out_buffer, int32_t offset)
 {
 	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
 	if (self->_should_reverse)
@@ -191,7 +191,7 @@ inline void bsp__auto_bit_converter_t__get_bytes_from_float(
 }
 
 inline void bsp__auto_bit_converter_t__get_bytes_from_double(
-	bsp_auto_bit_converter_t *self, double value, uint8_t *out_buffer, int32_t offset)
+	bsp__auto_bit_converter *self, double value, uint8_t *out_buffer, int32_t offset)
 {
 	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
 	if (self->_should_reverse)
