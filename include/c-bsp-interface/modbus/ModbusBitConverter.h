@@ -59,62 +59,62 @@ typedef enum ModbusBitConverterUnit
 } ModbusBitConverterUnit;
 
 #pragma region 转数字
-uint8_t ModbusBitConverter_ToUInt8(ModbusBitConverterUnit unit,
-								   uint8_t const *buffer, int32_t offset);
+uint8_t Modbusbsp__bit_converter__ToUInt8(ModbusBitConverterUnit unit,
+										  uint8_t const *buffer, int32_t offset);
 
-uint8_t ModbusBitConverter_ToInt8(ModbusBitConverterUnit unit,
-								  uint8_t const *buffer, int32_t offset);
+uint8_t Modbusbsp__bit_converter__ToInt8(ModbusBitConverterUnit unit,
+										 uint8_t const *buffer, int32_t offset);
 
-uint16_t ModbusBitConverter_ToUInt16(ModbusBitConverterUnit unit,
-									 uint8_t const *buffer, int32_t offset);
+uint16_t Modbusbsp__bit_converter__ToUInt16(ModbusBitConverterUnit unit,
+											uint8_t const *buffer, int32_t offset);
 
-int16_t ModbusBitConverter_ToInt16(ModbusBitConverterUnit unit,
-								   uint8_t const *buffer, int32_t offset);
+int16_t Modbusbsp__bit_converter__ToInt16(ModbusBitConverterUnit unit,
+										  uint8_t const *buffer, int32_t offset);
 
-uint32_t ModbusBitConverter_ToUInt32(ModbusBitConverterUnit unit,
-									 uint8_t const *buffer, int32_t offset);
+uint32_t Modbusbsp__bit_converter__ToUInt32(ModbusBitConverterUnit unit,
+											uint8_t const *buffer, int32_t offset);
 
-int32_t ModbusBitConverter_ToInt32(ModbusBitConverterUnit unit,
-								   uint8_t const *buffer, int32_t offset);
+int32_t Modbusbsp__bit_converter__ToInt32(ModbusBitConverterUnit unit,
+										  uint8_t const *buffer, int32_t offset);
 
-uint64_t ModbusBitConverter_ToUInt64(ModbusBitConverterUnit unit,
-									 uint8_t const *buffer, int32_t offset);
+uint64_t Modbusbsp__bit_converter__ToUInt64(ModbusBitConverterUnit unit,
+											uint8_t const *buffer, int32_t offset);
 
-int64_t ModbusBitConverter_ToInt64(ModbusBitConverterUnit unit,
-								   uint8_t const *buffer, int32_t offset);
+int64_t Modbusbsp__bit_converter__ToInt64(ModbusBitConverterUnit unit,
+										  uint8_t const *buffer, int32_t offset);
 
-float ModbusBitConverter_ToFloat(ModbusBitConverterUnit unit,
-								 uint8_t const *buffer, int32_t offset);
+float Modbusbsp__bit_converter__ToFloat(ModbusBitConverterUnit unit,
+										uint8_t const *buffer, int32_t offset);
 
-double ModbusBitConverter_ToDouble(ModbusBitConverterUnit unit,
-								   uint8_t const *buffer, int32_t offset);
+double Modbusbsp__bit_converter__ToDouble(ModbusBitConverterUnit unit,
+										  uint8_t const *buffer, int32_t offset);
 #pragma endregion
 
 #pragma region 转字节数组
-void ModbusBitConverter_GetBytesFromUInt8(ModbusBitConverterUnit unit,
-										  uint8_t value, uint8_t *out_buffer, int32_t offset);
+void Modbusbsp__bit_converter__GetBytesFromUInt8(ModbusBitConverterUnit unit,
+												 uint8_t value, uint8_t *out_buffer, int32_t offset);
 
-void ModbusBitConverter_GetBytesFromUInt16(ModbusBitConverterUnit unit,
-										   uint16_t value, uint8_t *out_buffer, int32_t offset);
+void Modbusbsp__bit_converter__GetBytesFromUInt16(ModbusBitConverterUnit unit,
+												  uint16_t value, uint8_t *out_buffer, int32_t offset);
 
-void ModbusBitConverter_GetBytesFromInt16(ModbusBitConverterUnit unit,
-										  int16_t value, uint8_t *out_buffer, int32_t offset);
+void Modbusbsp__bit_converter__GetBytesFromInt16(ModbusBitConverterUnit unit,
+												 int16_t value, uint8_t *out_buffer, int32_t offset);
 
-void ModbusBitConverter_GetBytesFromUInt32(ModbusBitConverterUnit unit,
-										   uint32_t value, uint8_t *out_buffer, int32_t offset);
+void Modbusbsp__bit_converter__GetBytesFromUInt32(ModbusBitConverterUnit unit,
+												  uint32_t value, uint8_t *out_buffer, int32_t offset);
 
-void ModbusBitConverter_GetBytesFromInt32(ModbusBitConverterUnit unit,
-										  int32_t value, uint8_t *out_buffer, int32_t offset);
+void Modbusbsp__bit_converter__GetBytesFromInt32(ModbusBitConverterUnit unit,
+												 int32_t value, uint8_t *out_buffer, int32_t offset);
 
-void ModbusBitConverter_GetBytesFromUInt64(ModbusBitConverterUnit unit,
-										   uint64_t value, uint8_t *out_buffer, int32_t offset);
+void Modbusbsp__bit_converter__GetBytesFromUInt64(ModbusBitConverterUnit unit,
+												  uint64_t value, uint8_t *out_buffer, int32_t offset);
 
-void ModbusBitConverter_GetBytesFromInt64(ModbusBitConverterUnit unit,
-										  int64_t value, uint8_t *out_buffer, int32_t offset);
+void Modbusbsp__bit_converter__GetBytesFromInt64(ModbusBitConverterUnit unit,
+												 int64_t value, uint8_t *out_buffer, int32_t offset);
 
-void ModbusBitConverter_GetBytesFromFloat(ModbusBitConverterUnit unit,
-										  float value, uint8_t *out_buffer, int32_t offset);
+void Modbusbsp__bit_converter__GetBytesFromFloat(ModbusBitConverterUnit unit,
+												 float value, uint8_t *out_buffer, int32_t offset);
 
-void ModbusBitConverter_GetBytesFromDouble(ModbusBitConverterUnit unit,
-										   double value, uint8_t *out_buffer, int32_t offset);
+void Modbusbsp__bit_converter__GetBytesFromDouble(ModbusBitConverterUnit unit,
+												  double value, uint8_t *out_buffer, int32_t offset);
 #pragma endregion

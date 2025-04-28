@@ -5,22 +5,22 @@
 
 #pragma region 转数字
 
-uint8_t ModbusBitConverter_ToUInt8(ModbusBitConverterUnit unit,
-								   uint8_t const *buffer, int32_t offset)
+uint8_t Modbusbsp__bit_converter__ToUInt8(ModbusBitConverterUnit unit,
+										  uint8_t const *buffer, int32_t offset)
 {
 	uint8_t const *p = (uint8_t const *)(buffer + offset);
 	uint8_t value = *p;
 	return value;
 }
 
-uint8_t ModbusBitConverter_ToInt8(ModbusBitConverterUnit unit,
-								  uint8_t const *buffer, int32_t offset)
+uint8_t Modbusbsp__bit_converter__ToInt8(ModbusBitConverterUnit unit,
+										 uint8_t const *buffer, int32_t offset)
 {
-	return ModbusBitConverter_ToUInt8(unit, buffer, offset);
+	return Modbusbsp__bit_converter__ToUInt8(unit, buffer, offset);
 }
 
-uint16_t ModbusBitConverter_ToUInt16(ModbusBitConverterUnit unit,
-									 uint8_t const *buffer, int32_t offset)
+uint16_t Modbusbsp__bit_converter__ToUInt16(ModbusBitConverterUnit unit,
+											uint8_t const *buffer, int32_t offset)
 {
 	uint16_t const *p = (uint16_t const *)(buffer + offset);
 	uint16_t value = *p;
@@ -32,14 +32,14 @@ uint16_t ModbusBitConverter_ToUInt16(ModbusBitConverterUnit unit,
 	return value;
 }
 
-int16_t ModbusBitConverter_ToInt16(ModbusBitConverterUnit unit,
-								   uint8_t const *buffer, int32_t offset)
+int16_t Modbusbsp__bit_converter__ToInt16(ModbusBitConverterUnit unit,
+										  uint8_t const *buffer, int32_t offset)
 {
-	return ModbusBitConverter_ToUInt16(unit, buffer, offset);
+	return Modbusbsp__bit_converter__ToUInt16(unit, buffer, offset);
 }
 
-uint32_t ModbusBitConverter_ToUInt32(ModbusBitConverterUnit unit,
-									 uint8_t const *buffer, int32_t offset)
+uint32_t Modbusbsp__bit_converter__ToUInt32(ModbusBitConverterUnit unit,
+											uint8_t const *buffer, int32_t offset)
 {
 	uint32_t const *p = (uint32_t const *)(buffer + offset);
 	uint32_t value = *p;
@@ -69,14 +69,14 @@ uint32_t ModbusBitConverter_ToUInt32(ModbusBitConverterUnit unit,
 	return value;
 }
 
-int32_t ModbusBitConverter_ToInt32(ModbusBitConverterUnit unit,
-								   uint8_t const *buffer, int32_t offset)
+int32_t Modbusbsp__bit_converter__ToInt32(ModbusBitConverterUnit unit,
+										  uint8_t const *buffer, int32_t offset)
 {
-	return ModbusBitConverter_ToUInt32(unit, buffer, offset);
+	return Modbusbsp__bit_converter__ToUInt32(unit, buffer, offset);
 }
 
-uint64_t ModbusBitConverter_ToUInt64(ModbusBitConverterUnit unit,
-									 uint8_t const *buffer, int32_t offset)
+uint64_t Modbusbsp__bit_converter__ToUInt64(ModbusBitConverterUnit unit,
+											uint8_t const *buffer, int32_t offset)
 {
 	uint64_t const *p = (uint64_t const *)(buffer + offset);
 	uint64_t value = *p;
@@ -106,14 +106,14 @@ uint64_t ModbusBitConverter_ToUInt64(ModbusBitConverterUnit unit,
 	return value;
 }
 
-int64_t ModbusBitConverter_ToInt64(ModbusBitConverterUnit unit,
-								   uint8_t const *buffer, int32_t offset)
+int64_t Modbusbsp__bit_converter__ToInt64(ModbusBitConverterUnit unit,
+										  uint8_t const *buffer, int32_t offset)
 {
-	return ModbusBitConverter_ToUInt64(unit, buffer, offset);
+	return Modbusbsp__bit_converter__ToUInt64(unit, buffer, offset);
 }
 
-float ModbusBitConverter_ToFloat(ModbusBitConverterUnit unit,
-								 uint8_t const *buffer, int32_t offset)
+float Modbusbsp__bit_converter__ToFloat(ModbusBitConverterUnit unit,
+										uint8_t const *buffer, int32_t offset)
 {
 	float const *p = (float const *)(buffer + offset);
 	float value = *p;
@@ -143,8 +143,8 @@ float ModbusBitConverter_ToFloat(ModbusBitConverterUnit unit,
 	return value;
 }
 
-double ModbusBitConverter_ToDouble(ModbusBitConverterUnit unit,
-								   uint8_t const *buffer, int32_t offset)
+double Modbusbsp__bit_converter__ToDouble(ModbusBitConverterUnit unit,
+										  uint8_t const *buffer, int32_t offset)
 {
 	double const *p = (double const *)(buffer + offset);
 	double value = *p;
@@ -178,8 +178,8 @@ double ModbusBitConverter_ToDouble(ModbusBitConverterUnit unit,
 
 #pragma region 转字节数组
 
-void ModbusBitConverter_GetBytesFromUInt8(ModbusBitConverterUnit unit,
-										  uint8_t value, uint8_t *out_buffer, int32_t offset)
+void Modbusbsp__bit_converter__GetBytesFromUInt8(ModbusBitConverterUnit unit,
+												 uint8_t value, uint8_t *out_buffer, int32_t offset)
 {
 	/* 这里是 uint8_t 所以直接使用赋值。2 个字节以及上的数据类型不能这么做，因为可能会有对齐问题。
 	 * 对没有对齐的内存地址的整型操作可能会引发硬件错误
@@ -187,8 +187,8 @@ void ModbusBitConverter_GetBytesFromUInt8(ModbusBitConverterUnit unit,
 	*(out_buffer + offset) = value;
 }
 
-void ModbusBitConverter_GetBytesFromUInt16(ModbusBitConverterUnit unit,
-										   uint16_t value, uint8_t *out_buffer, int32_t offset)
+void Modbusbsp__bit_converter__GetBytesFromUInt16(ModbusBitConverterUnit unit,
+												  uint16_t value, uint8_t *out_buffer, int32_t offset)
 {
 	uint8_t *value_buffer = (uint8_t *)(&value);
 	memcpy(out_buffer + offset, value_buffer, 2);
@@ -198,14 +198,14 @@ void ModbusBitConverter_GetBytesFromUInt16(ModbusBitConverterUnit unit,
 	}
 }
 
-void ModbusBitConverter_GetBytesFromInt16(ModbusBitConverterUnit unit,
-										  int16_t value, uint8_t *out_buffer, int32_t offset)
+void Modbusbsp__bit_converter__GetBytesFromInt16(ModbusBitConverterUnit unit,
+												 int16_t value, uint8_t *out_buffer, int32_t offset)
 {
-	ModbusBitConverter_GetBytesFromUInt16(unit, value, out_buffer, offset);
+	Modbusbsp__bit_converter__GetBytesFromUInt16(unit, value, out_buffer, offset);
 }
 
-void ModbusBitConverter_GetBytesFromUInt32(ModbusBitConverterUnit unit,
-										   uint32_t value, uint8_t *out_buffer, int32_t offset)
+void Modbusbsp__bit_converter__GetBytesFromUInt32(ModbusBitConverterUnit unit,
+												  uint32_t value, uint8_t *out_buffer, int32_t offset)
 {
 	uint8_t *value_buffer = (uint8_t *)(&value);
 	memcpy(out_buffer + offset, value_buffer, 4);
@@ -237,14 +237,14 @@ void ModbusBitConverter_GetBytesFromUInt32(ModbusBitConverterUnit unit,
 	ReverseByteArrayPerElement(out_buffer + offset, 2, 2);
 }
 
-void ModbusBitConverter_GetBytesFromInt32(ModbusBitConverterUnit unit,
-										  int32_t value, uint8_t *out_buffer, int32_t offset)
+void Modbusbsp__bit_converter__GetBytesFromInt32(ModbusBitConverterUnit unit,
+												 int32_t value, uint8_t *out_buffer, int32_t offset)
 {
-	ModbusBitConverter_GetBytesFromUInt32(unit, value, out_buffer, offset);
+	Modbusbsp__bit_converter__GetBytesFromUInt32(unit, value, out_buffer, offset);
 }
 
-void ModbusBitConverter_GetBytesFromUInt64(ModbusBitConverterUnit unit,
-										   uint64_t value, uint8_t *out_buffer, int32_t offset)
+void Modbusbsp__bit_converter__GetBytesFromUInt64(ModbusBitConverterUnit unit,
+												  uint64_t value, uint8_t *out_buffer, int32_t offset)
 {
 	uint8_t *value_buffer = (uint8_t *)(&value);
 	memcpy(out_buffer + offset, value_buffer, 8);
@@ -276,14 +276,14 @@ void ModbusBitConverter_GetBytesFromUInt64(ModbusBitConverterUnit unit,
 	ReverseByteArrayPerElement(out_buffer + offset, 2, 4);
 }
 
-void ModbusBitConverter_GetBytesFromInt64(ModbusBitConverterUnit unit,
-										  int64_t value, uint8_t *out_buffer, int32_t offset)
+void Modbusbsp__bit_converter__GetBytesFromInt64(ModbusBitConverterUnit unit,
+												 int64_t value, uint8_t *out_buffer, int32_t offset)
 {
-	ModbusBitConverter_GetBytesFromUInt64(unit, value, out_buffer, offset);
+	Modbusbsp__bit_converter__GetBytesFromUInt64(unit, value, out_buffer, offset);
 }
 
-void ModbusBitConverter_GetBytesFromFloat(ModbusBitConverterUnit unit,
-										  float value, uint8_t *out_buffer, int32_t offset)
+void Modbusbsp__bit_converter__GetBytesFromFloat(ModbusBitConverterUnit unit,
+												 float value, uint8_t *out_buffer, int32_t offset)
 {
 	uint8_t *value_buffer = (uint8_t *)(&value);
 	memcpy(out_buffer + offset, value_buffer, 4);
@@ -315,8 +315,8 @@ void ModbusBitConverter_GetBytesFromFloat(ModbusBitConverterUnit unit,
 	ReverseByteArrayPerElement(out_buffer + offset, 2, 2);
 }
 
-void ModbusBitConverter_GetBytesFromDouble(ModbusBitConverterUnit unit,
-										   double value, uint8_t *out_buffer, int32_t offset)
+void Modbusbsp__bit_converter__GetBytesFromDouble(ModbusBitConverterUnit unit,
+												  double value, uint8_t *out_buffer, int32_t offset)
 {
 	uint8_t *value_buffer = (uint8_t *)(&value);
 	memcpy(out_buffer + offset, value_buffer, 8);

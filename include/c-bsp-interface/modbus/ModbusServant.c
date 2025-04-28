@@ -393,21 +393,21 @@ static void WriteHoldingRegisters(ModbusServant *self, uint8_t *pdu, int32_t pdu
 	int32_t info_buffer_offset = 0;
 
 	// 起始记录地址
-	uint16_t start_record_addr = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
-															 info_buffer,
-															 info_buffer_offset);
+	uint16_t start_record_addr = Modbusbsp__bit_converter__ToUInt16(ModbusBitConverterUnit_Whole,
+																	info_buffer,
+																	info_buffer_offset);
 	info_buffer_offset += 2;
 
 	// 要读取的记录数
-	int32_t record_count = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
-													   info_buffer,
-													   info_buffer_offset);
+	int32_t record_count = Modbusbsp__bit_converter__ToUInt16(ModbusBitConverterUnit_Whole,
+															  info_buffer,
+															  info_buffer_offset);
 	info_buffer_offset += 2;
 
 	// 数据字节数
-	int32_t byte_count = ModbusBitConverter_ToUInt8(ModbusBitConverterUnit_Whole,
-													info_buffer,
-													info_buffer_offset);
+	int32_t byte_count = Modbusbsp__bit_converter__ToUInt8(ModbusBitConverterUnit_Whole,
+														   info_buffer,
+														   info_buffer_offset);
 	info_buffer_offset += 1;
 
 	if (!WriteHoldingRegisters_CheckByteCount(record_count, byte_count))
@@ -436,9 +436,9 @@ static void WriteHoldingRegisters(ModbusServant *self, uint8_t *pdu, int32_t pdu
 		{
 		case ModbusMultibyteSizeEnum_2Byte:
 			{
-				uint16_t value = ModbusBitConverter_ToUInt16(ModbusBitConverterUnit_Whole,
-															 info_buffer,
-															 info_buffer_offset);
+				uint16_t value = Modbusbsp__bit_converter__ToUInt16(ModbusBitConverterUnit_Whole,
+																	info_buffer,
+																	info_buffer_offset);
 				info_buffer_offset += 2;
 				self->Write2ByteCallback(current_record_addr, value);
 				record_addr_offset += 1;
@@ -446,9 +446,9 @@ static void WriteHoldingRegisters(ModbusServant *self, uint8_t *pdu, int32_t pdu
 			}
 		case ModbusMultibyteSizeEnum_4Byte:
 			{
-				uint32_t value = ModbusBitConverter_ToUInt32(ModbusBitConverterUnit_Whole,
-															 info_buffer,
-															 info_buffer_offset);
+				uint32_t value = Modbusbsp__bit_converter__ToUInt32(ModbusBitConverterUnit_Whole,
+																	info_buffer,
+																	info_buffer_offset);
 				info_buffer_offset += 4;
 				self->Write4ByteCallback(current_record_addr, value);
 				record_addr_offset += 2;
@@ -456,9 +456,9 @@ static void WriteHoldingRegisters(ModbusServant *self, uint8_t *pdu, int32_t pdu
 			}
 		case ModbusMultibyteSizeEnum_8Byte:
 			{
-				uint64_t value = ModbusBitConverter_ToUInt64(ModbusBitConverterUnit_Whole,
-															 info_buffer,
-															 info_buffer_offset);
+				uint64_t value = Modbusbsp__bit_converter__ToUInt64(ModbusBitConverterUnit_Whole,
+																	info_buffer,
+																	info_buffer_offset);
 				info_buffer_offset += 8;
 				self->Write8ByteCallback(current_record_addr, value);
 				record_addr_offset += 4;
