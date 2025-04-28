@@ -11,7 +11,7 @@ typedef struct bsp_auto_bit_converter_t
 	bsp__bool _should_reverse;
 } bsp_auto_bit_converter_t;
 
-inline void bsp_auto_bit_converter_t__initialize(
+inline void bsp__auto_bit_converter_t__initialize(
 	bsp_auto_bit_converter_t *self, bsp__endian_enum remote_endian)
 {
 	self->_remote_endian = remote_endian;
@@ -20,7 +20,7 @@ inline void bsp_auto_bit_converter_t__initialize(
 
 /* #region 转数字 */
 
-inline uint16_t bsp_auto_bit_converter_t__to_uint16(
+inline uint16_t bsp__auto_bit_converter_t__to_uint16(
 	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
 {
 	uint16_t ret = BitConverter_ByteArrayToUInt16(buffer, offset);
@@ -32,7 +32,7 @@ inline uint16_t bsp_auto_bit_converter_t__to_uint16(
 	return ret;
 }
 
-inline int16_t bsp_auto_bit_converter_t__to_int16(
+inline int16_t bsp__auto_bit_converter_t__to_int16(
 	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
 {
 	int16_t ret = BitConverter_ByteArrayToInt16(buffer, offset);
@@ -44,7 +44,7 @@ inline int16_t bsp_auto_bit_converter_t__to_int16(
 	return ret;
 }
 
-inline uint32_t bsp_auto_bit_converter_t__to_uint32(
+inline uint32_t bsp__auto_bit_converter_t__to_uint32(
 	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
 {
 	uint32_t ret = BitConverter_ByteArrayToUInt32(buffer, offset);
@@ -56,7 +56,7 @@ inline uint32_t bsp_auto_bit_converter_t__to_uint32(
 	return ret;
 }
 
-inline int32_t bsp_auto_bit_converter_t__to_int32(
+inline int32_t bsp__auto_bit_converter_t__to_int32(
 	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
 {
 	int32_t ret = BitConverter_ByteArrayToInt32(buffer, offset);
@@ -68,7 +68,7 @@ inline int32_t bsp_auto_bit_converter_t__to_int32(
 	return ret;
 }
 
-inline uint64_t AutoBitConverter_ToUInt64(
+inline uint64_t bsp__auto_bit_converter_t__to_uint64(
 	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
 {
 	uint64_t ret = BitConverter_ByteArrayToUInt64(buffer, offset);
@@ -80,7 +80,7 @@ inline uint64_t AutoBitConverter_ToUInt64(
 	return ret;
 }
 
-inline int64_t AutoBitConverter_ToInt64(
+inline int64_t bsp__auto_bit_converter_t__to_int64(
 	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
 {
 	int64_t ret = BitConverter_ByteArrayToInt64(buffer, offset);
@@ -92,7 +92,7 @@ inline int64_t AutoBitConverter_ToInt64(
 	return ret;
 }
 
-inline float AutoBitConverter_ToFloat(
+inline float bsp__auto_bit_converter_t__to_float(
 	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
 {
 	float ret = BitConverter_ByteArrayToFloat(buffer, offset);
@@ -104,7 +104,7 @@ inline float AutoBitConverter_ToFloat(
 	return ret;
 }
 
-inline double bsp_auto_bit_converter_t__to_double(
+inline double bsp__auto_bit_converter_t__to_double(
 	bsp_auto_bit_converter_t *self, uint8_t const *buffer, int32_t offset)
 {
 	double ret = BitConverter_ByteArrayToDouble(buffer, offset);
@@ -120,7 +120,7 @@ inline double bsp_auto_bit_converter_t__to_double(
 
 /* #region 转字节数组 */
 
-inline void AutoBitConverter_GetBytesFromUInt16(
+inline void bsp__auto_bit_converter_t__get_bytes_from_uint16(
 	bsp_auto_bit_converter_t *self, uint16_t value, uint8_t *out_buffer, int32_t offset)
 {
 	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
@@ -130,7 +130,7 @@ inline void AutoBitConverter_GetBytesFromUInt16(
 	}
 }
 
-inline void AutoBitConverter_GetBytesFromInt16(
+inline void bsp__auto_bit_converter_t__get_bytes_from_int16(
 	bsp_auto_bit_converter_t *self, int16_t value, uint8_t *out_buffer, int32_t offset)
 {
 	BitConverter_GetBytesFromUInt16(value, out_buffer, offset);
