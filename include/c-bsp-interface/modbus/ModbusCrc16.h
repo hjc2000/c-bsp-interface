@@ -49,11 +49,11 @@ uint8_t ModbusCrc16_LowByte(ModbusCrc16 *o);
 /// @return 相等返回 true，不相等返回 false。
 uint8_t ModbusCrc16_CompareRegister(ModbusCrc16 *o,
 									uint8_t *crc16_register_buffer,
-									bsp__endian_enum crc16_register_buffer_endian);
+									bsp__endian crc16_register_buffer_endian);
 
 typedef struct Stream Stream;
 
 /// @brief 将 CRC16 寄存器写入流。
 /// @param self
 /// @param endian 写入流时使用的字节序。
-void ModbusCrc16_WriteRegisterToStream(ModbusCrc16 *self, Stream *stream, bsp__endian_enum endian);
+void ModbusCrc16_WriteRegisterToStream(ModbusCrc16 *self, Stream *stream, bsp__endian endian);

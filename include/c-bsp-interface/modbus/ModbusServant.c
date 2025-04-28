@@ -13,7 +13,7 @@ typedef struct ModbusServant
 	/// @brief 从机站号
 	uint8_t _servant_address;
 	ModbusCrc16 *_crc;
-	bsp__endian_enum _crc16_endian;
+	bsp__endian _crc16_endian;
 	ModbusBitConverterUnit _bit_converter_unit;
 	MemoryStream *_send_buffer_memory_stream;
 	ModbusStreamWriter *_writer;
@@ -586,7 +586,7 @@ static void HandleBrocastPdu(ModbusServant *self, uint8_t *pdu, int32_t pdu_size
 }
 
 ModbusServant *ModbusServant_StackHeapAlloc(uint8_t servant_address,
-											bsp__endian_enum crc16_endian,
+											bsp__endian crc16_endian,
 											ModbusBitConverterUnit bit_converter_unit,
 											ModbusServantReadWriteCallbackHub *read_write_callback_hub)
 {

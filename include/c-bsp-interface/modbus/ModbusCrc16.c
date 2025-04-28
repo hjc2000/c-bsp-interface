@@ -79,12 +79,12 @@ uint8_t ModbusCrc16_LowByte(ModbusCrc16 *o)
 
 uint8_t ModbusCrc16_CompareRegister(ModbusCrc16 *o,
 									uint8_t *crc16_register_buffer,
-									bsp__endian_enum crc16_register_buffer_endian)
+									bsp__endian crc16_register_buffer_endian)
 {
 	uint8_t buffer_low_byte;
 	uint8_t buffer_high_byte;
 
-	if (crc16_register_buffer_endian == bsp__endian_enum__little_endian)
+	if (crc16_register_buffer_endian == bsp__endian__little_endian)
 	{
 		buffer_low_byte = crc16_register_buffer[0];
 		buffer_high_byte = crc16_register_buffer[1];
@@ -99,11 +99,11 @@ uint8_t ModbusCrc16_CompareRegister(ModbusCrc16 *o,
 		   buffer_high_byte == ModbusCrc16_HighByte(o);
 }
 
-void ModbusCrc16_WriteRegisterToStream(ModbusCrc16 *self, Stream *stream, bsp__endian_enum endian)
+void ModbusCrc16_WriteRegisterToStream(ModbusCrc16 *self, Stream *stream, bsp__endian endian)
 {
 	uint8_t crc16_high_byte = ModbusCrc16_HighByte(self);
 	uint8_t crc16_low_byte = ModbusCrc16_LowByte(self);
-	if (endian == bsp__endian_enum__big_endian)
+	if (endian == bsp__endian__big_endian)
 	{
 		stream->Write(stream->_self, &crc16_high_byte, 0, 1);
 		stream->Write(stream->_self, &crc16_low_byte, 0, 1);
