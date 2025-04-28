@@ -1,6 +1,6 @@
 #pragma once
 #include "c-bsp-interface/BitConverter.h"
-#include "c-bsp-interface/bsp__endian_enum.h"
+#include "c-bsp-interface/endian.h"
 #include "c-bsp-interface/Reverse.h"
 #include "type.h"
 #include <stdint.h>

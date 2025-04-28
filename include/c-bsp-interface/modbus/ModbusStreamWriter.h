@@ -1,5 +1,5 @@
 #pragma once
-#include <c-bsp-interface/bsp__endian_enum.h>
+#include <c-bsp-interface/endian.h>
 #include <c-bsp-interface/modbus/ModbusBitConverter.h>
 #include <c-bsp-interface/stream/Stream.h>
 

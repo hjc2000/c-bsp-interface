@@ -1,5 +1,5 @@
 #include "ModbusBitConverter.h"
-#include <c-bsp-interface/bsp__endian_enum.h>
+#include <c-bsp-interface/endian.h>
 #include <c-bsp-interface/Reverse.h>
 #include <string.h>
 
