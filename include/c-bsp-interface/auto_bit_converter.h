@@ -59,20 +59,44 @@ double bsp_auto_bit_converter_to_double(bsp_auto_bit_converter *self,
 
 /* #region 转字节数组 */
 
-void bsp_auto_bit_converter_get_bytes_from_uint16(bsp_auto_bit_converter *self, uint16_t value, uint8_t *out_buffer, int32_t offset);
+void bsp_auto_bit_converter_get_bytes_from_uint16(bsp_auto_bit_converter *self,
+												  uint16_t value,
+												  uint8_t *out_buffer,
+												  int32_t offset);
 
-void bsp_auto_bit_converter_get_bytes_from_int16(bsp_auto_bit_converter *self, int16_t value, uint8_t *out_buffer, int32_t offset);
+void bsp_auto_bit_converter_get_bytes_from_int16(bsp_auto_bit_converter *self,
+												 int16_t value,
+												 uint8_t *out_buffer,
+												 int32_t offset);
 
-void bsp_auto_bit_converter_get_bytes_from_uint32(bsp_auto_bit_converter *self, uint32_t value, uint8_t *out_buffer, int32_t offset);
+void bsp_auto_bit_converter_get_bytes_from_uint32(bsp_auto_bit_converter *self,
+												  uint32_t value,
+												  uint8_t *out_buffer,
+												  int32_t offset);
 
-void bsp_auto_bit_converter_get_bytes_from_int32(bsp_auto_bit_converter *self, int32_t value, uint8_t *out_buffer, int32_t offset);
+void bsp_auto_bit_converter_get_bytes_from_int32(bsp_auto_bit_converter *self,
+												 int32_t value,
+												 uint8_t *out_buffer,
+												 int32_t offset);
 
-void bsp_auto_bit_converter_get_bytes_from_uint64(bsp_auto_bit_converter *self, uint64_t value, uint8_t *out_buffer, int32_t offset);
+void bsp_auto_bit_converter_get_bytes_from_uint64(bsp_auto_bit_converter *self,
+												  uint64_t value,
+												  uint8_t *out_buffer,
+												  int32_t offset);
 
-void bsp_auto_bit_converter_get_bytes_from_int64(bsp_auto_bit_converter *self, int64_t value, uint8_t *out_buffer, int32_t offset);
+void bsp_auto_bit_converter_get_bytes_from_int64(bsp_auto_bit_converter *self,
+												 int64_t value,
+												 uint8_t *out_buffer,
+												 int32_t offset);
 
-void bsp_auto_bit_converter_get_bytes_from_float(bsp_auto_bit_converter *self, float value, uint8_t *out_buffer, int32_t offset);
+void bsp_auto_bit_converter_get_bytes_from_float(bsp_auto_bit_converter *self,
+												 float value,
+												 uint8_t *out_buffer,
+												 int32_t offset);
 
-void bsp_auto_bit_converter_get_bytes_from_double(bsp_auto_bit_converter *self, double value, uint8_t *out_buffer, int32_t offset);
+void bsp_auto_bit_converter_get_bytes_from_double(bsp_auto_bit_converter *self,
+												  double value,
+												  uint8_t *out_buffer,
+												  int32_t offset);
 
 /* #endregion */
