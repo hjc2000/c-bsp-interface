@@ -1,18 +1,21 @@
 #include "bit_converter.h" // IWYU pragma: keep
+#include <stdint.h>
 #include <string.h>
 
-// #region 转数字
+/* #region 转数字 */
 
 uint16_t bsp__bit_converter__byte_array_to_uint16(uint8_t const *buffer, int32_t offset)
 {
-	uint16_t const *p = (uint16_t const *)(buffer + offset);
-	return *p;
+	uint16_t ret;
+	memcpy((uint8_t *)(&ret), buffer + offset, sizeof(ret));
+	return ret;
 }
 
 int16_t bsp__bit_converter__byte_array_to_int16(uint8_t const *buffer, int32_t offset)
 {
-	int16_t const *p = (int16_t const *)(buffer + offset);
-	return *p;
+	int16_t ret;
+	memcpy((uint8_t *)(&ret), buffer + offset, sizeof(ret));
+	return ret;
 }
 
 uint16_t bsp__bit_converter__2_byte_to_uint16(uint8_t high, uint8_t low)
@@ -22,14 +25,16 @@ uint16_t bsp__bit_converter__2_byte_to_uint16(uint8_t high, uint8_t low)
 
 uint32_t bsp__bit_converter__byte_array_to_uint32(uint8_t const *buffer, int32_t offset)
 {
-	uint32_t const *p = (uint32_t const *)(buffer + offset);
-	return *p;
+	uint32_t ret;
+	memcpy((uint8_t *)(&ret), buffer + offset, sizeof(ret));
+	return ret;
 }
 
 int32_t bsp__bit_converter__byte_array_to_int32(uint8_t const *buffer, int32_t offset)
 {
-	int32_t const *p = (int32_t const *)(buffer + offset);
-	return *p;
+	int32_t ret;
+	memcpy((uint8_t *)(&ret), buffer + offset, sizeof(ret));
+	return ret;
 }
 
 uint32_t bsp__bit_converter__2_uint16_to_uint32(uint16_t high, uint16_t low)
@@ -46,78 +51,82 @@ uint32_t bsp__bit_converter__4_byte_to_uint32(uint8_t b3, uint8_t b2, uint8_t b1
 
 uint64_t bsp__bit_converter__byte_array_to_uint64(uint8_t const *buffer, int32_t offset)
 {
-	uint64_t const *p = (uint64_t const *)(buffer + offset);
-	return *p;
+	uint64_t ret;
+	memcpy((uint8_t *)(&ret), buffer + offset, sizeof(ret));
+	return ret;
 }
 
 int64_t bsp__bit_converter__byte_array_to_int64(uint8_t const *buffer, int32_t offset)
 {
-	int64_t const *p = (int64_t const *)(buffer + offset);
-	return *p;
+	int64_t ret;
+	memcpy((uint8_t *)(&ret), buffer + offset, sizeof(ret));
+	return ret;
 }
 
 float bsp__bit_converter__byte_array_to_float(uint8_t const *buffer, int32_t offset)
 {
-	float const *p = (float const *)(buffer + offset);
-	return *p;
+	float ret;
+	memcpy((uint8_t *)(&ret), buffer + offset, sizeof(ret));
+	return ret;
 }
 
 double bsp__bit_converter__byte_array_to_double(uint8_t const *buffer, int32_t offset)
 {
-	double const *p = (double const *)(buffer + offset);
-	return *p;
+	double ret;
+	memcpy((uint8_t *)(&ret), buffer + offset, sizeof(ret));
+	return ret;
 }
 
-// #endregion
+/* #endregion */
 
-// #region 转字节数组
+/* #region 转字节数组 */
 
 void bsp__bit_converter__get_bytes_from_uint16(uint16_t value, uint8_t *out_buffer, int32_t offset)
 {
-	uint8_t *buffer = (uint8_t *)(&value);
+	uint8_t const *buffer = (uint8_t const *)(&value);
 	memcpy(out_buffer + offset, buffer, sizeof(value));
 }
 
 void bsp__bit_converter__get_bytes_from_int16(int16_t value, uint8_t *out_buffer, int32_t offset)
 {
-	uint8_t *buffer = (uint8_t *)(&value);
+	uint8_t const *buffer = (uint8_t const *)(&value);
 	memcpy(out_buffer + offset, buffer, sizeof(value));
 }
 
 void bsp__bit_converter__get_bytes_from_uint32(uint32_t value, uint8_t *out_buffer, int32_t offset)
 {
-	uint8_t *buffer = (uint8_t *)(&value);
+	uint8_t const *buffer = (uint8_t const *)(&value);
 	memcpy(out_buffer + offset, buffer, sizeof(value));
 }
 
 void bsp__bit_converter__get_bytes_from_int32(int32_t value, uint8_t *out_buffer, int32_t offset)
 {
-	uint8_t *buffer = (uint8_t *)(&value);
+	uint8_t const *buffer = (uint8_t const *)(&value);
 	memcpy(out_buffer + offset, buffer, sizeof(value));
 }
 
 void bsp__bit_converter__get_bytes_from_uint64(uint64_t value, uint8_t *out_buffer, int32_t offset)
 {
-	uint8_t *buffer = (uint8_t *)(&value);
+	uint8_t const *buffer = (uint8_t const *)(&value);
 	memcpy(out_buffer + offset, buffer, sizeof(value));
 }
 
 void bsp__bit_converter__get_bytes_from_int64(int64_t value, uint8_t *out_buffer, int32_t offset)
 {
-	uint8_t *buffer = (uint8_t *)(&value);
+	uint8_t const *buffer = (uint8_t const *)(&value);
 	memcpy(out_buffer + offset, buffer, sizeof(value));
 }
 
 void bsp__bit_converter__get_bytes_from_float(float value, uint8_t *out_buffer, int32_t offset)
 {
-	uint8_t *buffer = (uint8_t *)(&value);
+	uint8_t const *buffer = (uint8_t const *)(&value);
 	memcpy(out_buffer + offset, buffer, sizeof(value));
 }
 
 void bsp__bit_converter__get_bytes_from_double(double value, uint8_t *out_buffer, int32_t offset)
 {
-	uint8_t *buffer = (uint8_t *)(&value);
+	uint8_t const *buffer = (uint8_t const *)(&value);
 	memcpy(out_buffer + offset, buffer, sizeof(value));
 }
 
-// #endregion
+/* #endregion */
