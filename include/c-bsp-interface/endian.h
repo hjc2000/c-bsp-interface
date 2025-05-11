@@ -1,14 +1,14 @@
 #pragma once
 
-typedef enum bsp__endian
+typedef enum bsp_endian
 {
-	bsp__endian__big_endian,
-	bsp__endian__little_endian,
-} bsp__endian;
+	bsp_endian_big_endian,
+	bsp_endian_little_endian,
+} bsp_endian;
 
 ///
 /// @brief 获取本机字节序
 ///
 /// @return
 ///
-bsp__endian bsp__local_host_endian();
+bsp_endian bsp_local_host_endian();

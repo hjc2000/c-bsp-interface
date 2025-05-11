@@ -1,14 +1,14 @@
 #include "endian.h"
 #include <stdint.h>
 
-bsp__endian bsp__local_host_endian()
+bsp_endian bsp_local_host_endian()
 {
-	int32_t a = 1;
-	int8_t *p = (int8_t *)(&a);
-	if (*p)
+	uint32_t a = 1;
+	uint8_t *p = (uint8_t *)(&a);
+	if (p[0])
 	{
-		return bsp__endian__little_endian;
+		return bsp_endian_little_endian;
 	}
 
-	return bsp__endian__big_endian;
+	return bsp_endian_big_endian;
 }

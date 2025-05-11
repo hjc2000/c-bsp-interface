@@ -8,7 +8,7 @@
 ///
 /// @param size
 ///
-void bsp__reverse_byte_array(uint8_t *array, int32_t size);
+void bsp_reverse_byte_array(uint8_t *array, int32_t size);
 
 ///
 /// @brief 将字节数组中的字节以每个单元为单位，在单元内进行字节序反转。
@@ -19,4 +19,4 @@ void bsp__reverse_byte_array(uint8_t *array, int32_t size);
 ///
 /// @param element_count 单元的个数。
 ///
-void bsp__reverse_byte_array_per_element(uint8_t *array, int32_t element_size, int32_t element_count);
+void bsp_reverse_byte_array_per_element(uint8_t *array, int32_t element_size, int32_t element_count);

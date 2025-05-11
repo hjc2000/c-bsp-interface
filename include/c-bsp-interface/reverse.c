@@ -1,6 +1,6 @@
 #include "reverse.h"
 
-void bsp__reverse_byte_array(uint8_t *array, int32_t size)
+void bsp_reverse_byte_array(uint8_t *array, int32_t size)
 {
 	if (size <= 1)
 	{
@@ -16,7 +16,7 @@ void bsp__reverse_byte_array(uint8_t *array, int32_t size)
 	}
 }
 
-void bsp__reverse_byte_array_per_element(uint8_t *array, int32_t element_size, int32_t element_count)
+void bsp_reverse_byte_array_per_element(uint8_t *array, int32_t element_size, int32_t element_count)
 {
 	if (element_size <= 1)
 	{
@@ -32,6 +32,6 @@ void bsp__reverse_byte_array_per_element(uint8_t *array, int32_t element_size, i
 
 	for (int32_t i = 0; i < element_count; i++)
 	{
-		bsp__reverse_byte_array(array + element_size * i, element_size);
+		bsp_reverse_byte_array(array + element_size * i, element_size);
 	}
 }
