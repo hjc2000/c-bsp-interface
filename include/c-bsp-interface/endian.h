@@ -1,5 +1,9 @@
 #pragma once
 
+///
+/// @brief 字节序枚举。
+///
+///
 typedef enum bsp_endian_enum
 {
 	bsp_endian_big_endian,

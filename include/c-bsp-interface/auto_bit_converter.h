@@ -3,9 +3,20 @@
 #include "type.h"
 #include <stdint.h>
 
+///
+/// @brief 自适应比特转换器。
+///
+///
 typedef struct bsp_auto_bit_converter
 {
+	///
+	/// @brief 是否应该翻转字节数组。
+	///
+	/// @note 本机字节序和远程字节序不同时就需要翻转字节数组。
+	///
+	///
 	bsp_bool _should_reverse;
+
 } bsp_auto_bit_converter;
 
 void bsp_auto_bit_converter_initialize(bsp_auto_bit_converter *self, bsp_endian_enum remote_endian);
