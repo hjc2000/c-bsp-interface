@@ -2,7 +2,7 @@
 #include "c-bsp-interface/bit_converter.h"
 #include "c-bsp-interface/reverse.h"
 
-void bsp_auto_bit_converter_initialize(bsp_auto_bit_converter *self, bsp_endian remote_endian)
+void bsp_auto_bit_converter_initialize(bsp_auto_bit_converter *self, bsp_endian_enum remote_endian)
 {
 	self->_should_reverse = bsp_local_host_endian() != remote_endian;
 }

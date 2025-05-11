@@ -8,7 +8,7 @@ typedef struct bsp_auto_bit_converter
 	bsp_bool _should_reverse;
 } bsp_auto_bit_converter;
 
-void bsp_auto_bit_converter_initialize(bsp_auto_bit_converter *self, bsp_endian remote_endian);
+void bsp_auto_bit_converter_initialize(bsp_auto_bit_converter *self, bsp_endian_enum remote_endian);
 
 /* #region 转数字 */
 
