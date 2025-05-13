@@ -1,6 +1,9 @@
 #pragma once
-#include <stdint.h>
 
-typedef uint8_t bsp_bool;
+typedef enum
+{
+	bsp_false = 0,
+	bsp_true = 1,
+} bsp_bool;
 
 #define bsp_nullptr (void *)(0)
