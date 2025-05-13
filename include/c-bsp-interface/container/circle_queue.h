@@ -1,4 +1,5 @@
 #pragma once
+#include "c-bsp-interface/type.h"
 #include <stddef.h>
 
 #ifndef __element_type
@@ -24,6 +25,7 @@ typedef struct bsp_circle_queue
 
 	size_t _head;
 	size_t _tail;
+	bsp_bool _is_full;
 
 	__element_type _array[];
 
