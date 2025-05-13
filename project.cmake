@@ -1,5 +1,5 @@
 # 编译目标
-add_library(${ProjectName})
+add_library(${ProjectName} STATIC)
 target_import_src(${ProjectName})
 
 # 添加测试程序
