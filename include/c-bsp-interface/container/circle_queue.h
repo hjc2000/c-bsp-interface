@@ -4,6 +4,7 @@
 
 #include "c-bsp-interface/type.h"
 #include <stddef.h>
+#include <stdint.h>
 
 #ifndef __element_type
 	#define __element_type int
@@ -31,20 +32,21 @@ typedef struct bsp_circle_queue
 ///
 /// @brief 在 memory_block 上构造 bsp_circle_queue.
 ///
-/// @param memory_block size_t 的数组。
-/// 	@note 使用 size_t 数组是为了保证内存对齐。
+/// @param memory_block uint64_t 的数组。
+/// 	@note 使用 uint64_t 数组是为了保证内存对齐。
 ///
 /// @param total_size memory_block 的总字节数。
 ///
 /// @return
 ///
-static bsp_circle_queue *bsp_circle_queue_placement_new(size_t *memory_block, size_t total_size)
+static bsp_circle_queue *bsp_circle_queue_placement_new(uint64_t *memory_block, size_t total_size)
 {
 	bsp_circle_queue *ret = (bsp_circle_queue *)(memory_block);
 	ret->_total_size = total_size;
 	ret->_head = 0;
 	ret->_tail = 0;
 	ret->_is_full = 0;
+	return ret;
 }
 
 #undef __element_type
