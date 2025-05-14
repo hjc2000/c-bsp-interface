@@ -18,13 +18,13 @@ typedef struct bsp_int_circle_queue
 /// @brief 想要存放 N 个元素，需要准备多少个字节的内存块。
 ///
 ///
-#define bsp_int_circle_queue_required_memory_block_size(N) (sizeof(bsp_int_circle_queue) + N * sizeof(int))
+#define __bsp_int_circle_queue_required_memory_block_size(N) (sizeof(bsp_int_circle_queue) + N * sizeof(int))
 
 ///
 /// @brief 想要存放 N 个元素，需要准备具有多少个元素的 uint64_t 数组。
 ///
 ///
-#define bsp_int_circle_queue_required_uint64_array_count(N) (bsp_int_circle_queue_required_memory_block_size(N) / 8 + 1)
+#define __bsp_int_circle_queue_required_uint64_array_count(N) (__bsp_int_circle_queue_required_memory_block_size(N) / 8 + 1)
 
 ///
 /// @brief 在 memory_block 上构造 bsp_int_circle_queue.
