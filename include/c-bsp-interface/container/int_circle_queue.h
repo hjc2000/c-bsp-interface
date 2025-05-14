@@ -41,6 +41,8 @@ typedef struct bsp_int_circle_queue
 ///
 bsp_int_circle_queue *bsp_int_circle_queue_placement_new(uint64_t *memory_block, size_t max_count);
 
+int *bsp_int_circle_queue_get(bsp_int_circle_queue *self, size_t index);
+
 bsp_bool bsp_int_circle_queue_is_empty(bsp_int_circle_queue *self);
 
 size_t bsp_int_circle_queue_count(bsp_int_circle_queue *self);

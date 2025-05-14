@@ -1,5 +1,6 @@
 #include "int_circle_queue.h"
 #include "c-bsp-interface/type.h"
+#include <stddef.h>
 
 static void bsp_int_circle_queue_add_start(bsp_int_circle_queue *self)
 {
@@ -21,6 +22,17 @@ bsp_int_circle_queue *bsp_int_circle_queue_placement_new(uint64_t *memory_block,
 	ret->_end = 0;
 	ret->_is_full = bsp_false;
 	return ret;
+}
+
+int *bsp_int_circle_queue_get(bsp_int_circle_queue *self, size_t index)
+{
+	if (bsp_int_circle_queue_is_empty(self))
+	{
+		return bsp_nullptr;
+	}
+
+	size_t pos = (self->_start + index) % self->_max_count;
+	return &self->_array[pos];
 }
 
 bsp_bool bsp_int_circle_queue_is_empty(bsp_int_circle_queue *self)
