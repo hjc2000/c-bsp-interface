@@ -19,7 +19,7 @@ bsp_int_circle_queue *bsp_int_circle_queue_placement_new(uint64_t *memory_block,
 	ret->_max_count = max_count;
 	ret->_start = 0;
 	ret->_end = 0;
-	ret->_is_full = 0;
+	ret->_is_full = bsp_false;
 	return ret;
 }
 
