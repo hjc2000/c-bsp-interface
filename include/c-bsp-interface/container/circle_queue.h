@@ -148,5 +148,3 @@ static bsp_bool bsp_circle_queue_dequeue(bsp_circle_queue *self, __element_type 
 	bsp_circle_queue_sub_start(self);
 	return bsp_true;
 }
-
-#undef __element_type
