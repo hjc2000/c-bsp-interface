@@ -1,7 +1,4 @@
 #pragma once
-// 在翻译单元中定义 int 后包含本头文件，即可像 C++ 模板实例化那样示例化出
-// 不同数据类型的循环队列。
-
 #include "c-bsp-interface/type.h"
 #include <stddef.h>
 #include <stdint.h>
